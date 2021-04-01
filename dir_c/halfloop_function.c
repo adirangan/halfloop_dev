@@ -1,0 +1,22 @@
+/* halfloop functions */
+#include "array_extract_call.c"
+#include "array_mean_center_call.c"
+#include "array_orth_call.c"
+#include "array_printf_call.c"
+#include "array_stats_call.c"
+#include "array_transpose_call.c"
+#include "rand_call.c"
+#include "dp_ps_call.c"
+#include "erfcln_call.c"
+#include "find_internal_maximum_call.c"
+#include "get_xdrop_logscale_call.c"
+#include "GLOBAL_tictoc.c"
+#include "gumbel_call.c"
+#include "halfloop_nonbinary_call.c"
+#include "halfloop_nonbinary_recursive_call.c"
+#include "malloc1_call.c"
+#include "MDA_io_call.c"
+#include "nelder_mead_call.c"
+#include "quicksort_call.c"
+
+
