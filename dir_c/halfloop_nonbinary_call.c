@@ -635,8 +635,8 @@ void halfloop_nonbinary_test_error()
 void halfloop_nonbinary_test_speed()
 {
   int verbose=1;
-  int n_r = 1000;
-  int n_c = 20000;
+  int n_r = 1781;
+  int n_c = 2e4;
   float *A1_rc__=NULL,*A1_cr__=NULL;
   double *B1_rc__=NULL,*B1_cr__=NULL;
   double gamma = 0.01;

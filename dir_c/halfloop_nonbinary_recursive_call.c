@@ -865,7 +865,7 @@ void halfloop_nonbinary_f_recursive_test()
   free1_char__(n_r_index,&output_label__);
   free1_char__(n_r_index,&nlpbra_label__);
   free1_char__(n_r_index,&nlpnex_label__);
-  GLOBAL_toc(0,1," % halfloop_nonbinary_f_recurrsive: ");
+  GLOBAL_toc(0,1," % halfloop_nonbinary_f_recursive: ");
   /* %%%%%%%% */
   GLOBAL_tic(0);
   halfloop_nonbinary_f_recursive(
@@ -909,7 +909,7 @@ void halfloop_nonbinary_f_recursive_test()
   free1_char__(n_r_index,&output_label__);
   free1_char__(n_r_index,&nlpbra_label__);
   free1_char__(n_r_index,&nlpnex_label__);
-  GLOBAL_toc(0,1," % halfloop_nonbinary_f_recurrsive: ");
+  GLOBAL_toc(0,1," % halfloop_nonbinary_f_recursive: ");
   /* %%%%%%%% */
   free1(&E_base_rc__);
   free1(&r_index_);
@@ -1625,7 +1625,7 @@ void halfloop_nonbinary_f_recursive_omp_test()
   free1_char__(n_r_index,&output_label__);
   free1_char__(n_r_index,&nlpbra_label__);
   free1_char__(n_r_index,&nlpnex_label__);
-  GLOBAL_toc(0,1," % halfloop_nonbinary_f_recurrsive_omp: ");
+  GLOBAL_toc(0,1," % halfloop_nonbinary_f_recursive_omp: ");
   /* %%%%%%%% */
   GLOBAL_tic(0);
   halfloop_nonbinary_f_recursive_omp(
@@ -1663,7 +1663,84 @@ void halfloop_nonbinary_f_recursive_omp_test()
   free1_char__(n_r_index,&output_label__);
   free1_char__(n_r_index,&nlpbra_label__);
   free1_char__(n_r_index,&nlpnex_label__);
-  GLOBAL_toc(0,1," % halfloop_nonbinary_f_recurrsive_omp: ");
+  GLOBAL_toc(0,1," % halfloop_nonbinary_f_recursive_omp: ");
+  /* %%%%%%%% */
+  free1(&E_base_rc__);
+  free1(&r_index_);
+  free1(&c_index_);
+}
+
+void halfloop_nonbinary_f_recursive_omp_test_speed()
+{
+  int verbose=1;
+  int flag_r0drop_vs_rcdrop=0;
+  int flag_rcdrop = 0;
+  int flag_r0drop = 1;
+  double gamma = 0.01;
+  int n_shuffle = 64;
+  double p_set = 0.05;
+  int n_member_lob = 3;
+  int nr=0,n_r = 178*2;
+  int nc=0,n_c = 2e4;
+  int nr_index=0,n_r_index=0,*r_index_=NULL;
+  int nc_index=0,n_c_index=0,*c_index_=NULL;
+  float x=0,y=0,z=0;
+  unsigned long int rseed=0;
+  unsigned long long int ulli=0;
+  float *E_base_rc__=NULL;
+  int flag_force_create=1;
+  unsigned long long int *binary_label_=NULL;
+  char **output_label__=NULL;
+  char **nlpbra_label__=NULL;
+  char **nlpnex_label__=NULL;
+  E_base_rc__ = (float *) malloc1((unsigned long long int)n_r*(unsigned long long int)n_c*sizeof(float));
+  rseed=1; RSEED_adv8(&rseed);
+  ulli=0;
+  for (nc=0;nc<n_c;nc++){ for (nr=0;nr<n_r;nr++){ 
+      //E_base_rc__[ulli] = RNGET(&rseed);
+      //if ( (nc<floor(sqrt((double)n_c))) && (nr<floor(sqrt((double)n_r))) ){ E_base_rc__[ulli] += 0.5; }
+      x = 2.0*(float)nr/(float)(n_r-1) - 1.0;
+      y = 2.0*(float)nc/(float)(n_c-1) - 1.0;
+      z = (x+y)/4.0;
+      E_base_rc__[ulli] = sin(2*PI*x) + cos(2*PI*2*y) + x*x + y*y*y + cos(2*PI*4*z);
+      ulli++;
+      /* for (nc=0;nc<n_c;nc++){ for (nr=0;nr<n_r;nr++){ }} */}}
+  array_printf_margin(E_base_rc__,"float",n_r,n_c," % E_base_r__: ");
+  r_index_ = (int *) malloc1((unsigned long long int)n_r*sizeof(int));
+  n_r_index = 0; for (nr=0;nr<n_r;nr++){ if (nr%1==0){ r_index_[n_r_index++]=nr;}}
+  c_index_ = (int *) malloc1((unsigned long long int)n_c*sizeof(int));
+  n_c_index = 0; for (nc=0;nc<n_c;nc++){ if (nc%1==0){ c_index_[n_c_index++]=nc;}}
+  /* %%%%%%%% */
+  GLOBAL_tic(0);
+  halfloop_nonbinary_f_recursive_omp(
+  verbose
+ ,n_r
+ ,n_c
+ ,E_base_rc__
+ ,n_r_index
+ ,r_index_
+ ,n_c_index
+ ,c_index_
+ ,flag_rcdrop
+ ,gamma
+ ,n_shuffle
+ ,p_set
+ ,n_member_lob
+ ,0
+ ,NULL
+ ,NULL
+ ,"test_rc"
+ ,flag_force_create
+ ,&binary_label_
+ ,&output_label__
+ ,&nlpbra_label__
+ ,&nlpnex_label__
+ );
+  free1(&binary_label_);
+  free1_char__(n_r_index,&output_label__);
+  free1_char__(n_r_index,&nlpbra_label__);
+  free1_char__(n_r_index,&nlpnex_label__);
+  GLOBAL_toc(0,1," % halfloop_nonbinary_f_recursive_omp: ");
   /* %%%%%%%% */
   free1(&E_base_rc__);
   free1(&r_index_);
