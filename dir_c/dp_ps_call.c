@@ -196,7 +196,13 @@ void dp_ps_mult_cblas_sgemm(int n_row_A,int n_col_X,float *f_A_trn__,int n_row_B
     f_C__ = *f_C_p_;
     /* if (f_C_p_!=NULL){ } */}
   if (f_C__!=NULL){
+#ifdef _CBLAS
     cblas_sgemm(CblasColMajor,CblasTrans,CblasNoTrans,n_row_A,n_row_B,n_col_X,1.0,f_A_trn__,n_col_X_rup,f_B_trn__,n_col_X_rup,0.0,f_C__,n_row_A);
+#endif /* _CBLAS */
+#ifndef _CBLAS
+    printf(" %% Warning, _CBLAS not defined in dp_ps_mult_cblas_sgemm, using bruteforce instead.\n");
+    dp_ps_mult_bruteforce(n_row_A,n_col_X,f_A_trn__,n_row_B,f_B_trn__,f_C_p_);
+#endif /* _CBLAS */
   /* if (f_C__!=NULL){ } */}
 }
 
@@ -211,11 +217,17 @@ void dp_ps_mult_cblas_sdot(int n_row_A,int n_col_X,float *f_A_trn__,int n_row_B,
     f_C__ = *f_C_p_;
     /* if (f_C_p_!=NULL){ } */}
   if (f_C__!=NULL){
+#ifdef _CBLAS
     for (nrow_B=0;nrow_B<n_row_B;nrow_B++){
       for (nrow_A=0;nrow_A<n_row_A;nrow_A++){
 	f_C__[nrow_A + nrow_B*n_row_A] = cblas_sdot(n_col_X,f_A_trn__+nrow_A*n_col_X_rup,1,f_B_trn__+nrow_B*n_col_X_rup,1);
 	/* for (nrow_A=0;nrow_A<n_row_A;nrow_A++){ } */}
       /* for (nrow_B=0;nrow_B<n_row_B;nrow_B++){ } */}
+#endif /* _CBLAS */
+#ifndef _CBLAS
+    printf(" %% Warning, _CBLAS not defined in dp_ps_mult_cblas_sdot, using bruteforce instead.\n");
+    dp_ps_mult_bruteforce(n_row_A,n_col_X,f_A_trn__,n_row_B,f_B_trn__,f_C_p_);
+#endif /* _CBLAS */
     /* if (f_C__!=NULL){ } */}
 }
 
@@ -539,6 +551,7 @@ void dp_ps_mult_immintrin_test()
   ferror = ffnorm(ulli_C_total,f_C_bf__,f_C_bf__);
   printf(" %% ferror %0.16f\n",ferror);
   /* %%%%%%%% */
+#ifdef _CBLAS
   GLOBAL_tic(0);
   memset(f_C_ps__,0,ulli_C_total*sizeof(float));
   dp_ps_mult_cblas_sgemm(n_row_A,n_col_X,ps_A_trn__,n_row_B,ps_B_trn__,&f_C_ps__);
@@ -549,7 +562,9 @@ void dp_ps_mult_immintrin_test()
   array_printf(f_C_sub__,"float",n_row_A_sub,n_row_B_sub," % f_C_ps__: ");
   ferror = ffnorm(ulli_C_total,f_C_bf__,f_C_ps__);
   printf(" %% ferror %0.16f\n",ferror);
+#endif /* _CBLAS */
   /* %%%%%%%% */
+#ifdef _CBLAS
   GLOBAL_tic(0);
   memset(f_C_ps__,0,ulli_C_total*sizeof(float));
   dp_ps_mult_cblas_sdot(n_row_A,n_col_X,ps_A_trn__,n_row_B,ps_B_trn__,&f_C_ps__);
@@ -560,6 +575,7 @@ void dp_ps_mult_immintrin_test()
   array_printf(f_C_sub__,"float",n_row_A_sub,n_row_B_sub," % f_C_ps__: ");
   ferror = ffnorm(ulli_C_total,f_C_bf__,f_C_ps__);
   printf(" %% ferror %0.16f\n",ferror);
+#endif /* _CBLAS */
   /* %%%%%%%% */
   GLOBAL_tic(0);
   memset(f_C_ps__,0,ulli_C_total*sizeof(float));

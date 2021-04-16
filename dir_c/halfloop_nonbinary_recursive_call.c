@@ -814,7 +814,7 @@ void halfloop_nonbinary_f_recursive_test()
       x = 2.0*(float)nr/(float)(n_r-1) - 1.0;
       y = 2.0*(float)nc/(float)(n_c-1) - 1.0;
       z = (x+y)/4.0;
-      E_base_rc__[ulli] = sin(2*PI*x) + cos(2*PI*2*y) + x*x + y*y*y + cos(2*PI*4*z);
+      E_base_rc__[ulli] = sin(2*PI_LF*x) + cos(2*PI_LF*2*y) + x*x + y*y*y + cos(2*PI_LF*4*z);
       ulli++;
       /* for (nc=0;nc<n_c;nc++){ for (nr=0;nr<n_r;nr++){ }} */}}
   array_printf_margin(E_base_rc__,"float",n_r,n_c," % E_base_r__: ");
@@ -1580,7 +1580,7 @@ void halfloop_nonbinary_f_recursive_omp_test()
       x = 2.0*(float)nr/(float)(n_r-1) - 1.0;
       y = 2.0*(float)nc/(float)(n_c-1) - 1.0;
       z = (x+y)/4.0;
-      E_base_rc__[ulli] = sin(2*PI*x) + cos(2*PI*2*y) + x*x + y*y*y + cos(2*PI*4*z);
+      E_base_rc__[ulli] = sin(2*PI_LF*x) + cos(2*PI_LF*2*y) + x*x + y*y*y + cos(2*PI_LF*4*z);
       ulli++;
       /* for (nc=0;nc<n_c;nc++){ for (nr=0;nr<n_r;nr++){ }} */}}
   array_printf_margin(E_base_rc__,"float",n_r,n_c," % E_base_r__: ");
@@ -1702,7 +1702,7 @@ void halfloop_nonbinary_f_recursive_omp_test_speed()
       x = 2.0*(float)nr/(float)(n_r-1) - 1.0;
       y = 2.0*(float)nc/(float)(n_c-1) - 1.0;
       z = (x+y)/4.0;
-      E_base_rc__[ulli] = sin(2*PI*x) + cos(2*PI*2*y) + x*x + y*y*y + cos(2*PI*4*z);
+      E_base_rc__[ulli] = sin(2*PI_LF*x) + cos(2*PI_LF*2*y) + x*x + y*y*y + cos(2*PI_LF*4*z);
       ulli++;
       /* for (nc=0;nc<n_c;nc++){ for (nr=0;nr<n_r;nr++){ }} */}}
   array_printf_margin(E_base_rc__,"float",n_r,n_c," % E_base_r__: ");

@@ -2,7 +2,7 @@
 #include "halfloop_header.h"
 #endif /* _MONOLITH */
 
-void iarray_printf_margin(int *i_,int n_r,int n_c,char *prefix)
+void iarray_printf_margin(int *i_,int n_r,int n_c,const char *prefix)
 {
   int nr=0,nc=0,margin=3;
   for (nr=0;nr<n_r;nr++){
@@ -20,7 +20,7 @@ void iarray_printf_margin(int *i_,int n_r,int n_c,char *prefix)
     /* for (nr=0;nr<n_r;nr++){ } */}
 }
 
-void farray_printf_margin(float *f_,int n_r,int n_c,char *prefix)
+void farray_printf_margin(float *f_,int n_r,int n_c,const char *prefix)
 {
   int nr=0,nc=0,margin=3;
   for (nr=0;nr<n_r;nr++){
@@ -38,7 +38,7 @@ void farray_printf_margin(float *f_,int n_r,int n_c,char *prefix)
     /* for (nr=0;nr<n_r;nr++){ } */}
 }
 
-void darray_printf_margin(double *d_,int n_r,int n_c,char *prefix)
+void darray_printf_margin(double *d_,int n_r,int n_c,const char *prefix)
 {
   int nr=0,nc=0,margin=3;
   for (nr=0;nr<n_r;nr++){
@@ -56,14 +56,14 @@ void darray_printf_margin(double *d_,int n_r,int n_c,char *prefix)
     /* for (nr=0;nr<n_r;nr++){ } */}
 }
 
-void array_printf_margin(void *v_,char *type,int n_row,int n_col,char *prefix)
+void array_printf_margin(void *v_,const char *type,int n_row,int n_col,const char *prefix)
 {
   if (strcmp(type,"int")==0){ iarray_printf_margin((int *)v_,n_row,n_col,prefix);}
   if (strcmp(type,"float")==0){ farray_printf_margin((float *)v_,n_row,n_col,prefix);}
   if (strcmp(type,"double")==0){ darray_printf_margin((double *)v_,n_row,n_col,prefix);}
 }
 
-void array_printf(void *v_,char *type,int n_row,int n_col,char *prefix)
+void array_printf(void *v_,const char *type,int n_row,int n_col,const char *prefix)
 {
   /* prints out ar_ys of varying types */
   int nr=0,nc=0,tmp=0;
@@ -77,7 +77,9 @@ void array_printf(void *v_,char *type,int n_row,int n_col,char *prefix)
   unsigned long long int *ull_=NULL;
   char *char_=NULL;
   unsigned char *uchar_=NULL;
+#ifdef _COMPLEX
   float complex *c_=NULL;
+#endif /* _COMPLEX */
   /* double dtmp=0; */
   double printftol=0.000000001;
   if (strcmp(type,"float")==0){
@@ -113,6 +115,7 @@ void array_printf(void *v_,char *type,int n_row,int n_col,char *prefix)
       for (nr=0;nr<n_row;nr++){ if (fabs(d_[nr+nc*n_row])<printftol){ printf("    .   ");} else{ printf(" %+07.3f",d_[nr+nc*n_row]);} /* for (nr=0;nr<n_row;nr++){ } */}
       printf("\n"); /* for (nc=0;nc<n_col;nc++){ } */}
     /* if double_trn */}
+#ifdef _COMPLEX
   else if (strcmp(type,"float complex")==0){
     if (n_row>1 && n_col==1){ tmp=n_row; n_row=n_col; n_col=tmp;}
     c_ = (float complex *) v_;
@@ -122,6 +125,7 @@ void array_printf(void *v_,char *type,int n_row,int n_col,char *prefix)
 	/* for (nc=0;nc<n_col;nc++){ } */}
       printf("\n"); /* for (nr=0;nr<n_row;nr++){ } */}
     /* else if (strcmp(type,"float complex")==0){ } */}
+#endif /* _COMPLEX */
   else if (strcmp(type,"long")==0){
     l_ = (long *) v_;
     for (nr=0;nr<n_row;nr++){ printf("%s",prefix); for (nc=0;nc<n_col;nc++){ printf(" %ld",l_[nr+nc*n_row]);} printf("\n");}}
@@ -152,7 +156,7 @@ void array_printf(void *v_,char *type,int n_row,int n_col,char *prefix)
   else{ printf(" warning, poor type %s in array_printf\n",type);}
 }
 
-void array_fprintf(char *fname,void *v_,char *type,int n_row,int n_col,char *prefix)
+void array_fprintf(const char *fname,void *v_,const char *type,int n_row,int n_col,const char *prefix)
 {
   /* prints out arrays of varying types */
   FILE *fp=NULL;
@@ -256,7 +260,7 @@ void bitstring_from_uchar(unsigned char *w_, char *str_, int k)
     i++; /* while (i<k){ } */}
 }
 
-void bitstring_from_uchar_printf(unsigned char *w_,int nrows,int ncols,char *prefix)
+void bitstring_from_uchar_printf(unsigned char *w_,int nrows,int ncols,const char *prefix)
 {
   /* prints out binary array stored in *w_, assuming w_ is stored in column-major order (i.e., columns varying quickly, rows varying slowly)
      This is useful for printing row-vectors on a single line. */

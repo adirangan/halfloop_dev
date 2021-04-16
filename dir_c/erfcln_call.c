@@ -8,7 +8,7 @@ float erfcln_single_f(float f_0in)
  /* This is quite accurate (errors < 1e-6) ; */
  /* when the input is > 3 or so. ; */
   float f_out=0;
-  float x1=0,x2=0,pi=PI;
+  float x1=0,x2=0,pi=PI_LF;
   if (f_0in<=10){ f_out = logf(erfcf(f_0in));}
   if (f_0in> 10){
     x1 = f_0in;
@@ -60,7 +60,7 @@ double erfcln_single_d(double d_0in)
  /* This is quite accurate (errors < 1e-6) ; */
  /* when the input is > 3 or so. ; */
   double d_out=0;
-  double x1=0,x2=0,pi=PI;
+  double x1=0,x2=0,pi=PI_LF;
   if (d_0in<=10){ d_out = log(erfc(d_0in));}
   if (d_0in> 10){
     x1 = d_0in;

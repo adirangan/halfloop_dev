@@ -10,7 +10,7 @@ void GLOBAL_tic(int nx)
   GLOBAL_n_malloc1_[nx] = GLOBAL_n_malloc1;
 }
 
-void GLOBAL_toc(int nx,int verbose,char *prefix)
+void GLOBAL_toc(int nx,int verbose,const char *prefix)
 { 
   double r=0;
   nx = maximum(0,minimum(GLOBAL_NTICKS-1,nx)); 

@@ -60,7 +60,7 @@ void array_mean_center_row_d(int n_r,int n_c,double *d_rc_0in__,double *d_cr_0in
     /* if (d_rc_out__!=NULL){ } */}
 }
 
-void array_mean_center_row(int n_r,int n_c,void *v_rc_0in__,void *v_cr_0in__,char *type,void *v_rc_out_p_,void *v_cr_out_p_)
+void array_mean_center_row(int n_r,int n_c,void *v_rc_0in__,void *v_cr_0in__,const char *type,void *v_rc_out_p_,void *v_cr_out_p_)
 {
   if (strcmp(type,"float")==0){ array_mean_center_row_f(n_r,n_c,(float *)v_rc_0in__,(float *)v_cr_0in__,(float **)v_rc_out_p_,(float **)v_cr_out_p_);}
   if (strcmp(type,"double")==0){ array_mean_center_row_d(n_r,n_c,(double *)v_rc_0in__,(double *)v_cr_0in__,(double **)v_rc_out_p_,(double **)v_cr_out_p_);}
@@ -200,7 +200,7 @@ void array_normalize_row_d(int n_r,int n_c,double *d_rc_0in__,double *d_cr_0in__
     /* if (d_rc_out__!=NULL){ } */}
 }
 
-void array_normalize_row(int n_r,int n_c,void *v_rc_0in__,void *v_cr_0in__,char *type,void *v_rc_out_p_,void *v_cr_out_p_)
+void array_normalize_row(int n_r,int n_c,void *v_rc_0in__,void *v_cr_0in__,const char *type,void *v_rc_out_p_,void *v_cr_out_p_)
 {
   if (strcmp(type,"float")==0){ array_normalize_row_f(n_r,n_c,(float *)v_rc_0in__,(float *)v_cr_0in__,(float **)v_rc_out_p_,(float **)v_cr_out_p_);}
   if (strcmp(type,"double")==0){ array_normalize_row_d(n_r,n_c,(double *)v_rc_0in__,(double *)v_cr_0in__,(double **)v_rc_out_p_,(double **)v_cr_out_p_);}

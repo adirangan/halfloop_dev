@@ -160,6 +160,7 @@ void dtranspose_test()
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 
+#ifdef _COMPLEX
 void cntranspose_bruteforce(int n_row_A,int n_col_A,float complex *c_0in__,float complex *c_out__)
 {
   /* transposes float complex array */
@@ -400,7 +401,6 @@ inline void cctranspose(const int n_row_A,const int n_col_A,const float complex*
 {
   cctranspose_block_AtoB(n_row_A,n_col_A,A_,B_,32);
 }
-  
 
 void cctranspose_test()
 {
@@ -474,3 +474,4 @@ void cctranspose_test()
   free1(&c_out_sub_);
   //wkspace_printf();
 }
+#endif /* _COMPLEX */

@@ -527,7 +527,7 @@ void array_extract_d_from_f_test()
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 
-void array_extract(int n_r,int n_c,void *A_rc__,char *type_A,int n_r_rtn,int *r_rtn_,int n_c_rtn,int *c_rtn_,void *B_rc_p_,void *B_cr_p_,char *type_B)
+void array_extract(int n_r,int n_c,void *A_rc__,const char *type_A,int n_r_rtn,int *r_rtn_,int n_c_rtn,int *c_rtn_,void *B_rc_p_,void *B_cr_p_,const char *type_B)
 {
   if ( (strcmp(type_A,"float")==0) && (strcmp(type_B,"double")==0) ){
     array_extract_d_from_f(n_r,n_c,(float *)A_rc__,n_r_rtn,r_rtn_,n_c_rtn,c_rtn_,(double **)B_rc_p_,(double **)B_cr_p_);

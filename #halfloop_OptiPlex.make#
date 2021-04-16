@@ -1,19 +1,17 @@
 
 # Compiler
 CC=gcc
-CCFLAGS_dev= -fPIC -w -O2 -mfma -fopenmp -lm -I./dir_h
-CCFLAGS_opt= -D_COMPLEX -D_AVX -mavx -D_CBLAS -Wl,-R -Wl,/usr/lib/x86_64-linux-gnu -lgslcblas
-CCFLAGS=$(CCFLAGS_dev) -D_MONOLITH
+CCFLAGS_dev= -fPIC -w -O2 -mavx -mfma -fopenmp -lgslcblas -lm -I./dir_h -I./dir_c -Wl,-R -Wl,/usr/lib/x86_64-linux-gnu -DSINGLE
+CCFLAGS=$(CCFLAGS_dev) -D_MONOLITH 
 
 vpath %.c ./dir_c
 
 project=halfloop
 project_dev=halfloop_dev
 project_lib=halfloop_lib
-project_ar=libhalfloop
+project_ar=halfloop_ar
 
-CLINK_dev=$(CC) -o $(project_dev)
-CLINK=$(CC) -o $(project)
+CLINK=$(CC) -o $(project_dev)
 
 header_dev = ./dir_h/halfloop_header.h
 
@@ -49,19 +47,19 @@ $(objects_dev): | ./dir_o
 
 $(project_dev): $(objects_dev) $(header_dev)
 	rm -f $(project_dev)
-	$(CLINK_dev) $(objects_dev) $(CCFLAGS_dev)
+	$(CLINK) $(objects_dev) $(CCFLAGS_dev)
 
 $(project): $(objects_dev) $(header_dev)
 	rm -f $(project)
-	$(CLINK) $(objects_dev) $(CCFLAGS)
+	gcc -fPIC -w -O2 -mavx -mfma -fopenmp ./dir_c/main_driver.c -o $(project) -L./dir_h -L./dir_c -I./dir_h -I./dir_c -D_MONOLITH -DSINGLE -lgslcblas -lm -Wl,-R -Wl,/usr/lib/x86_64-linux-gnu 
 
 $(project_lib): $(objects_dev) $(header_dev)
 	rm -f $(project_lib).so
-	gcc -shared -o $(project_lib).so $(objects_dev) $(CCFLAGS_dev)
+	gcc -shared -fPIC -w -O2 -mavx -mfma -fopenmp -o $(project_lib).so $(objects_dev) -L./dir_h -L./dir_c -I./dir_h -I./dir_c -D_MONOLITH -DSINGLE -lgslcblas -lm -Wl,-R -Wl,/usr/lib/x86_64-linux-gnu 
 
-$(project_ar): $(objects_dev) $(header_dev)
-	rm -f $(project_ar).so
-	ar -rcs $(project_ar).a $(objects_dev)
+$(project_lib): $(objects_dev) $(header_dev)
+	rm -f $(project_lib).so
+	ar -rcs $(project_lib).a $(objects_dev) -L./dir_h -L./dir_c -I./dir_h -I./dir_c -D_MONOLITH -DSINGLE -lgslcblas -lm -Wl,-R -Wl,/usr/lib/x86_64-linux-gnu 
 
 ./dir_o/%.o : %.c ./dir_h/halfloop_header.h
 	@echo $< 

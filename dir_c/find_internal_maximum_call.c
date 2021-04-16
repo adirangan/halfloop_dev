@@ -222,7 +222,7 @@ void find_internal_maximum_test()
   Z_ = (double *) malloc1(n_x*sizeof(double));
   zone_max_ = (double *) malloc1(n_test*sizeof(double));
   zone_max_index_ = (int *) malloc1(n_test*sizeof(int));
-  for (nx=0;nx<n_x;nx++){ x_[nx] = (double)nx*(2*PI)/(double)(n_x-1);}
+  for (nx=0;nx<n_x;nx++){ x_[nx] = (double)nx*(2*PI_LF)/(double)(n_x-1);}
   /* %%%%%%%% */
   ntest=0;
   zone_max_ans_[ntest] =  0.4995552448460956 ; zone_max_index_ans_[ntest] =  113; ntest++;
@@ -253,7 +253,7 @@ void find_internal_maximum_test()
   printf(" %% zone_max %0.16f/%0.16f zone_max_index %d/%d\n",zone_max,zone_max_ans_[ntest],zone_max_index,zone_max_index_ans_[ntest]);
   zone_max_[ntest] = zone_max; zone_max_index_[ntest] = zone_max_index; ntest++;  
   /* %%%%%%%% */
-  for (nx=0;nx<n_x;nx++){ x=x_[nx]; Z = exp(x-2*PI); Z_[nx] = Z;}
+  for (nx=0;nx<n_x;nx++){ x=x_[nx]; Z = exp(x-2*PI_LF); Z_[nx] = Z;}
   GLOBAL_tic(1);find_internal_maximum(verbose,n_x,Z_,0.00,&zone_max,&zone_max_index);GLOBAL_toc(1,1," % find_internal_maximum: ");
   printf(" %% zone_max %0.16f/%0.16f zone_max_index %d/%d\n",zone_max,zone_max_ans_[ntest],zone_max_index,zone_max_index_ans_[ntest]);
   zone_max_[ntest] = zone_max; zone_max_index_[ntest] = zone_max_index; ntest++;
@@ -263,7 +263,7 @@ void find_internal_maximum_test()
   printf(" %% zone_max %0.16f/%0.16f zone_max_index %d/%d\n",zone_max,zone_max_ans_[ntest],zone_max_index,zone_max_index_ans_[ntest]);
   zone_max_[ntest] = zone_max; zone_max_index_[ntest] = zone_max_index; ntest++;
   /* %%%%%%%% */
-  for (nx=0;nx<n_x;nx++){ x=x_[nx]; Z = exp(x-2*PI)*sin(x); Z_[nx] = Z;}
+  for (nx=0;nx<n_x;nx++){ x=x_[nx]; Z = exp(x-2*PI_LF)*sin(x); Z_[nx] = Z;}
   GLOBAL_tic(1);find_internal_maximum(verbose,n_x,Z_,0.00,&zone_max,&zone_max_index);GLOBAL_toc(1,1," % find_internal_maximum: ");
   printf(" %% zone_max %0.16f/%0.16f zone_max_index %d/%d\n",zone_max,zone_max_ans_[ntest],zone_max_index,zone_max_index_ans_[ntest]);
   zone_max_[ntest] = zone_max; zone_max_index_[ntest] = zone_max_index; ntest++;
@@ -273,7 +273,7 @@ void find_internal_maximum_test()
   printf(" %% zone_max %0.16f/%0.16f zone_max_index %d/%d\n",zone_max,zone_max_ans_[ntest],zone_max_index,zone_max_index_ans_[ntest]);
   zone_max_[ntest] = zone_max; zone_max_index_[ntest] = zone_max_index; ntest++;
   /* %%%%%%%% */
-  for (nx=0;nx<n_x;nx++){ x=x_[nx]; Z = exp(x-2*PI)*cos(x); Z_[nx] = Z;}
+  for (nx=0;nx<n_x;nx++){ x=x_[nx]; Z = exp(x-2*PI_LF)*cos(x); Z_[nx] = Z;}
   GLOBAL_tic(1);find_internal_maximum(verbose,n_x,Z_,0.00,&zone_max,&zone_max_index);GLOBAL_toc(1,1," % find_internal_maximum: ");
   printf(" %% zone_max %0.16f/%0.16f zone_max_index %d/%d\n",zone_max,zone_max_ans_[ntest],zone_max_index,zone_max_index_ans_[ntest]);
   zone_max_[ntest] = zone_max; zone_max_index_[ntest] = zone_max_index; ntest++;
@@ -283,7 +283,7 @@ void find_internal_maximum_test()
   printf(" %% zone_max %0.16f/%0.16f zone_max_index %d/%d\n",zone_max,zone_max_ans_[ntest],zone_max_index,zone_max_index_ans_[ntest]);
   zone_max_[ntest] = zone_max; zone_max_index_[ntest] = zone_max_index; ntest++;
   /* %%%%%%%% */
-  for (nx=0;nx<n_x;nx++){ x=x_[nx]; Z = (x-PI)*(x-PI); Z_[nx] = Z;}
+  for (nx=0;nx<n_x;nx++){ x=x_[nx]; Z = (x-PI_LF)*(x-PI_LF); Z_[nx] = Z;}
   GLOBAL_tic(1);find_internal_maximum(verbose,n_x,Z_,0.00,&zone_max,&zone_max_index);GLOBAL_toc(1,1," % find_internal_maximum: ");
   printf(" %% zone_max %0.16f/%0.16f zone_max_index %d/%d\n",zone_max,zone_max_ans_[ntest],zone_max_index,zone_max_index_ans_[ntest]);
   zone_max_[ntest] = zone_max; zone_max_index_[ntest] = zone_max_index; ntest++;
@@ -293,7 +293,7 @@ void find_internal_maximum_test()
   printf(" %% zone_max %0.16f/%0.16f zone_max_index %d/%d\n",zone_max,zone_max_ans_[ntest],zone_max_index,zone_max_index_ans_[ntest]);
   zone_max_[ntest] = zone_max; zone_max_index_[ntest] = zone_max_index; ntest++;
   /* %%%%%%%% */
-  for (nx=0;nx<n_x;nx++){ x=x_[nx]; Z = exp(x-2*PI)+0.15*cos(3*x); Z_[nx] = Z;}
+  for (nx=0;nx<n_x;nx++){ x=x_[nx]; Z = exp(x-2*PI_LF)+0.15*cos(3*x); Z_[nx] = Z;}
   GLOBAL_tic(1);find_internal_maximum(verbose,n_x,Z_,0.00,&zone_max,&zone_max_index);GLOBAL_toc(1,1," % find_internal_maximum: ");
   printf(" %% zone_max %0.16f/%0.16f zone_max_index %d/%d\n",zone_max,zone_max_ans_[ntest],zone_max_index,zone_max_index_ans_[ntest]);
   zone_max_[ntest] = zone_max; zone_max_index_[ntest] = zone_max_index; ntest++;
@@ -303,7 +303,7 @@ void find_internal_maximum_test()
   printf(" %% zone_max %0.16f/%0.16f zone_max_index %d/%d\n",zone_max,zone_max_ans_[ntest],zone_max_index,zone_max_index_ans_[ntest]);
   zone_max_[ntest] = zone_max; zone_max_index_[ntest] = zone_max_index; ntest++;
   /* %%%%%%%% */
-  for (nx=0;nx<n_x;nx++){ x=x_[nx]; Z = exp(x-2*PI)+0.15*sin(3*x); Z_[nx] = Z;}
+  for (nx=0;nx<n_x;nx++){ x=x_[nx]; Z = exp(x-2*PI_LF)+0.15*sin(3*x); Z_[nx] = Z;}
   GLOBAL_tic(1);find_internal_maximum(verbose,n_x,Z_,0.00,&zone_max,&zone_max_index);GLOBAL_toc(1,1," % find_internal_maximum: ");
   printf(" %% zone_max %0.16f/%0.16f zone_max_index %d/%d\n",zone_max,zone_max_ans_[ntest],zone_max_index,zone_max_index_ans_[ntest]);
   zone_max_[ntest] = zone_max; zone_max_index_[ntest] = zone_max_index; ntest++;
@@ -313,7 +313,7 @@ void find_internal_maximum_test()
   printf(" %% zone_max %0.16f/%0.16f zone_max_index %d/%d\n",zone_max,zone_max_ans_[ntest],zone_max_index,zone_max_index_ans_[ntest]);
   zone_max_[ntest] = zone_max; zone_max_index_[ntest] = zone_max_index; ntest++;
   /* %%%%%%%% */
-  for (nx=0;nx<n_x;nx++){ x=x_[nx]; Z = exp(x-2*PI)+0.1*sin(3*x)+1; Z_[nx] = Z;}
+  for (nx=0;nx<n_x;nx++){ x=x_[nx]; Z = exp(x-2*PI_LF)+0.1*sin(3*x)+1; Z_[nx] = Z;}
   GLOBAL_tic(1);find_internal_maximum(verbose,n_x,Z_,0.00,&zone_max,&zone_max_index);GLOBAL_toc(1,1," % find_internal_maximum: ");
   printf(" %% zone_max %0.16f/%0.16f zone_max_index %d/%d\n",zone_max,zone_max_ans_[ntest],zone_max_index,zone_max_index_ans_[ntest]);
   zone_max_[ntest] = zone_max; zone_max_index_[ntest] = zone_max_index; ntest++;
@@ -323,7 +323,7 @@ void find_internal_maximum_test()
   printf(" %% zone_max %0.16f/%0.16f zone_max_index %d/%d\n",zone_max,zone_max_ans_[ntest],zone_max_index,zone_max_index_ans_[ntest]);
   zone_max_[ntest] = zone_max; zone_max_index_[ntest] = zone_max_index; ntest++;
   /* %%%%%%%% */
-  for (nx=0;nx<n_x;nx++){ x=x_[nx]; Z = exp(x-2*PI)+0.1*cos(3*x)+1; Z_[nx] = Z;}
+  for (nx=0;nx<n_x;nx++){ x=x_[nx]; Z = exp(x-2*PI_LF)+0.1*cos(3*x)+1; Z_[nx] = Z;}
   GLOBAL_tic(1);find_internal_maximum(verbose,n_x,Z_,0.00,&zone_max,&zone_max_index);GLOBAL_toc(1,1," % find_internal_maximum: ");
   printf(" %% zone_max %0.16f/%0.16f zone_max_index %d/%d\n",zone_max,zone_max_ans_[ntest],zone_max_index,zone_max_index_ans_[ntest]);
   zone_max_[ntest] = zone_max; zone_max_index_[ntest] = zone_max_index; ntest++;
@@ -333,7 +333,7 @@ void find_internal_maximum_test()
   printf(" %% zone_max %0.16f/%0.16f zone_max_index %d/%d\n",zone_max,zone_max_ans_[ntest],zone_max_index,zone_max_index_ans_[ntest]);
   zone_max_[ntest] = zone_max; zone_max_index_[ntest] = zone_max_index; ntest++;
   /* %%%%%%%% */
-  for (nx=0;nx<n_x;nx++){ x=x_[nx]; Z = exp(x-2*PI)+0.5*cos(3*x); Z_[nx] = Z;}
+  for (nx=0;nx<n_x;nx++){ x=x_[nx]; Z = exp(x-2*PI_LF)+0.5*cos(3*x); Z_[nx] = Z;}
   GLOBAL_tic(1);find_internal_maximum(verbose,n_x,Z_,0.00,&zone_max,&zone_max_index);GLOBAL_toc(1,1," % find_internal_maximum: ");
   printf(" %% zone_max %0.16f/%0.16f zone_max_index %d/%d\n",zone_max,zone_max_ans_[ntest],zone_max_index,zone_max_index_ans_[ntest]);
   zone_max_[ntest] = zone_max; zone_max_index_[ntest] = zone_max_index; ntest++;
@@ -343,7 +343,7 @@ void find_internal_maximum_test()
   printf(" %% zone_max %0.16f/%0.16f zone_max_index %d/%d\n",zone_max,zone_max_ans_[ntest],zone_max_index,zone_max_index_ans_[ntest]);
   zone_max_[ntest] = zone_max; zone_max_index_[ntest] = zone_max_index; ntest++;
   /* %%%%%%%% */
-  for (nx=0;nx<n_x;nx++){ x=x_[nx]; Z = exp(x-2*PI)+0.5*sin(3*x); Z_[nx] = Z;}
+  for (nx=0;nx<n_x;nx++){ x=x_[nx]; Z = exp(x-2*PI_LF)+0.5*sin(3*x); Z_[nx] = Z;}
   GLOBAL_tic(1);find_internal_maximum(verbose,n_x,Z_,0.00,&zone_max,&zone_max_index);GLOBAL_toc(1,1," % find_internal_maximum: ");
   printf(" %% zone_max %0.16f/%0.16f zone_max_index %d/%d\n",zone_max,zone_max_ans_[ntest],zone_max_index,zone_max_index_ans_[ntest]);
   zone_max_[ntest] = zone_max; zone_max_index_[ntest] = zone_max_index; ntest++;

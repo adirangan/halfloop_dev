@@ -16,10 +16,14 @@
 #include <assert.h>
 #include <emmintrin.h>
 #include <immintrin.h>
+#ifdef _CBLAS
 #include <cblas.h>
+#endif /* _CBLAS */
+#ifdef _COMPLEX
 #include <complex.h>
+#endif /* _COMPLEX */
 
-#define PI 3.141592653589793
+#define PI_LF 3.141592653589793
 #define FNAMESIZE (4096+256)
 #define PNAMESIZE (8192+512)
 #define BIT8 8
@@ -59,9 +63,9 @@ extern int addressable_int[128];
 #define bsize(A) ((rup((A) + ((BITJ - ((A) % BITJ)) % BITJ),POPLENGTH))/BIT8)
 
 /* ---------------------------------------------------------------- */
-int GLOBAL_malloc1_notupdate;
-unsigned long long int GLOBAL_n_malloc1;
-int GLOBAL_n_malloc1_[GLOBAL_NTICKS];
+extern int GLOBAL_malloc1_notupdate;
+extern unsigned long long int GLOBAL_n_malloc1;
+extern int GLOBAL_n_malloc1_[GLOBAL_NTICKS];
 
 /* ---------------------------------------------------------------- */
 
@@ -70,6 +74,10 @@ extern unsigned long int POW2RPOWPLUSRADD;
 extern unsigned long int POW22RPOWMINUSONE;
 
 /* ---------------------------------------------------------------- */
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
 
 void array_extract_i_from_i(int n_r,int n_c,int *A_rc__,int n_r_rtn,int *r_rtn_,int n_c_rtn,int *c_rtn_,int **B_rc_p_,int **B_cr_p_);
 void array_extract_i_from_i_test();
@@ -81,15 +89,15 @@ void array_extract_f_from_f(int n_r,int n_c,float *A_rc__,int n_r_rtn,int *r_rtn
 void array_extract_f_from_f_test();
 void array_extract_d_from_f(int n_r,int n_c,float *A_rc__,int n_r_rtn,int *r_rtn_,int n_c_rtn,int *c_rtn_,double **B_rc_p_,double **B_cr_p_);
 void array_extract_d_from_f_test();
-void array_extract(int n_r,int n_c,void *A_rc__,char *type_A,int n_r_rtn,int *r_rtn_,int n_c_rtn,int *c_rtn_,void *B_rc_p_,void *B_cr_p_,char *type_B);
+void array_extract(int n_r,int n_c,void *A_rc__,const char *type_A,int n_r_rtn,int *r_rtn_,int n_c_rtn,int *c_rtn_,void *B_rc_p_,void *B_cr_p_,const char *type_B);
 void array_extract_test();
 void array_mean_center_row_f(int n_r,int n_c,float *f_rc_0in__,float *f_cr_0in__,float **f_rc_out_p_,float **f_cr_out_p_);
 void array_mean_center_row_d(int n_r,int n_c,double *d_rc_0in__,double *d_cr_0in__,double **d_rc_out_p_,double **d_cr_out_p_);
-void array_mean_center_row(int n_r,int n_c,void *v_rc_0in__,void *v_cr_0in__,char *type,void *v_rc_out_p_,void *v_cr_out_p_);
+void array_mean_center_row(int n_r,int n_c,void *v_rc_0in__,void *v_cr_0in__,const char *type,void *v_rc_out_p_,void *v_cr_out_p_);
 void array_mean_center_row_test();
 void array_normalize_row_f(int n_r,int n_c,float *f_rc_0in__,float *f_cr_0in__,float **f_rc_out_p_,float **f_cr_out_p_);
 void array_normalize_row_d(int n_r,int n_c,double *d_rc_0in__,double *d_cr_0in__,double **d_rc_out_p_,double **d_cr_out_p_);
-void array_normalize_row(int n_r,int n_c,void *v_rc_0in__,void *v_cr_0in__,char *type,void *v_rc_out_p_,void *v_cr_out_p_);
+void array_normalize_row(int n_r,int n_c,void *v_rc_0in__,void *v_cr_0in__,const char *type,void *v_rc_out_p_,void *v_cr_out_p_);
 void array_normalize_row_test();
 void array_gram_schmidt_inplace_f(int n_r,int n_c,float *Q_rc__);
 void array_orth_f(int n_r,int n_c,float **Q_rc_p_,unsigned long int *rseed_p);
@@ -99,14 +107,14 @@ void array_gram_schmidt_inplace_d(int n_r,int n_c,double *Q_rc__);
 void array_orth_d(int n_r,int n_c,double **Q_rc_p_,unsigned long int *rseed_p);
 void array_orth_d_test_error();
 void array_orth_d_test_speed();
-void iarray_printf_margin(int *i_,int n_r,int n_c,char *prefix);
-void farray_printf_margin(float *f_,int n_r,int n_c,char *prefix);
-void darray_printf_margin(double *d_,int n_r,int n_c,char *prefix);
-void array_printf_margin(void *v_,char *type,int n_row,int n_col,char *prefix);
-void array_printf(void *v_,char *type,int n_row,int n_col,char *prefix);
-void array_fprintf(char *fname,void *v_,char *type,int n_row,int n_col,char *prefix);
+void iarray_printf_margin(int *i_,int n_r,int n_c,const char *prefix);
+void farray_printf_margin(float *f_,int n_r,int n_c,const char *prefix);
+void darray_printf_margin(double *d_,int n_r,int n_c,const char *prefix);
+void array_printf_margin(void *v_,const char *type,int n_row,int n_col,const char *prefix);
+void array_printf(void *v_,const char *type,int n_row,int n_col,const char *prefix);
+void array_fprintf(const char *fname,void *v_,const char *type,int n_row,int n_col,const char *prefix);
 void bitstring_from_uchar(unsigned char *w_, char *str_, int k);
-void bitstring_from_uchar_printf(unsigned char *w_,int nrows,int ncols,char *prefix);
+void bitstring_from_uchar_printf(unsigned char *w_,int nrows,int ncols,const char *prefix);
 void icumsum(unsigned long long int ulli_length,int *i_0in_,int **i_out_p_);
 double ifnormn(unsigned long long int ulli_length,int *i_0_,int *i_1_);
 double ullifnormn(unsigned long long int ulli_length,unsigned long long int *ulli_0_,unsigned long long int *ulli_1_);
@@ -114,15 +122,18 @@ float ffnorm(unsigned long long int ulli_length,float *f_0_,float *f_1_);
 float ffnormn(unsigned long long int ulli_length,float *f_0_,float *f_1_);
 double dfnormn(unsigned long long int ulli_length,double *d_0_,double *d_1_);
 double dfnorm(unsigned long long int ulli_length,double *d_0_,double *d_1_);
+#ifdef _COMPLEX
 double cfnorm(unsigned long long int ulli_length,float complex *c_0_,float complex *c_1_);
 double zfnorm(unsigned long long int ulli_length,double complex *z_0_,double complex *z_1_);
-void array_maximum_minimum(void *v_,char *type,unsigned long long int ulli_length,void *max_p,int *index_max_p,void *min_p,int *index_min_p);
-void array_stats(void *v_,char *type,unsigned long long int ulli_length,void *max_p,void *min_p,double *mean_p,double *stdev_p);
+#endif /* _COMPLEX */
+void array_maximum_minimum(void *v_,const char *type,unsigned long long int ulli_length,void *max_p,int *index_max_p,void *min_p,int *index_min_p);
+void array_stats(void *v_,const char *type,unsigned long long int ulli_length,void *max_p,void *min_p,double *mean_p,double *stdev_p);
 void dtranspose_bruteforce(int n_row_A,int n_col_A,double *d_0in__,double *d_out__);
 void dtranspose_block_AtoB(const int n_row_A,const int n_col_A,const double* A_,double* B_,const int block_size);
 void dtranspose_block_BtoA(const int n_row_A,const int n_col_A,const double* A_,double* B_,const int block_size);
 void dtranspose(const int n_row_A,const int n_col_A,const double* A_,const double* B_);
 void dtranspose_test();
+#ifdef _COMPLEX
 void cntranspose_bruteforce(int n_row_A,int n_col_A,float complex *c_0in__,float complex *c_out__);
 void cntranspose_block_AtoB(const int n_row_A,const int n_col_A,const float complex* A_,float complex* B_,const int block_size);
 void cntranspose_block_BtoA(const int n_row_A,const int n_col_A,const float complex* A_,float complex* B_,const int block_size);
@@ -133,6 +144,7 @@ void cctranspose_block_AtoB(const int n_row_A,const int n_col_A,const float comp
 void cctranspose_block_BtoA(const int n_row_A,const int n_col_A,const float complex* A_,float complex* B_,const int block_size);
 void cctranspose(const int n_row_A,const int n_col_A,const float complex* A_,float complex* B_);
 void cctranspose_test();
+#endif /* _COMPLEX */
 unsigned long int lrand();
 double randn();
 unsigned long int RGET(unsigned long int *rseed_p);
@@ -176,7 +188,7 @@ int get_xdrop_logscale_length(double n_row,double n_col,double gamma);
 void get_xdrop_logscale_array(double n_row,double n_col,double gamma,int *length_p,int **rdrop_p_,int **cdrop_p_,int **rkeep_p_,int **ckeep_p_);
 void get_xdrop_logscale_array_test();
 void GLOBAL_tic(int nx);
-void GLOBAL_toc(int nx,int verbose,char *prefix);
+void GLOBAL_toc(int nx,int verbose,const char *prefix);
 void gumbel_nll(int n_x,double *x_,double *g_,double tol,double **nll_p_,double *nll_sum_p);
 void gumbel_nll_wrap(int n_g,double *g_,double *nll_sum_p,void *args);
 void gumbel_nll_test();
@@ -342,18 +354,18 @@ void * malloc1(size_t size);
 void free1(void **vp);
 void malloc1_char__(int n_l,char ***str_p_);
 void free1_char__(int n_l,char ***str_p_);
-void MDA_write_i4(int n_dim,int *dim_,int *i4_,char *fname);
-void MDA_read_i4(int *n_dim_p,int **dim_p_,int **i4_p_,char *fname);
-void MDA_printf_r4_margin(char *fname);
-void MDA_write_r4(int n_dim,int *dim_,float *r4_,char *fname);
-void MDA_read_r4(int *n_dim_p,int **dim_p_,float **r4_p_,char *fname);
-void MDA_printf_i4_margin(char *fname);
-void MDA_write_r8(int n_dim,int *dim_,double *r8_,char *fname);
-void MDA_read_r8(int *n_dim_p,int **dim_p_,double **r8_p_,char *fname);
-void MDA_printf_r8_margin(char *fname);
-void MDA_write_ulli(int n_dim,int *dim_,unsigned long long int *ulli_,char *fname);
-void MDA_read_ulli(int *n_dim_p,int **dim_p_,unsigned long long int **ulli_p_,char *fname);
-void MDA_printf_ulli_margin(char *fname);
+void MDA_write_i4(int n_dim,int *dim_,int *i4_,const char *fname);
+void MDA_read_i4(int *n_dim_p,int **dim_p_,int **i4_p_,const char *fname);
+void MDA_printf_r4_margin(const char *fname);
+void MDA_write_r4(int n_dim,int *dim_,float *r4_,const char *fname);
+void MDA_read_r4(int *n_dim_p,int **dim_p_,float **r4_p_,const char *fname);
+void MDA_printf_i4_margin(const char *fname);
+void MDA_write_r8(int n_dim,int *dim_,double *r8_,const char *fname);
+void MDA_read_r8(int *n_dim_p,int **dim_p_,double **r8_p_,const char *fname);
+void MDA_printf_r8_margin(const char *fname);
+void MDA_write_ulli(int n_dim,int *dim_,unsigned long long int *ulli_,const char *fname);
+void MDA_read_ulli(int *n_dim_p,int **dim_p_,unsigned long long int **ulli_p_,const char *fname);
+void MDA_printf_ulli_margin(const char *fname);
 void MDA_io_test();
 void nelder_mead_terminate(int n_d,double *simplex_point__,int *index_simplex_point_,double *simplex_cost_,double option_tolx,double option_tolf,int *flag_continue_p);
 void nelder_mead_simplex_centroid(int n_d,double *simplex_point__,int *index_simplex_point_,double *simplex_centroid_);
@@ -382,6 +394,10 @@ void dquicksort_index_index_driver(int n_d,double *d_,int stride,double *d_works
 void dquicksort_index_index_driver_test();
 void ping();
 void pong();
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 
 

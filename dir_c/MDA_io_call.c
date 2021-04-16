@@ -2,7 +2,7 @@
 #include "halfloop_header.h"
 #endif /* _MONOLITH */
 
-void MDA_write_i4(int n_dim,int *dim_,int *i4_,char *fname)
+void MDA_write_i4(int n_dim,int *dim_,int *i4_,const char *fname)
 {
   int verbose=0;
   FILE *fp=NULL;
@@ -17,7 +17,7 @@ void MDA_write_i4(int n_dim,int *dim_,int *i4_,char *fname)
   fclose(fp);fp=NULL;
 }
 
-void MDA_read_i4(int *n_dim_p,int **dim_p_,int **i4_p_,char *fname)
+void MDA_read_i4(int *n_dim_p,int **dim_p_,int **i4_p_,const char *fname)
 {
   int verbose=0;
   FILE *fp=NULL;
@@ -52,7 +52,7 @@ void MDA_read_i4(int *n_dim_p,int **dim_p_,int **i4_p_,char *fname)
   fclose(fp);fp=NULL;
 }
 
-void MDA_printf_r4_margin(char *fname)
+void MDA_printf_r4_margin(const char *fname)
 {
   int ndim=0,n_dim;
   int *dim_=NULL;
@@ -68,7 +68,7 @@ void MDA_printf_r4_margin(char *fname)
   free1(&r4_);
 }
 
-void MDA_write_r4(int n_dim,int *dim_,float *r4_,char *fname)
+void MDA_write_r4(int n_dim,int *dim_,float *r4_,const char *fname)
 {
   int verbose=0;
   FILE *fp=NULL;
@@ -83,7 +83,7 @@ void MDA_write_r4(int n_dim,int *dim_,float *r4_,char *fname)
   fclose(fp);fp=NULL;
 }
 
-void MDA_read_r4(int *n_dim_p,int **dim_p_,float **r4_p_,char *fname)
+void MDA_read_r4(int *n_dim_p,int **dim_p_,float **r4_p_,const char *fname)
 {
   int verbose=0;
   FILE *fp=NULL;
@@ -118,7 +118,7 @@ void MDA_read_r4(int *n_dim_p,int **dim_p_,float **r4_p_,char *fname)
   fclose(fp);fp=NULL;
 }
 
-void MDA_printf_i4_margin(char *fname)
+void MDA_printf_i4_margin(const char *fname)
 {
   int ndim=0,n_dim;
   int *dim_=NULL;
@@ -134,7 +134,7 @@ void MDA_printf_i4_margin(char *fname)
   free1(&i4_);
 }
 
-void MDA_write_r8(int n_dim,int *dim_,double *r8_,char *fname)
+void MDA_write_r8(int n_dim,int *dim_,double *r8_,const char *fname)
 {
   int verbose=0;
   FILE *fp=NULL;
@@ -149,7 +149,7 @@ void MDA_write_r8(int n_dim,int *dim_,double *r8_,char *fname)
   fclose(fp);fp=NULL;
 }
 
-void MDA_read_r8(int *n_dim_p,int **dim_p_,double **r8_p_,char *fname)
+void MDA_read_r8(int *n_dim_p,int **dim_p_,double **r8_p_,const char *fname)
 {
   int verbose=0;
   FILE *fp=NULL;
@@ -184,7 +184,7 @@ void MDA_read_r8(int *n_dim_p,int **dim_p_,double **r8_p_,char *fname)
   fclose(fp);fp=NULL;
 }
 
-void MDA_printf_r8_margin(char *fname)
+void MDA_printf_r8_margin(const char *fname)
 {
   int ndim=0,n_dim;
   int *dim_=NULL;
@@ -200,7 +200,7 @@ void MDA_printf_r8_margin(char *fname)
   free1(&r8_);
 }
 
-void MDA_write_ulli(int n_dim,int *dim_,unsigned long long int *ulli_,char *fname)
+void MDA_write_ulli(int n_dim,int *dim_,unsigned long long int *ulli_,const char *fname)
 {
   int verbose=0;
   FILE *fp=NULL;
@@ -215,7 +215,7 @@ void MDA_write_ulli(int n_dim,int *dim_,unsigned long long int *ulli_,char *fnam
   fclose(fp);fp=NULL;
 }
 
-void MDA_read_ulli(int *n_dim_p,int **dim_p_,unsigned long long int **ulli_p_,char *fname)
+void MDA_read_ulli(int *n_dim_p,int **dim_p_,unsigned long long int **ulli_p_,const char *fname)
 {
   int verbose=0;
   FILE *fp=NULL;
@@ -250,7 +250,7 @@ void MDA_read_ulli(int *n_dim_p,int **dim_p_,unsigned long long int **ulli_p_,ch
   fclose(fp);fp=NULL;
 }
 
-void MDA_printf_ulli_margin(char *fname)
+void MDA_printf_ulli_margin(const char *fname)
 {
   int ndim=0,n_dim;
   int *dim_=NULL;

@@ -85,6 +85,7 @@ double dfnorm(unsigned long long int ulli_length,double *d_0_,double *d_1_)
   return sqrt(output);
 }
 
+#ifdef _COMPLEX
 double cfnorm(unsigned long long int ulli_length,float complex *c_0_,float complex *c_1_)
 {
   double output = 0;
@@ -93,7 +94,9 @@ double cfnorm(unsigned long long int ulli_length,float complex *c_0_,float compl
   for (ulli=0;ulli<ulli_length;ulli++){ c_diff = c_0_[ulli]-c_1_[ulli]; output += crealf(c_diff*conjf(c_diff)); /* for (ulli=0;ulli<ulli_length;ulli++){ } */}
   return sqrt(output);
 }
+#endif /* _COMPLEX */
 
+#ifdef _COMPLEX
 double zfnorm(unsigned long long int ulli_length,double complex *z_0_,double complex *z_1_)
 {
   double output = 0;
@@ -102,8 +105,9 @@ double zfnorm(unsigned long long int ulli_length,double complex *z_0_,double com
   for (ulli=0;ulli<ulli_length;ulli++){ z_diff = z_0_[ulli]-z_1_[ulli]; output += creal(z_diff*conj(z_diff)); /* for (ulli=0;ulli<ulli_length;ulli++){ } */}
   return sqrt(output);
 }
+#endif /* _COMPLEX */
 
-void array_maximum_minimum(void *v_,char *type,unsigned long long int ulli_length,void *max_p,int *index_max_p,void *min_p,int *index_min_p)
+void array_maximum_minimum(void *v_,const char *type,unsigned long long int ulli_length,void *max_p,int *index_max_p,void *min_p,int *index_min_p)
 {
   /* finds the maximum and minimum of an array */
   unsigned long long int ulli=0;
@@ -174,7 +178,7 @@ void array_maximum_minimum(void *v_,char *type,unsigned long long int ulli_lengt
   if (index_min_p!=NULL){ *index_min_p = index_min;}
 }
 
-void array_stats(void *v_,char *type,unsigned long long int ulli_length,void *max_p,void *min_p,double *mean_p,double *stdev_p)
+void array_stats(void *v_,const char *type,unsigned long long int ulli_length,void *max_p,void *min_p,double *mean_p,double *stdev_p)
 {
   /* finds the stats of an array */
   unsigned long long int ulli=0;
