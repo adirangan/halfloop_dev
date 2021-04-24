@@ -60,7 +60,7 @@ $(project_lib): $(objects_dev) $(header_dev)
 	gcc -shared -o $(project_lib).so $(objects_dev) $(CCFLAGS_dev)
 
 $(project_ar): $(objects_dev) $(header_dev)
-	rm -f $(project_ar).so
+	rm -f $(project_ar).a
 	ar -rcs $(project_ar).a $(objects_dev)
 
 ./dir_o/%.o : %.c ./dir_h/halfloop_header.h
