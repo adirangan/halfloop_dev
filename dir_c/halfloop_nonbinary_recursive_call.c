@@ -859,6 +859,7 @@ void halfloop_nonbinary_f_recursive_test()
     flag_error += strcmp(output_label__[nr_index],output_label_rc_ans__[nr_index]);
     flag_error += strcmp(nlpbra_label__[nr_index],nlpbra_label_rc_ans__[nr_index]);
     flag_error += strcmp(nlpnex_label__[nr_index],nlpnex_label_rc_ans__[nr_index]);
+    if (verbose){ printf(" %% nr_index %d/%d: %d %s %s %s\n",nr_index,n_r_index,binary_label_[nr_index],output_label__[nr_index],nlpbra_label__[nr_index],nlpnex_label__[nr_index]);}
     /* for (nr_index=0;nr_index<n_r_index;nr_index++){ } */}
   printf(" %% output_label_rc_ans__, nlpbra_label_rc_ans__ and nlpnex_label_rc_ans__ vs output_label__, nlpbra_label__ and nlpex_label__:  flag_error %d\n",flag_error);
   free1(&binary_label_);
@@ -903,6 +904,7 @@ void halfloop_nonbinary_f_recursive_test()
     flag_error += strcmp(output_label__[nr_index],output_label_r0_ans__[nr_index]);
     flag_error += strcmp(nlpbra_label__[nr_index],nlpbra_label_r0_ans__[nr_index]);
     flag_error += strcmp(nlpnex_label__[nr_index],nlpnex_label_r0_ans__[nr_index]);
+    if (verbose){ printf(" %% nr_index %d/%d: %d %s %s %s\n",nr_index,n_r_index,binary_label_[nr_index],output_label__[nr_index],nlpbra_label__[nr_index],nlpnex_label__[nr_index]);}
     /* for (nr_index=0;nr_index<n_r_index;nr_index++){ } */}
   printf(" %% output_label_r0_ans__, nlpbra_label_r0_ans__ and nlpnex_label_r0_ans__ vs output_label__, nlpbra_label__ and nlpex_label__:  flag_error %d\n",flag_error);
   free1(&binary_label_);
@@ -1619,6 +1621,7 @@ void halfloop_nonbinary_f_recursive_omp_test()
     flag_error += strcmp(output_label__[nr_index],output_label_rc_ans__[nr_index]);
     flag_error += strcmp(nlpbra_label__[nr_index],nlpbra_label_rc_ans__[nr_index]);
     flag_error += strcmp(nlpnex_label__[nr_index],nlpnex_label_rc_ans__[nr_index]);
+    if (verbose){ printf(" %% nr_index %d/%d: %d %s %s %s\n",nr_index,n_r_index,binary_label_[nr_index],output_label__[nr_index],nlpbra_label__[nr_index],nlpnex_label__[nr_index]);}
     /* for (nr_index=0;nr_index<n_r_index;nr_index++){ } */}
   printf(" %% output_label_rc_ans__, nlpbra_label_rc_ans__ and nlpnex_label_rc_ans__ vs output_label__, nlpbra_label__ and nlpex_label__:  flag_error %d\n",flag_error);
   free1(&binary_label_);
@@ -1657,6 +1660,7 @@ void halfloop_nonbinary_f_recursive_omp_test()
     flag_error += strcmp(output_label__[nr_index],output_label_r0_ans__[nr_index]);
     flag_error += strcmp(nlpbra_label__[nr_index],nlpbra_label_r0_ans__[nr_index]);
     flag_error += strcmp(nlpnex_label__[nr_index],nlpnex_label_r0_ans__[nr_index]);
+    if (verbose){ printf(" %% nr_index %d/%d: %d %s %s %s\n",nr_index,n_r_index,binary_label_[nr_index],output_label__[nr_index],nlpbra_label__[nr_index],nlpnex_label__[nr_index]);}
     /* for (nr_index=0;nr_index<n_r_index;nr_index++){ } */}
   printf(" %% output_label_r0_ans__, nlpbra_label_r0_ans__ and nlpnex_label_r0_ans__ vs output_label__, nlpbra_label__ and nlpex_label__:  flag_error %d\n",flag_error);
   free1(&binary_label_);
