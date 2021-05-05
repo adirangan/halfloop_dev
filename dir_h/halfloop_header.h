@@ -207,6 +207,16 @@ void halfloop_nonbinary_rdrop_d_bkp(int n_r,int n_c,double *A1_rc__,double *A1_c
 void halfloop_nonbinary_rdrop_d(int n_r,int n_c,double *A1_rc__,double *A1_cr__,double gamma,int **out_xdrop_p_,int *n_iteration_p,double **trace_p_);
 void halfloop_nonbinary_rdrop_test_error();
 void halfloop_nonbinary_rdrop_test_speed();
+void halfloop_nonbinary_f_recursive_helper_QR_helper_orth
+(
+  int verbose
+ ,int n_r_index
+ ,int n_c_index
+ ,float *E_rc__
+ ,float *QE_rc__
+ ,unsigned long long int *rseed_p
+);
+void halfloop_nonbinary_f_recursive_helper_QR_helper_orth_test_speed();
 void halfloop_nonbinary_f_recursive_helper_QR__
 (
   int verbose

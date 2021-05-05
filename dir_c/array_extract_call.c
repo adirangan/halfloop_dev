@@ -317,6 +317,27 @@ void array_extract_d_from_d_test()
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 
+void array_implant_f_from_f(int n_r,int n_c,float *A_rc__,int n_r_rtn,int *r_rtn_,int n_c_rtn,int *c_rtn_,float *B_rc__,float *B_cr__)
+{
+  int nr=0,nc=0;
+  int nr_0in=0,nc_0in=0,nr_out=0,nc_out=0;
+  float *A_r_=NULL;
+  int flag_r_extract=0;
+  int flag_c_extract=0;
+  int n_r_out=0,n_c_out=0;
+  if ( (n_r_rtn>0) && (r_rtn_!=NULL) ){ flag_r_extract=1; n_r_out = n_r_rtn;} else{ flag_r_extract=0; n_r_out = n_r;}
+  if ( (n_c_rtn>0) && (c_rtn_!=NULL) ){ flag_c_extract=1; n_c_out = n_c_rtn;} else{ flag_c_extract=0; n_c_out = n_c;}
+  for (nc_out=0;nc_out<n_c_out;nc_out++){
+    if (flag_c_extract){ nc_0in = c_rtn_[nc_out];} else{ nc_0in = nc_out;}
+    A_r_ = A_rc__ + (unsigned long long int)nc_0in * (unsigned long long int)n_r;
+    for (nr_out=0;nr_out<n_r_out;nr_out++){
+      if (flag_r_extract){ nr_0in = r_rtn_[nr_out];} else{ nr_0in = nr_out;}
+      if (B_rc__!=NULL){ A_r_[nr_0in] = B_rc__[nr_out + nc_out*n_r_out];}
+      if (B_cr__!=NULL){ A_r_[nr_0in] = B_cr__[nc_out + nr_out*n_c_out];}
+      /* for (nr_out=0;nr_out<n_r_out;nr_out++){ } */}
+    /* for (nc_out=0;nc_out<n_c_out;nc_out++){ } */}
+}
+
 void array_extract_f_from_f(int n_r,int n_c,float *A_rc__,int n_r_rtn,int *r_rtn_,int n_c_rtn,int *c_rtn_,float **B_rc_p_,float **B_cr_p_)
 {
   int nr=0,nc=0;

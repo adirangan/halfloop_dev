@@ -2,6 +2,96 @@
 #include "halfloop_header.h"
 #endif /* _MONOLITH */
 
+void halfloop_nonbinary_f_recursive_helper_QR_helper_orth
+(
+  int verbose
+ ,int n_r_index
+ ,int n_c_index
+ ,float *E_rc__
+ ,float *QE_rc__
+ ,unsigned long long int *rseed_p
+)
+{
+  int niteration=0,n_iteration=0;
+  if (verbose){ printf(" %% [entering halfloop_nonbinary_f_recursive_helper_QR_helper_orth]\n");}
+  float *Q_rc__=NULL;
+  float *QE_0_rc__=NULL;
+  float *QE_1_rc__=NULL;
+  int *r_perm_index_=NULL;
+  int *r_perm_index_thrice_=NULL;
+  int *r_perm_index_sub_=NULL;
+  if (n_r_index<=n_c_index){
+    Q_rc__ = (float *) malloc1((unsigned long long int)n_r_index*(unsigned long long int)n_r_index*sizeof(float));
+    array_orth_f(n_r_index,n_r_index,&Q_rc__,rseed_p);
+    if (verbose>9){ array_printf_margin(Q_rc__,"float",n_r_index,n_r_index," % Q_rc__: "); printf(" %% %% %% %%\n");}
+    dp_ps_mult_immintrin_loadu(n_r_index,n_r_index,Q_rc__,n_c_index,E_rc__,&QE_rc__);
+    free1(&Q_rc__);
+    /* if (n_r_index<=n_c_index){ } */}
+  if (n_r_index> n_c_index){
+    Q_rc__ = (float *) malloc1((unsigned long long int)n_c_index*(unsigned long long int)n_c_index*sizeof(float));
+    QE_0_rc__ = (float *) malloc1((unsigned long long int)n_c_index*(unsigned long long int)n_c_index*sizeof(float));
+    QE_1_rc__ = (float *) malloc1((unsigned long long int)n_c_index*(unsigned long long int)n_c_index*sizeof(float));
+    memcpy(QE_rc__,E_rc__,(unsigned long long int)n_r_index*(unsigned long long int)n_c_index*sizeof(float));
+    irandperm(n_r_index,&r_perm_index_,rseed_p);
+    r_perm_index_thrice_ = (int *) malloc1((unsigned long long int)n_r_index*(unsigned long long int)3*sizeof(int));
+    memcpy(r_perm_index_thrice_+0*n_r_index,r_perm_index_,(unsigned long long int)n_r_index*sizeof(int));
+    memcpy(r_perm_index_thrice_+1*n_r_index,r_perm_index_,(unsigned long long int)n_r_index*sizeof(int));
+    memcpy(r_perm_index_thrice_+2*n_r_index,r_perm_index_,(unsigned long long int)n_r_index*sizeof(int));
+    n_iteration = 2*ceil((double)n_r_index/(double)n_c_index);
+    for (niteration=0;niteration<n_iteration;niteration++){
+      if (verbose>9){ printf(" %% %d/%d\n",niteration,n_iteration);}
+      r_perm_index_sub_ = r_perm_index_thrice_ + (int)floor((double)niteration*(double)n_c_index/(double)2);
+      if (verbose>9){ array_printf_margin(r_perm_index_,"int",1,n_r_index," %% r_perm_index_: ");}
+      array_extract_f_from_f(n_r_index,n_c_index,QE_rc__,n_c_index,r_perm_index_sub_,0,NULL,&QE_0_rc__,NULL);
+      if (verbose>9){ array_printf_margin(QE_0_rc__,"float",n_c_index,n_c_index," %% QE_0_rc__: ");}
+      array_orth_f(n_c_index,n_c_index,&Q_rc__,rseed_p);
+      if (verbose>9){ array_printf_margin(Q_rc__,"float",n_c_index,n_c_index," %% Q_rc__: ");}
+      dp_ps_mult_immintrin_loadu(n_c_index,n_c_index,Q_rc__,n_c_index,QE_0_rc__,&QE_1_rc__);
+      array_implant_f_from_f(n_r_index,n_c_index,QE_rc__,n_c_index,r_perm_index_sub_,0,NULL,QE_1_rc__,NULL);
+      /* for (niteration=0;niteration<n_iteration;niteration++){ } */}
+    free1(&r_perm_index_thrice_);
+    free1(&r_perm_index_);
+    free1(&Q_rc__);
+    free1(&QE_0_rc__);
+    free1(&QE_1_rc__);
+    /* if (n_r_index> n_c_index){ } */}
+  if (verbose){ printf(" %% [finished halfloop_nonbinary_f_recursive_helper_QR_helper_orth]\n");}
+}
+
+void halfloop_nonbinary_f_recursive_helper_QR_helper_orth_test_speed()
+{
+  int verbose=0;
+  int nr=0,n_r = 5000;
+  int nc=0,n_c = 50;
+  float *E_rc__=NULL;
+  float *QE_rc__=NULL;
+  unsigned long long int ulli=0;
+  float x=0,y=0,z=0;
+  unsigned long long int rseed=0;
+  E_rc__ = (float *) malloc1((unsigned long long int)n_r*(unsigned long long int)n_c*sizeof(float));
+  rseed=1; RSEED_adv8(&rseed);
+  ulli=0;
+  for (nc=0;nc<n_c;nc++){ for (nr=0;nr<n_r;nr++){ 
+      //E_rc__[ulli] = RNGET(&rseed);
+      //if ( (nc<floor(sqrt((double)n_c))) && (nr<floor(sqrt((double)n_r))) ){ E_rc__[ulli] += 0.5; }
+      x = 2.0*(float)nr/(float)(n_r-1) - 1.0;
+      y = 2.0*(float)nc/(float)(n_c-1) - 1.0;
+      z = (x+y)/4.0;
+      E_rc__[ulli] = sin(2*PI_LF*x) + cos(2*PI_LF*2*y) + x*x + y*y*y + cos(2*PI_LF*4*z);
+      ulli++;
+      /* for (nc=0;nc<n_c;nc++){ for (nr=0;nr<n_r;nr++){ }} */}}
+  array_printf_margin(E_rc__,"float",n_r,n_c," %  E_r__: ");
+  QE_rc__ = (float *) malloc1((unsigned long long int)n_r*(unsigned long long int)n_c*sizeof(float));
+  /* %%%%%%%% */
+  GLOBAL_tic(0);
+  halfloop_nonbinary_f_recursive_helper_QR_helper_orth(verbose,n_r,n_c,E_rc__,QE_rc__,&rseed);
+  GLOBAL_toc(0,1," % halfloop_nonbinary_f_recursive: ");
+  /* %%%%%%%% */
+  array_printf_margin(QE_rc__,"float",n_r,n_c," % QE_r__: ");
+  free1(&E_rc__);
+  free1(&QE_rc__);
+}
+
 void halfloop_nonbinary_f_recursive_helper_QR__
 (
   int verbose
@@ -38,7 +128,6 @@ void halfloop_nonbinary_f_recursive_helper_QR__
   int *xdrop_shuffle__=NULL;
   float *E_cr__=NULL;
   float *E_rc__=NULL;
-  float *Q_rc__=NULL;
   float *QE_rc__=NULL;
   int MDA_n_dim=0;
   int *MDA_dim_=NULL;
@@ -77,7 +166,6 @@ void halfloop_nonbinary_f_recursive_helper_QR__
     QR_ = QR__ + (unsigned long long int)0*(unsigned long long int)n_iteration;
     array_extract_d_from_d(6,n_iteration,trace__,1,&trace_QR_index,0,NULL,&QR_,NULL);
     if (verbose>9){ array_printf_margin(QR_,"double",1,n_iteration," % QR_: ");}
-    Q_rc__ = (float *) malloc1((unsigned long long int)n_r_index*(unsigned long long int)n_r_index*sizeof(float));
     QE_rc__ = (float *) malloc1((unsigned long long int)n_r_index*(unsigned long long int)n_c_index*sizeof(float));
     for (nshuffle=0;nshuffle<n_shuffle;nshuffle++){
       if (verbose>9){ printf(" %% nshuffle %d/%d\n",nshuffle,n_shuffle);}
@@ -85,9 +173,7 @@ void halfloop_nonbinary_f_recursive_helper_QR__
       array_extract_f_from_f(n_r,n_c,E_base_rc__,n_r_index,r_index_,n_c_index,c_index_,&E_rc__,NULL);
       array_mean_center_row(n_r_index,n_c_index,E_rc__,NULL,"float",&E_rc__,NULL);
       if (verbose>9){ array_printf_margin(E_rc__,"float",n_r_index,n_c_index," % E_rc__: "); printf(" %% %% %% %%\n");}
-      array_orth_f(n_r_index,n_r_index,&Q_rc__,&rseed);
-      if (verbose>9){ array_printf_margin(Q_rc__,"float",n_r_index,n_r_index," % Q_rc__: "); printf(" %% %% %% %%\n");}
-      dp_ps_mult_immintrin_loadu(n_r_index,n_r_index,Q_rc__,n_c_index,E_rc__,&QE_rc__);
+      halfloop_nonbinary_f_recursive_helper_QR_helper_orth(verbose,n_r_index,n_c_index,E_rc__,QE_rc__,&rseed);
       if (verbose>9){ array_printf_margin(QE_rc__,"float",n_r_index,n_c_index," % QE_rc__: "); printf(" %% %% %% %%\n");}
       array_mean_center_row(n_r_index,n_c_index,QE_rc__,NULL,"float",&E_rc__,&E_cr__);
       if (verbose>9){ array_printf_margin(E_rc__,"float",n_r_index,n_c_index," % E_rc__: "); printf(" %% %% %% %%\n");}
@@ -104,7 +190,6 @@ void halfloop_nonbinary_f_recursive_helper_QR__
     sprintf(MDA_fname,"%s",fname_QR__); MDA_n_dim = 2; MDA_dim_[0] = n_iteration; MDA_dim_[1] = (1+n_shuffle);
     MDA_write_r8(MDA_n_dim,MDA_dim_,QR__,MDA_fname);
     if (verbose>9){ MDA_printf_r8_margin(MDA_fname);}
-    free1(&Q_rc__);
     free1(&QE_rc__);
     free1(&E_cr__);
     free1(&E_rc__);
@@ -945,6 +1030,84 @@ void halfloop_nonbinary_f_recursive_test()
   free1(&c_index_);
 }
 
+void halfloop_nonbinary_f_recursive_test_speed()
+{
+  int verbose=1;
+  int flag_r0drop_vs_rcdrop=0;
+  int flag_rcdrop = 0;
+  int flag_r0drop = 1;
+  double gamma = 0.01;
+  int n_shuffle = 64;
+  double p_set = 0.05;
+  int n_member_lob = 3;
+  int nr=0,n_r = 178*2;
+  int nc=0,n_c = 2e4;
+  n_r = 5000; n_c = 50;
+  int nr_index=0,n_r_index=0,*r_index_=NULL;
+  int nc_index=0,n_c_index=0,*c_index_=NULL;
+  float x=0,y=0,z=0;
+  unsigned long int rseed=0;
+  unsigned long long int ulli=0;
+  float *E_base_rc__=NULL;
+  int flag_force_create=1;
+  unsigned long long int *binary_label_=NULL;
+  char **output_label__=NULL;
+  char **nlpbra_label__=NULL;
+  char **nlpnex_label__=NULL;
+  E_base_rc__ = (float *) malloc1((unsigned long long int)n_r*(unsigned long long int)n_c*sizeof(float));
+  rseed=1; RSEED_adv8(&rseed);
+  ulli=0;
+  for (nc=0;nc<n_c;nc++){ for (nr=0;nr<n_r;nr++){ 
+      //E_base_rc__[ulli] = RNGET(&rseed);
+      //if ( (nc<floor(sqrt((double)n_c))) && (nr<floor(sqrt((double)n_r))) ){ E_base_rc__[ulli] += 0.5; }
+      x = 2.0*(float)nr/(float)(n_r-1) - 1.0;
+      y = 2.0*(float)nc/(float)(n_c-1) - 1.0;
+      z = (x+y)/4.0;
+      E_base_rc__[ulli] = sin(2*PI_LF*x) + cos(2*PI_LF*2*y) + x*x + y*y*y + cos(2*PI_LF*4*z);
+      ulli++;
+      /* for (nc=0;nc<n_c;nc++){ for (nr=0;nr<n_r;nr++){ }} */}}
+  array_printf_margin(E_base_rc__,"float",n_r,n_c," % E_base_r__: ");
+  r_index_ = (int *) malloc1((unsigned long long int)n_r*sizeof(int));
+  n_r_index = 0; for (nr=0;nr<n_r;nr++){ if (nr%1==0){ r_index_[n_r_index++]=nr;}}
+  c_index_ = (int *) malloc1((unsigned long long int)n_c*sizeof(int));
+  n_c_index = 0; for (nc=0;nc<n_c;nc++){ if (nc%1==0){ c_index_[n_c_index++]=nc;}}
+  /* %%%%%%%% */
+  GLOBAL_tic(0);
+  halfloop_nonbinary_f_recursive(
+  verbose
+ ,n_r
+ ,n_c
+ ,E_base_rc__
+ ,n_r_index
+ ,r_index_
+ ,n_c_index
+ ,c_index_
+ ,flag_rcdrop
+ ,gamma
+ ,n_shuffle
+ ,p_set
+ ,n_member_lob
+ ,-1
+ ,NULL
+ ,NULL
+ ,"test_rc"
+ ,flag_force_create
+ ,&binary_label_
+ ,&output_label__
+ ,&nlpbra_label__
+ ,&nlpnex_label__
+ );
+  free1(&binary_label_);
+  free1_char__(n_r_index,&output_label__);
+  free1_char__(n_r_index,&nlpbra_label__);
+  free1_char__(n_r_index,&nlpnex_label__);
+  GLOBAL_toc(0,1," % halfloop_nonbinary_f_recursive_omp: ");
+  /* %%%%%%%% */
+  free1(&E_base_rc__);
+  free1(&r_index_);
+  free1(&c_index_);
+}
+
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 
 void halfloop_nonbinary_f_recursive_omp_helper_QR_
@@ -973,7 +1136,6 @@ void halfloop_nonbinary_f_recursive_omp_helper_QR_
   unsigned long int rseed=0;
   float *tmp_E_cr__=NULL;
   float *tmp_E_rc__=NULL;
-  float *tmp_Q_rc__=NULL;
   float *tmp_QE_rc__=NULL;
   if (verbose){ printf(" %% [entering halfloop_nonbinary_f_recursive_omp_helper_QR_]\n");}
   if (nshuffle==0){
@@ -987,11 +1149,9 @@ void halfloop_nonbinary_f_recursive_omp_helper_QR_
     xdrop_shuffle__ = (int *) malloc1((unsigned long long int)2*(unsigned long long int)n_xdrop*sizeof(double));
     tmp_E_rc__ = (float *) malloc1((unsigned long long int)n_r_index*(unsigned long long int)n_c_index*sizeof(float));
     tmp_E_cr__ = (float *) malloc1((unsigned long long int)n_c_index*(unsigned long long int)n_r_index*sizeof(float));
-    tmp_Q_rc__ = (float *) malloc1((unsigned long long int)n_r_index*(unsigned long long int)n_r_index*sizeof(float));
     tmp_QE_rc__ = (float *) malloc1((unsigned long long int)n_r_index*(unsigned long long int)n_c_index*sizeof(float));
     rseed = (0+nshuffle); RSEED_adv8(&rseed);
-    array_orth_f(n_r_index,n_r_index,&tmp_Q_rc__,&rseed);
-    dp_ps_mult_immintrin_loadu(n_r_index,n_r_index,tmp_Q_rc__,n_c_index,E_rc__,&tmp_QE_rc__);
+    halfloop_nonbinary_f_recursive_helper_QR_helper_orth(verbose,n_r_index,n_c_index,E_rc__,tmp_QE_rc__,&rseed);
     array_mean_center_row(n_r_index,n_c_index,tmp_QE_rc__,NULL,"float",&tmp_E_rc__,&tmp_E_cr__);
     if (flag_r0drop_vs_rcdrop==flag_rcdrop){ halfloop_nonbinary_f(n_r_index,n_c_index,tmp_E_rc__,tmp_E_cr__,gamma,&xdrop_shuffle__,&tmp_n_iteration,&trace_shuffle__);}
     if (flag_r0drop_vs_rcdrop==flag_r0drop){ halfloop_nonbinary_rdrop_f(n_r_index,n_c_index,tmp_E_rc__,tmp_E_cr__,gamma,&xdrop_shuffle__,&tmp_n_iteration,&trace_shuffle__);}
@@ -1000,7 +1160,6 @@ void halfloop_nonbinary_f_recursive_omp_helper_QR_
     free1(&xdrop_shuffle__);
     free1(&tmp_E_rc__);
     free1(&tmp_E_cr__);
-    free1(&tmp_Q_rc__);
     free1(&tmp_QE_rc__);
     /* if (nshuffle> 0){ } */}
   if (verbose){ printf(" %% [finished halfloop_nonbinary_f_recursive_omp_helper_QR_]\n");}
@@ -1740,6 +1899,7 @@ void halfloop_nonbinary_f_recursive_omp_test_speed()
   int n_member_lob = 3;
   int nr=0,n_r = 178*2;
   int nc=0,n_c = 2e4;
+  n_r = 5000; n_c = 50;
   int nr_index=0,n_r_index=0,*r_index_=NULL;
   int nc_index=0,n_c_index=0,*c_index_=NULL;
   float x=0,y=0,z=0;

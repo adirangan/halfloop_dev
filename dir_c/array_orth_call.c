@@ -60,8 +60,8 @@ void array_orth_f_test_error()
 
 void array_orth_f_test_speed()
 {
-  int n_r=10000;
-  int n_c=90;
+  int n_r=5000;
+  int n_c=100;
   int nc=0;
   float *Q_rc__=NULL;
   float *QQ_cc__=NULL;
@@ -70,6 +70,7 @@ void array_orth_f_test_speed()
   RSEED_adv8(&rseed);
   GLOBAL_tic(0);
   GLOBAL_tic(1);
+  printf(" %% n_r,n_c %d,%d\n",n_r,n_c);
   array_orth_f(n_r,n_c,&Q_rc__,&rseed);
   GLOBAL_toc(1,1," % array_orth_f: ");
   printf(" %% Gops %0.6f\n",(double)n_c*(double)n_c*(double)n_r/(double)2/GLOBAL_elrt[1]/1e9);

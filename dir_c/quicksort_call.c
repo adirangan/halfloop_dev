@@ -96,7 +96,7 @@ void iquicksort_index_index_driver_test()
   printf(" %% index_sort_from_orig_ans_ vs index_sort_from_orig_: relative error %0.16f\n",ifnormn(5,index_sort_from_orig_ans_,index_sort_from_orig_));
 }
 
-void irandperm(int n_i,int **index_p_,unsigned long long int *rseed)
+void irandperm(int n_i,int **index_p_,unsigned long long int *rseed_p)
 {
   double *d_=NULL;
   int nd=0;
@@ -104,7 +104,7 @@ void irandperm(int n_i,int **index_p_,unsigned long long int *rseed)
   int *index_;
   d_ = (double *) malloc1(n_i*sizeof(double));
   d_workspace_ = (double *) malloc1(n_i*sizeof(double));
-  for (nd=0;nd<n_i;nd++){ d_[nd] = R01GET(rseed);}
+  for (nd=0;nd<n_i;nd++){ d_[nd] = R01GET(rseed_p);}
   if (*index_p_==NULL){ (*index_p_) = (int *) malloc1(n_i*sizeof(int));}
   index_ = *index_p_;
   dquicksort_index_driver(n_i,d_,1,d_workspace_,index_);
