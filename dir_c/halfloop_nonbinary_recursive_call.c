@@ -388,6 +388,10 @@ void halfloop_nonbinary_f_recursive
   double *nlp_p_split_=NULL;
   double p_branch=0,p_next=0;
   int flag_split=0;
+  char fname_output_label[PNAMESIZE];
+  char fname_nlpbra_label[PNAMESIZE];
+  char fname_nlpnex_label[PNAMESIZE];
+  FILE *fp=NULL;
   if (verbose>0){ printf(" %% [entering halfloop_nonbinary_f_recursive]\n");}
   /* %%%%%%%%%%%%%%%% */
   n_str_path = pathconf(".",_PC_PATH_MAX);
@@ -758,6 +762,29 @@ void halfloop_nonbinary_f_recursive
     /* %%%% */
     /* if (flag_split){ } */}
   /* %%%% */
+  /* if p_prev_0in < 0 then print labels to file */
+  /* %%%% */
+  if (p_prev_0in< 0){
+    sprintf(fname_output_label,"%s/output_label__.txt",dir_out);
+    if ((fp=fopen(fname_output_label,"w"))==NULL){ printf(" %% Warning! could not open %s.\n",fname_output_label); exit(EXIT_FAILURE);}
+    for (nr_index=0;nr_index<n_r_index;nr_index++){
+      fprintf(fp,"%s\n",output_label__[nr_index]);
+      /* for (nr_index=0;nr_index<n_r_index;nr_index++){ } */}
+    fclose(fp);fp=NULL;
+    sprintf(fname_nlpbra_label,"%s/nlpbra_label__.txt",dir_out);
+    if ((fp=fopen(fname_nlpbra_label,"w"))==NULL){ printf(" %% Warning! could not open %s.\n",fname_nlpbra_label); exit(EXIT_FAILURE);}
+    for (nr_index=0;nr_index<n_r_index;nr_index++){
+      fprintf(fp,"%s\n",nlpbra_label__[nr_index]);
+      /* for (nr_index=0;nr_index<n_r_index;nr_index++){ } */}
+    fclose(fp);fp=NULL;
+    sprintf(fname_nlpnex_label,"%s/nlpnex_label__.txt",dir_out);
+    if ((fp=fopen(fname_nlpnex_label,"w"))==NULL){ printf(" %% Warning! could not open %s.\n",fname_nlpnex_label); exit(EXIT_FAILURE);}
+    for (nr_index=0;nr_index<n_r_index;nr_index++){
+      fprintf(fp,"%s\n",nlpnex_label__[nr_index]);
+      /* for (nr_index=0;nr_index<n_r_index;nr_index++){ } */}
+    fclose(fp);fp=NULL;
+    /* if (p_prev_0in< 0){ } */}
+  /* %%%% */
   free1(&r_index_rmv_sub_);
   free1(&r_index_rtn_sub_);
   free1(&c_index_rtn_sub_);
@@ -838,7 +865,7 @@ void halfloop_nonbinary_f_recursive_test()
  ,n_shuffle
  ,p_set
  ,n_member_lob
- ,0
+ ,-1
  ,NULL
  ,NULL
  ,"test_rc"
@@ -883,7 +910,7 @@ void halfloop_nonbinary_f_recursive_test()
  ,n_shuffle
  ,p_set
  ,n_member_lob
- ,0
+ ,-1
  ,NULL
  ,NULL
  ,"test_r0"
@@ -1157,6 +1184,10 @@ void halfloop_nonbinary_f_recursive_omp
   double *nlp_p_split_=NULL;
   double p_branch=0,p_next=0;
   int flag_split=0;
+  char fname_output_label[PNAMESIZE];
+  char fname_nlpbra_label[PNAMESIZE];
+  char fname_nlpnex_label[PNAMESIZE];
+  FILE *fp=NULL;
   if (verbose>0){ printf(" %% [entering halfloop_nonbinary_f_recursive_omp]\n");}
   /* %%%%%%%%%%%%%%%% */
   n_str_path = pathconf(".",_PC_PATH_MAX);
@@ -1527,6 +1558,29 @@ void halfloop_nonbinary_f_recursive_omp
     /* %%%% */
     /* if (flag_split){ } */}
   /* %%%% */
+  /* if p_prev_0in < 0 then print labels to file */
+  /* %%%% */
+  if (p_prev_0in< 0){
+    sprintf(fname_output_label,"%s/output_label__.txt",dir_out);
+    if ((fp=fopen(fname_output_label,"w"))==NULL){ printf(" %% Warning! could not open %s.\n",fname_output_label); exit(EXIT_FAILURE);}
+    for (nr_index=0;nr_index<n_r_index;nr_index++){
+      fprintf(fp,"%s\n",output_label__[nr_index]);
+      /* for (nr_index=0;nr_index<n_r_index;nr_index++){ } */}
+    fclose(fp);fp=NULL;
+    sprintf(fname_nlpbra_label,"%s/nlpbra_label__.txt",dir_out);
+    if ((fp=fopen(fname_nlpbra_label,"w"))==NULL){ printf(" %% Warning! could not open %s.\n",fname_nlpbra_label); exit(EXIT_FAILURE);}
+    for (nr_index=0;nr_index<n_r_index;nr_index++){
+      fprintf(fp,"%s\n",nlpbra_label__[nr_index]);
+      /* for (nr_index=0;nr_index<n_r_index;nr_index++){ } */}
+    fclose(fp);fp=NULL;
+    sprintf(fname_nlpnex_label,"%s/nlpnex_label__.txt",dir_out);
+    if ((fp=fopen(fname_nlpnex_label,"w"))==NULL){ printf(" %% Warning! could not open %s.\n",fname_nlpnex_label); exit(EXIT_FAILURE);}
+    for (nr_index=0;nr_index<n_r_index;nr_index++){
+      fprintf(fp,"%s\n",nlpnex_label__[nr_index]);
+      /* for (nr_index=0;nr_index<n_r_index;nr_index++){ } */}
+    fclose(fp);fp=NULL;
+    /* if (p_prev_0in< 0){ } */}
+  /* %%%% */
   free1(&r_index_rmv_sub_);
   free1(&r_index_rtn_sub_);
   free1(&c_index_rtn_sub_);
@@ -1606,7 +1660,7 @@ void halfloop_nonbinary_f_recursive_omp_test()
  ,n_shuffle
  ,p_set
  ,n_member_lob
- ,0
+ ,-1
  ,NULL
  ,NULL
  ,"test_rc"
@@ -1645,7 +1699,7 @@ void halfloop_nonbinary_f_recursive_omp_test()
  ,n_shuffle
  ,p_set
  ,n_member_lob
- ,0
+ ,-1
  ,NULL
  ,NULL
  ,"test_r0"
@@ -1730,7 +1784,7 @@ void halfloop_nonbinary_f_recursive_omp_test_speed()
  ,n_shuffle
  ,p_set
  ,n_member_lob
- ,0
+ ,-1
  ,NULL
  ,NULL
  ,"test_rc"
@@ -1791,7 +1845,7 @@ void halfloop_nonbinary_f_gateway_matlab
  ,n_shuffle
  ,p_set
  ,n_member_lob
- ,0
+ ,-1
  ,dir_trunk
  ,NULL
  ,prefix_base
@@ -1817,7 +1871,7 @@ void halfloop_nonbinary_f_gateway_matlab
  ,n_shuffle
  ,p_set
  ,n_member_lob
- ,0
+ ,-1
  ,dir_trunk
  ,NULL
  ,prefix_base
@@ -1828,7 +1882,7 @@ void halfloop_nonbinary_f_gateway_matlab
  ,&nlpnex_label__
  );
   /* if (flag_omp_use==1){ } */}
-  for (nr=0;nr<n_r;nr++){ binary_label_out_[nr] = binary_label_[nr];}
+  for (nr=0;nr<n_r;nr++){ binary_label_out_[nr] = binary_label_[nr];}  
   free1(&binary_label_);
   free1_char__(n_r,&output_label__);
   free1_char__(n_r,&nlpbra_label__);
