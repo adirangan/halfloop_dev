@@ -101,10 +101,10 @@ int main(int argc, char** argv) {
   //find_internal_maximum_test();
   //halfloop_nonbinary_test_speed();
   //halfloop_nonbinary_f_recursive_test();
-  //halfloop_nonbinary_f_recursive_helper_QR_helper_orth_test_speed();
+  halfloop_nonbinary_f_recursive_helper_QR_helper_orth_test_speed();
   //halfloop_nonbinary_f_recursive_test_speed();
   //halfloop_nonbinary_f_recursive_omp_test();
-  halfloop_nonbinary_f_recursive_omp_test_speed();
+  //halfloop_nonbinary_f_recursive_omp_test_speed();
   if (GLOBAL_verbose>-1){ printf("exiting successfully\n");}
   return 0;
 }
