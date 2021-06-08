@@ -22,14 +22,14 @@ void halfloop_nonbinary_f_recursive_helper_QR_helper_orth
   int *r_perm_index_sub_=NULL;
   int n_m_index = 8; //%<-- 8 floats per __m256. ;
   int n_m_index_2 = n_m_index/2;
-  if (n_r_index<=n_m_index){
+  if ( (GLOBAL_flag_orth_brute==1) || (n_r_index<=n_m_index) ){
     Q_rc__ = (float *) malloc1((unsigned long long int)n_r_index*(unsigned long long int)n_r_index*sizeof(float));
     array_orth_f(n_r_index,n_r_index,&Q_rc__,rseed_p);
     if (verbose>9){ array_printf_margin(Q_rc__,"float",n_r_index,n_r_index," % Q_rc__: "); printf(" %% %% %% %%\n");}
     dp_ps_mult_immintrin_loadu(n_r_index,n_r_index,Q_rc__,n_c_index,E_rc__,&QE_rc__);
     free1(&Q_rc__);
     /* if (n_r_index<=n_m_index){ } */}
-  if (n_r_index> n_m_index){
+  if ( (GLOBAL_flag_orth_brute==0) && (n_r_index> n_m_index) ){
     Q_rc__ = (float *) malloc1((unsigned long long int)n_m_index*(unsigned long long int)n_m_index*sizeof(float));
     QE_0_rc__ = (float *) malloc1((unsigned long long int)n_m_index*(unsigned long long int)n_c_index*sizeof(float));
     QE_1_rc__ = (float *) malloc1((unsigned long long int)n_m_index*(unsigned long long int)n_c_index*sizeof(float));
@@ -331,7 +331,13 @@ void halfloop_nonbinary_recursive_helper_ZR__
   if (verbose>2){ printf(" %% nlp_gumb_opt %f p_gumb_opt %f nlp_gumb_emp %f p_gumb_emp %f\n",nlp_gumb_opt,p_gumb_opt,nlp_gumb_emp,p_gumb_emp);}
   find_internal_maximum(0*verbose,n_sub,nlp_ZR_sub_,0,&nlp_ZR_max,&nlp_ZR_index);
   if (nlp_ZR_max>=-log(p_use)){ find_internal_maximum(0*verbose,n_sub,nlp_ZR_sub_,-log(p_use),&nlp_ZR_max,&nlp_ZR_index);}
-  if (nlp_ZR_index<=-1){ printf(" %% Warning, no maximum found\n"); nlp_ZR_index = 0; nlp_ZR_max = nlp_ZR_sub_[nlp_ZR_index]; }
+  if (nlp_ZR_index<=-1){
+    if ( (verbose>0) && (n_sub>=5) ){
+      printf(" %% Warning, no maximum found, n_sub %d\n",n_sub);
+      array_printf_margin(nlp_ZR_sub_,"double",1,n_sub," % nlp_ZR_sub: ");
+      /* if ( (verbose>0) && (n_sub>=5) ){ } */}
+    nlp_ZR_index = 0; nlp_ZR_max = nlp_ZR_sub_[nlp_ZR_index];
+    /* if (nlp_ZR_index<=-1){ } */}
   if (verbose>2){ printf(" %% index_sub_[%d] = %d\n",nlp_ZR_index,index_sub_[nlp_ZR_index]);}
   nlp_ZR_index = index_sub_[nlp_ZR_index];
   n_r_rtn_index = trace__[trace_r_rtn_index + nlp_ZR_index*6]; n_r_rmv_index = r_rtn_max - n_r_rtn_index;
@@ -921,6 +927,7 @@ void halfloop_nonbinary_f_recursive_test()
   char output_label_r0_ans__[128][32] = { "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "BA0" , "BA0" , "BA0" , "BA0" , "BA0" , "BA0" , "BA0" , "BA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBB0" , "BBB0" , "BBB0" , "BBB0" , "BBB0" , "BBB0" , "BBB0" , "BBB0" , "BBB0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "BA0" , "BA0" , "BA0" , "BA0" , "BA0" , "BA0" , "BA0" , "BA0" , "BA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBB0" , "BBB0" , "BBB0" , "BBB0" , "BBB0" , "BBB0" , "BBB0" , "A0" , "A0" , "A0" , "A0" };
   char nlpbra_label_r0_ans__[128][32] = { "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 4.23 " , "7.21 4.23 " , "7.21 4.23 " , "7.21 4.23 " , "7.21 4.23 " , "7.21 4.23 " , "7.21 4.23 " , "7.21 4.23 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 4.23 " , "7.21 4.23 " , "7.21 4.23 " , "7.21 4.23 " , "7.21 4.23 " , "7.21 4.23 " , "7.21 4.23 " , "7.21 4.23 " , "7.21 4.23 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " };
   char nlpnex_label_r0_ans__[128][32] = { "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 4.18 " , "7.21 4.18 " , "7.21 4.18 " , "7.21 4.18 " , "7.21 4.18 " , "7.21 4.18 " , "7.21 4.18 " , "7.21 4.18 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 4.18 " , "7.21 4.18 " , "7.21 4.18 " , "7.21 4.18 " , "7.21 4.18 " , "7.21 4.18 " , "7.21 4.18 " , "7.21 4.18 " , "7.21 4.18 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " };
+  GLOBAL_flag_orth_brute = 1;
   E_base_rc__ = (float *) malloc1((unsigned long long int)n_r*(unsigned long long int)n_c*sizeof(float));
   rseed=1; RSEED_adv8(&rseed);
   ulli=0;
@@ -1790,6 +1797,7 @@ void halfloop_nonbinary_f_recursive_omp_test()
   char output_label_r0_ans__[128][32] = { "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "BA0" , "BA0" , "BA0" , "BA0" , "BA0" , "BA0" , "BA0" , "BA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBB0" , "BBB0" , "BBB0" , "BBB0" , "BBB0" , "BBB0" , "BBB0" , "BBB0" , "BBB0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "A0" , "BA0" , "BA0" , "BA0" , "BA0" , "BA0" , "BA0" , "BA0" , "BA0" , "BA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBA0" , "BBB0" , "BBB0" , "BBB0" , "BBB0" , "BBB0" , "BBB0" , "BBB0" , "A0" , "A0" , "A0" , "A0" };
   char nlpbra_label_r0_ans__[128][32] = { "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 4.23 " , "7.21 4.23 " , "7.21 4.23 " , "7.21 4.23 " , "7.21 4.23 " , "7.21 4.23 " , "7.21 4.23 " , "7.21 4.23 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 4.23 " , "7.21 4.23 " , "7.21 4.23 " , "7.21 4.23 " , "7.21 4.23 " , "7.21 4.23 " , "7.21 4.23 " , "7.21 4.23 " , "7.21 4.23 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 4.23 4.78 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " };
   char nlpnex_label_r0_ans__[128][32] = { "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 4.18 " , "7.21 4.18 " , "7.21 4.18 " , "7.21 4.18 " , "7.21 4.18 " , "7.21 4.18 " , "7.21 4.18 " , "7.21 4.18 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " , "7.21 4.18 " , "7.21 4.18 " , "7.21 4.18 " , "7.21 4.18 " , "7.21 4.18 " , "7.21 4.18 " , "7.21 4.18 " , "7.21 4.18 " , "7.21 4.18 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 4.18 3.75 " , "7.21 " , "7.21 " , "7.21 " , "7.21 " };
+  GLOBAL_flag_orth_brute = 1;
   E_base_rc__ = (float *) malloc1((unsigned long long int)n_r*(unsigned long long int)n_c*sizeof(float));
   rseed=1; RSEED_adv8(&rseed);
   ulli=0;
@@ -2053,3 +2061,103 @@ void halfloop_nonbinary_f_gateway_matlab
   free1_char__(n_r,&nlpnex_label__);
 }
 
+void halfloop_nonbinary_f_gateway_shell()
+{
+  int verbose=GLOBAL_verbose;
+  int n_d=0;
+  int *d_=NULL;
+  float *E_base_rc__=NULL;
+  int n_r=0,n_c=0,nr=0,nc=0;
+  unsigned long long int *binary_label_=NULL;
+  char **output_label__=NULL;
+  char **nlpbra_label__=NULL;
+  char **nlpnex_label__=NULL;
+  if (verbose){ printf(" %% [entering halfloop_nonbinary_f_gateway_shell]\n");}
+  MDA_read_r4(&n_d,&d_,&E_base_rc__,GLOBAL_E_base_mda_r4);
+  if (verbose){ array_printf(d_,"int",1,n_d," % d_: ");}
+  n_r = d_[0]; n_c = d_[1];
+  if (verbose>1){
+    for (nr=0;nr<16;nr++){
+      printf(" %%");
+      for (nc=0;nc<16;nc++){
+	printf(" %0.4f",E_base_rc__[nr+nc*n_r]);
+	/* for (nc=0;nc<16;nc++){ } */}
+      printf(" \n");
+      /* for (nr=0;nr<16;nr++){} */}
+    /* if (verbose>1){ } */}
+  /* %%%%%%%% */
+  if (verbose){
+    printf(" %% calling halfloop_nonbinary_f_recursive with parameters: \n");
+    printf(" %% verbose %d\n",GLOBAL_verbose);
+    printf(" %% E_base_mda_r4 %s\n",GLOBAL_E_base_mda_r4);
+    printf(" %% flag_r0drop_vs_rcdrop %d\n",GLOBAL_flag_r0drop_vs_rcdrop);
+    printf(" %% gamma %0.3f\n",GLOBAL_gamma);
+    printf(" %% n_shuffle %d\n",GLOBAL_n_shuffle);
+    printf(" %% p_set %0.3f\n",GLOBAL_p_set);
+    printf(" %% n_member_lob %d\n",GLOBAL_n_member_lob);
+    printf(" %% dir_trunk %s\n",GLOBAL_dir_trunk);
+    printf(" %% prefix_base %s\n",GLOBAL_prefix_base);
+    printf(" %% flag_force_create %d\n",GLOBAL_flag_force_create);
+    printf(" %% flag_omp_use %d\n",GLOBAL_flag_omp_use);
+    /* if (verbose){ } */}
+  if (GLOBAL_flag_omp_use==0){
+  halfloop_nonbinary_f_recursive(
+  GLOBAL_verbose
+ ,n_r
+ ,n_c
+ ,E_base_rc__
+ ,0
+ ,NULL
+ ,0
+ ,NULL
+ ,GLOBAL_flag_r0drop_vs_rcdrop
+ ,GLOBAL_gamma
+ ,GLOBAL_n_shuffle
+ ,GLOBAL_p_set
+ ,GLOBAL_n_member_lob
+ ,-1
+ ,GLOBAL_dir_trunk
+ ,NULL
+ ,GLOBAL_prefix_base
+ ,GLOBAL_flag_force_create
+ ,&binary_label_
+ ,&output_label__
+ ,&nlpbra_label__
+ ,&nlpnex_label__
+ );
+  /* if (GLOBAL_flag_omp_use==0){ } */}
+  if (GLOBAL_flag_omp_use==1){
+  halfloop_nonbinary_f_recursive_omp(
+  GLOBAL_verbose
+ ,n_r
+ ,n_c
+ ,E_base_rc__
+ ,0
+ ,NULL
+ ,0
+ ,NULL
+ ,GLOBAL_flag_r0drop_vs_rcdrop
+ ,GLOBAL_gamma
+ ,GLOBAL_n_shuffle
+ ,GLOBAL_p_set
+ ,GLOBAL_n_member_lob
+ ,-1
+ ,GLOBAL_dir_trunk
+ ,NULL
+ ,GLOBAL_prefix_base
+ ,GLOBAL_flag_force_create
+ ,&binary_label_
+ ,&output_label__
+ ,&nlpbra_label__
+ ,&nlpnex_label__
+ );
+  /* if (GLOBAL_flag_omp_use==1){ } */}
+  /* %%%%%%%% */
+  free1(&d_);
+  free1(&E_base_rc__);
+  free1(&binary_label_);
+  free1_char__(n_r,&output_label__);
+  free1_char__(n_r,&nlpbra_label__);
+  free1_char__(n_r,&nlpnex_label__);
+  if (verbose){ printf(" %% [finished halfloop_nonbinary_f_gateway_shell]\n");}
+}

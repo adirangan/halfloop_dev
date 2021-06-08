@@ -20,12 +20,24 @@ long GLOBAL_l_msec[GLOBAL_NTICKS],GLOBAL_l_ssec[GLOBAL_NTICKS],GLOBAL_l_usec[GLO
 double GLOBAL_elct[GLOBAL_NTICKS],GLOBAL_elrt[GLOBAL_NTICKS];
 
 int GLOBAL_verbose=0;
+char GLOBAL_mode[FNAMESIZE] = "\0";
 double GLOBAL_tolerance=0.000000000001; //%<-- 1e-12;
 unsigned int GLOBAL_recursion_limit=1024*32; //%<-- 2^15;
 int addressable_1=1;
 int addressable_0=0;
 int addressable_int_length=128;
 int addressable_int[128] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127};
+int GLOBAL_flag_orth_brute = 0;
+char GLOBAL_E_base_mda_r4[PNAMESIZE] = "\0";
+int GLOBAL_flag_r0drop_vs_rcdrop=0;
+double GLOBAL_gamma=0;
+int GLOBAL_n_shuffle=64;
+double GLOBAL_p_set=0.05;
+int GLOBAL_n_member_lob=2;
+char GLOBAL_dir_trunk[PNAMESIZE] = "\0";
+char GLOBAL_prefix_base[FNAMESIZE] = "\0";
+int GLOBAL_flag_force_create=0;
+int GLOBAL_flag_omp_use=1;
 
 /* ---------------------------------------------------------------- */
 int GLOBAL_malloc1_notupdate=0;
@@ -64,47 +76,49 @@ int main(int argc, char** argv) {
       cur_arg += 2; /* else if flag_test */}
     else { printf("Error: Invalid argument (%s).", argv[cur_arg]); exit(EXIT_FAILURE);}
     /* while (cur_arg < argc) { } */}
-  //MDA_io_test();
-  //R01GET_test();
-  //dtranspose_test();
-  //dp_ps_single_test();
-  //dp_ps_mult_immintrin_test();
-  //dp_pd_mult_immintrin_test();
-  //get_xdrop_logscale_array_test();
-  //iquicksort_index_driver_test();
-  //fquicksort_index_driver_test();
-  //dquicksort_index_driver_test();
-  //iquicksort_index_index_driver_test();
-  //fquicksort_index_index_driver_test();
-  //dquicksort_index_index_driver_test();
-  //irandperm_test();
-  //halfloop_nonbinary_test_error();
-  //halfloop_nonbinary_rdrop_test_error();
-  //gumbel_nll_test();
-  //nelder_mead_test();
-  //gumbel_fit_test();
-  //array_extract_i_from_i_test();
-  //array_extract_f_from_d_test();
-  //array_extract_d_from_d_test();
-  //array_extract_f_from_f_test();
-  //array_extract_d_from_f_test();
-  //array_extract_test();
-  //array_mean_center_row_test();
-  //array_normalize_row_test();
-  //array_orth_f_test_error();
-  //array_orth_f_test_speed();
-  //array_orth_d_test_error();
-  //array_orth_d_test_speed();
-  //erfcln_f_test();
-  //erfcln_d_test();
-  //z_to_lp_d_test();
-  //find_internal_maximum_test();
-  //halfloop_nonbinary_test_speed();
-  //halfloop_nonbinary_f_recursive_test();
-  halfloop_nonbinary_f_recursive_helper_QR_helper_orth_test_speed();
-  //halfloop_nonbinary_f_recursive_test_speed();
-  //halfloop_nonbinary_f_recursive_omp_test();
-  //halfloop_nonbinary_f_recursive_omp_test_speed();
+  read_input();
+  if (strcmp(GLOBAL_mode,"MDA_io_test")==0){ MDA_io_test();}
+  if (strcmp(GLOBAL_mode,"R01GET_test")==0){ R01GET_test();}
+  if (strcmp(GLOBAL_mode,"dtranspose_test")==0){ dtranspose_test();}
+  if (strcmp(GLOBAL_mode,"dp_ps_single_test")==0){ dp_ps_single_test();}
+  if (strcmp(GLOBAL_mode,"dp_ps_mult_immintrin_test")==0){ dp_ps_mult_immintrin_test();}
+  if (strcmp(GLOBAL_mode,"dp_pd_mult_immintrin_test")==0){ dp_pd_mult_immintrin_test();}
+  if (strcmp(GLOBAL_mode,"get_xdrop_logscale_array_test")==0){ get_xdrop_logscale_array_test();}
+  if (strcmp(GLOBAL_mode,"iquicksort_index_driver_test")==0){ iquicksort_index_driver_test();}
+  if (strcmp(GLOBAL_mode,"fquicksort_index_driver_test")==0){ fquicksort_index_driver_test();}
+  if (strcmp(GLOBAL_mode,"dquicksort_index_driver_test")==0){ dquicksort_index_driver_test();}
+  if (strcmp(GLOBAL_mode,"iquicksort_index_index_driver_test")==0){ iquicksort_index_index_driver_test();}
+  if (strcmp(GLOBAL_mode,"fquicksort_index_index_driver_test")==0){ fquicksort_index_index_driver_test();}
+  if (strcmp(GLOBAL_mode,"dquicksort_index_index_driver_test")==0){ dquicksort_index_index_driver_test();}
+  if (strcmp(GLOBAL_mode,"irandperm_test")==0){ irandperm_test();}
+  if (strcmp(GLOBAL_mode,"halfloop_nonbinary_test_error")==0){ halfloop_nonbinary_test_error();}
+  if (strcmp(GLOBAL_mode,"halfloop_nonbinary_rdrop_test_error")==0){ halfloop_nonbinary_rdrop_test_error();}
+  if (strcmp(GLOBAL_mode,"gumbel_nll_test")==0){ gumbel_nll_test();}
+  if (strcmp(GLOBAL_mode,"nelder_mead_test")==0){ nelder_mead_test();}
+  if (strcmp(GLOBAL_mode,"gumbel_fit_test")==0){ gumbel_fit_test();}
+  if (strcmp(GLOBAL_mode,"array_extract_i_from_i_test")==0){ array_extract_i_from_i_test();}
+  if (strcmp(GLOBAL_mode,"array_extract_f_from_d_test")==0){ array_extract_f_from_d_test();}
+  if (strcmp(GLOBAL_mode,"array_extract_d_from_d_test")==0){ array_extract_d_from_d_test();}
+  if (strcmp(GLOBAL_mode,"array_extract_f_from_f_test")==0){ array_extract_f_from_f_test();}
+  if (strcmp(GLOBAL_mode,"array_extract_d_from_f_test")==0){ array_extract_d_from_f_test();}
+  if (strcmp(GLOBAL_mode,"array_extract_test")==0){ array_extract_test();}
+  if (strcmp(GLOBAL_mode,"array_mean_center_row_test")==0){ array_mean_center_row_test();}
+  if (strcmp(GLOBAL_mode,"array_normalize_row_test")==0){ array_normalize_row_test();}
+  if (strcmp(GLOBAL_mode,"array_orth_f_test_error")==0){ array_orth_f_test_error();}
+  if (strcmp(GLOBAL_mode,"array_orth_f_test_speed")==0){ array_orth_f_test_speed();}
+  if (strcmp(GLOBAL_mode,"array_orth_d_test_error")==0){ array_orth_d_test_error();}
+  if (strcmp(GLOBAL_mode,"array_orth_d_test_speed")==0){ array_orth_d_test_speed();}
+  if (strcmp(GLOBAL_mode,"erfcln_f_test")==0){ erfcln_f_test();}
+  if (strcmp(GLOBAL_mode,"erfcln_d_test")==0){ erfcln_d_test();}
+  if (strcmp(GLOBAL_mode,"z_to_lp_d_test")==0){ z_to_lp_d_test();}
+  if (strcmp(GLOBAL_mode,"find_internal_maximum_test")==0){ find_internal_maximum_test();}
+  if (strcmp(GLOBAL_mode,"halfloop_nonbinary_test_speed")==0){ halfloop_nonbinary_test_speed();}
+  if (strcmp(GLOBAL_mode,"halfloop_nonbinary_f_recursive_test")==0){ halfloop_nonbinary_f_recursive_test();}
+  if (strcmp(GLOBAL_mode,"halfloop_nonbinary_f_recursive_helper_QR_helper_orth_test_speed")==0){ halfloop_nonbinary_f_recursive_helper_QR_helper_orth_test_speed();}
+  if (strcmp(GLOBAL_mode,"halfloop_nonbinary_f_recursive_test_speed")==0){ halfloop_nonbinary_f_recursive_test_speed();}
+  if (strcmp(GLOBAL_mode,"halfloop_nonbinary_f_recursive_omp_test")==0){ halfloop_nonbinary_f_recursive_omp_test();}
+  if (strcmp(GLOBAL_mode,"halfloop_nonbinary_f_recursive_omp_test_speed")==0){ halfloop_nonbinary_f_recursive_omp_test_speed();}
+  if (strcmp(GLOBAL_mode,"halfloop_nonbinary_f_gateway_shell")==0){ halfloop_nonbinary_f_gateway_shell();}
   if (GLOBAL_verbose>-1){ printf("exiting successfully\n");}
   return 0;
 }

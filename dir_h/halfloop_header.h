@@ -47,12 +47,24 @@ extern double GLOBAL_elct[GLOBAL_NTICKS],GLOBAL_elrt[GLOBAL_NTICKS];
 
 /* global variables used for some routines */
 extern int GLOBAL_verbose;
+extern char GLOBAL_mode[FNAMESIZE];
 extern double GLOBAL_tolerance;
 extern unsigned int GLOBAL_recursion_limit;
 extern int addressable_1;
 extern int addressable_0;
 extern int addressable_int_length;
 extern int addressable_int[128];
+extern int GLOBAL_flag_orth_brute;
+extern char GLOBAL_E_base_mda_r4[PNAMESIZE];
+extern int GLOBAL_flag_r0drop_vs_rcdrop;
+extern double GLOBAL_gamma;
+extern int GLOBAL_n_shuffle;
+extern double GLOBAL_p_set;
+extern int GLOBAL_n_member_lob;
+extern char GLOBAL_dir_trunk[PNAMESIZE];
+extern char GLOBAL_prefix_base[FNAMESIZE];
+extern int GLOBAL_flag_force_create;
+extern int GLOBAL_flag_omp_use;
 
 #define rup(A,B) ((A) + !!((A)%(B))*((B) - ((A)%(B))))
 #define maximum(A,B) ((A) > (B) ? (A) : (B))
@@ -360,6 +372,7 @@ void halfloop_nonbinary_f_gateway_matlab
  ,int flag_omp_use
  ,unsigned long long int *binary_label_out_
 );
+void halfloop_nonbinary_f_gateway_shell();
 void * malloc1(size_t size);
 void free1(void **vp);
 void malloc1_char__(int n_l,char ***str_p_);
@@ -402,6 +415,8 @@ void dquicksort_index_driver(int n_d,double *d_,int stride,double *d_workspace_,
 void dquicksort_index_driver_test();
 void dquicksort_index_index_driver(int n_d,double *d_,int stride,double *d_workspace_,int *index_orig_from_sort_,int *index_sort_from_orig_,int *index_workspace_);
 void dquicksort_index_index_driver_test();
+void update_global(char *vname);
+void read_input();
 void ping();
 void pong();
 

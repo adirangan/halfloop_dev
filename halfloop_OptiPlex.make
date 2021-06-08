@@ -36,6 +36,7 @@ sources_dev = array_extract_call.c \
 	MDA_io_call.c \
 	nelder_mead_call.c \
 	quicksort_call.c \
+	update_global_call.c \
 	main_driver.c \
 
 objects_dev = $(patsubst %.c,./dir_o/%.o,$(sources_dev)) 
