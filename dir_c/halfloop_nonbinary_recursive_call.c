@@ -20,8 +20,9 @@ void halfloop_nonbinary_f_recursive_helper_QR_helper_orth
   int *r_perm_index_=NULL;
   int *r_perm_index_thrice_=NULL;
   int *r_perm_index_sub_=NULL;
-  int n_m_index = 8; //%<-- 8 floats per __m256. ;
+  int n_m_index = 24; //%<-- 8 floats per __m256. ;
   int n_m_index_2 = n_m_index/2;
+  int n_loop=0,nloop=0;
   if ( (GLOBAL_flag_orth_brute==1) || (n_r_index<=n_m_index) ){
     Q_rc__ = (float *) malloc1((unsigned long long int)n_r_index*(unsigned long long int)n_r_index*sizeof(float));
     array_orth_f(n_r_index,n_r_index,&Q_rc__,rseed_p);
@@ -34,25 +35,28 @@ void halfloop_nonbinary_f_recursive_helper_QR_helper_orth
     QE_0_rc__ = (float *) malloc1((unsigned long long int)n_m_index*(unsigned long long int)n_c_index*sizeof(float));
     QE_1_rc__ = (float *) malloc1((unsigned long long int)n_m_index*(unsigned long long int)n_c_index*sizeof(float));
     memcpy(QE_rc__,E_rc__,(unsigned long long int)n_r_index*(unsigned long long int)n_c_index*sizeof(float));
-    irandperm(n_r_index,&r_perm_index_,rseed_p);
-    r_perm_index_thrice_ = (int *) malloc1((unsigned long long int)n_r_index*(unsigned long long int)3*sizeof(int));
-    memcpy(r_perm_index_thrice_+0*n_r_index,r_perm_index_,(unsigned long long int)n_r_index*sizeof(int));
-    memcpy(r_perm_index_thrice_+1*n_r_index,r_perm_index_,(unsigned long long int)n_r_index*sizeof(int));
-    memcpy(r_perm_index_thrice_+2*n_r_index,r_perm_index_,(unsigned long long int)n_r_index*sizeof(int));
-    n_iteration = 2*ceil((double)n_r_index/(double)n_m_index);
-    for (niteration=0;niteration<n_iteration;niteration++){
-      if (verbose>9){ printf(" %% %d/%d\n",niteration,n_iteration);}
-      r_perm_index_sub_ = r_perm_index_thrice_ + (int)floor(niteration*n_m_index_2);
-      if (verbose>9){ array_printf_margin(r_perm_index_sub_,"int",1,n_m_index," %% r_perm_index_sub_: ");}
-      array_extract_f_from_f(n_r_index,n_c_index,QE_rc__,n_m_index,r_perm_index_sub_,0,NULL,&QE_0_rc__,NULL);
-      if (verbose>9){ array_printf_margin(QE_0_rc__,"float",n_m_index,n_c_index," %% QE_0_rc__: ");}
-      array_orth_f(n_m_index,n_m_index,&Q_rc__,rseed_p);
-      if (verbose>9){ array_printf_margin(Q_rc__,"float",n_m_index,n_m_index," %% Q_rc__: ");}
-      dp_ps_mult_immintrin_loadu_wrap(n_m_index,n_m_index,Q_rc__,n_c_index,QE_0_rc__,&QE_1_rc__);
-      array_implant_f_from_f(n_r_index,n_c_index,QE_rc__,n_m_index,r_perm_index_sub_,0,NULL,QE_1_rc__,NULL);
-      /* for (niteration=0;niteration<n_iteration;niteration++){ } */}
-    free1(&r_perm_index_thrice_);
-    free1(&r_perm_index_);
+    n_loop = maximum(1,ceil(log(n_r_index)/maximum(1,log(n_m_index))));
+    for (nloop=0;nloop<n_loop;nloop++){
+      irandperm(n_r_index,&r_perm_index_,rseed_p);
+      r_perm_index_thrice_ = (int *) malloc1((unsigned long long int)n_r_index*(unsigned long long int)3*sizeof(int));
+      memcpy(r_perm_index_thrice_+0*n_r_index,r_perm_index_,(unsigned long long int)n_r_index*sizeof(int));
+      memcpy(r_perm_index_thrice_+1*n_r_index,r_perm_index_,(unsigned long long int)n_r_index*sizeof(int));
+      memcpy(r_perm_index_thrice_+2*n_r_index,r_perm_index_,(unsigned long long int)n_r_index*sizeof(int));
+      n_iteration = 2*ceil((double)n_r_index/(double)n_m_index);
+      for (niteration=0;niteration<n_iteration;niteration++){
+	if (verbose>9){ printf(" %% %d/%d\n",niteration,n_iteration);}
+	r_perm_index_sub_ = r_perm_index_thrice_ + (int)floor(niteration*n_m_index_2);
+	if (verbose>9){ array_printf_margin(r_perm_index_sub_,"int",1,n_m_index," %% r_perm_index_sub_: ");}
+	array_extract_f_from_f(n_r_index,n_c_index,QE_rc__,n_m_index,r_perm_index_sub_,0,NULL,&QE_0_rc__,NULL);
+	if (verbose>9){ array_printf_margin(QE_0_rc__,"float",n_m_index,n_c_index," %% QE_0_rc__: ");}
+	array_orth_f(n_m_index,n_m_index,&Q_rc__,rseed_p);
+	if (verbose>9){ array_printf_margin(Q_rc__,"float",n_m_index,n_m_index," %% Q_rc__: ");}
+	dp_ps_mult_immintrin_loadu_wrap(n_m_index,n_m_index,Q_rc__,n_c_index,QE_0_rc__,&QE_1_rc__);
+	array_implant_f_from_f(n_r_index,n_c_index,QE_rc__,n_m_index,r_perm_index_sub_,0,NULL,QE_1_rc__,NULL);
+	/* for (niteration=0;niteration<n_iteration;niteration++){ } */}
+      free1(&r_perm_index_thrice_);
+      free1(&r_perm_index_);
+      /* for (nloop=0;nloop<n_loop;nloop++){ } */}
     free1(&Q_rc__);
     free1(&QE_0_rc__);
     free1(&QE_1_rc__);
@@ -63,8 +67,8 @@ void halfloop_nonbinary_f_recursive_helper_QR_helper_orth
 void halfloop_nonbinary_f_recursive_helper_QR_helper_orth_test_speed()
 {
   int verbose=0;
-  int nr=0,n_r = 5000;
-  int nc=0,n_c = 5000;
+  int nr=0,n_r = 6000;
+  int nc=0,n_c = 8000;
   float *E_rc__=NULL;
   float *QE_rc__=NULL;
   unsigned long long int ulli=0;
