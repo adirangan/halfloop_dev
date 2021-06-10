@@ -11,11 +11,11 @@ void array_gram_schmidt_inplace_f(int n_r,int n_c,float *Q_rc__)
   float Q_c0c1=0;
   for (nc0=0;nc0<n_c;nc0++){
     Q_c0_r_ = Q_rc__ + (unsigned long long int)nc0*(unsigned long long int)n_r;
-    dp_ps_immintrin_loadu(n_r,Q_c0_r_,Q_c0_r_,&Q_c0c0); Q_c0_f = sqrtf(Q_c0c0);
+    dp_ps_immintrin_loadu_fma(n_r,Q_c0_r_,Q_c0_r_,&Q_c0c0); Q_c0_f = sqrtf(Q_c0c0);
     for (nr0=0;nr0<n_r;nr0++){ Q_c0_r_[nr0] /= maximum(1e-12,Q_c0_f);}
     for (nc1=nc0+1;nc1<n_c;nc1++){
       Q_c1_r_ = Q_rc__ + (unsigned long long int)nc1*(unsigned long long int)n_r;
-      dp_ps_immintrin_loadu(n_r,Q_c0_r_,Q_c1_r_,&Q_c0c1);
+      dp_ps_immintrin_loadu_fma(n_r,Q_c0_r_,Q_c1_r_,&Q_c0c1);
       for (nr1=0;nr1<n_r;nr1++){ Q_c1_r_[nr1] -= Q_c0c1*Q_c0_r_[nr1];}
       /* for (nc1=nc0+1;nc1<n_c;nc1++){ } */}
     /* for (nc0=0;nc0<n_c;nc0++){ } */}
@@ -49,7 +49,7 @@ void array_orth_f_test_error()
   GLOBAL_tic(0);
   array_orth_f(n_r,n_c,&Q_rc__,&rseed);
   QQ_cc__ = (float *) malloc1((unsigned long long int)n_c*(unsigned long long int)n_c*sizeof(float));
-  dp_ps_mult_immintrin_loadu(n_c,n_r,Q_rc__,n_c,Q_rc__,&QQ_cc__);
+  dp_ps_mult_immintrin_loadu_fma(n_c,n_r,Q_rc__,n_c,Q_rc__,&QQ_cc__);
   array_printf(Q_rc__,"float",n_r,n_c," % Q_rc__: ");
   array_printf(QQ_cc__,"float",n_c,n_c," % QQ_cc__: ");
   printf(" %% QQ_cc_ans__ vs QQ_cc__: relative error %0.16f\n",ffnormn((unsigned long long int)n_c*(unsigned long long int)n_c,QQ_cc_ans__,QQ_cc__));
@@ -78,7 +78,7 @@ void array_orth_f_test_speed()
   memset(QQ_cc_ans__,0,(unsigned long long int)n_c*(unsigned long long int)n_c*sizeof(float));
   for (nc=0;nc<n_c;nc++){ QQ_cc_ans__[nc+nc*n_c]=1;}
   QQ_cc__ = (float *) malloc1((unsigned long long int)n_c*(unsigned long long int)n_c*sizeof(float));
-  dp_ps_mult_immintrin_loadu(n_c,n_r,Q_rc__,n_c,Q_rc__,&QQ_cc__);
+  dp_ps_mult_immintrin_loadu_fma(n_c,n_r,Q_rc__,n_c,Q_rc__,&QQ_cc__);
   printf(" %% QQ_cc_ans__ vs QQ_cc__: relative error %0.16f\n",ffnormn((unsigned long long int)n_c*(unsigned long long int)n_c,QQ_cc_ans__,QQ_cc__));
   free1(&QQ_cc_ans__);
   free1(&QQ_cc__);
@@ -97,11 +97,11 @@ void array_gram_schmidt_inplace_d(int n_r,int n_c,double *Q_rc__)
   double Q_c0c1=0;
   for (nc0=0;nc0<n_c;nc0++){
     Q_c0_r_ = Q_rc__ + (unsigned long long int)nc0*(unsigned long long int)n_r;
-    dp_pd_immintrin_loadu(n_r,Q_c0_r_,Q_c0_r_,&Q_c0c0); Q_c0_d = sqrt(Q_c0c0);
+    dp_pd_immintrin_loadu_fma(n_r,Q_c0_r_,Q_c0_r_,&Q_c0c0); Q_c0_d = sqrt(Q_c0c0);
     for (nr0=0;nr0<n_r;nr0++){ Q_c0_r_[nr0] /= maximum(1e-12,Q_c0_d);}
     for (nc1=nc0+1;nc1<n_c;nc1++){
       Q_c1_r_ = Q_rc__ + (unsigned long long int)nc1*(unsigned long long int)n_r;
-      dp_pd_immintrin_loadu(n_r,Q_c0_r_,Q_c1_r_,&Q_c0c1);
+      dp_pd_immintrin_loadu_fma(n_r,Q_c0_r_,Q_c1_r_,&Q_c0c1);
       for (nr1=0;nr1<n_r;nr1++){ Q_c1_r_[nr1] -= Q_c0c1*Q_c0_r_[nr1];}
       /* for (nc1=nc0+1;nc1<n_c;nc1++){ } */}
     /* for (nc0=0;nc0<n_c;nc0++){ } */}
@@ -135,7 +135,7 @@ void array_orth_d_test_error()
   GLOBAL_tic(0);
   array_orth_d(n_r,n_c,&Q_rc__,&rseed);
   QQ_cc__ = (double *) malloc1((unsigned long long int)n_c*(unsigned long long int)n_c*sizeof(double));
-  dp_pd_mult_immintrin_loadu(n_c,n_r,Q_rc__,n_c,Q_rc__,&QQ_cc__);
+  dp_pd_mult_immintrin_loadu_fma(n_c,n_r,Q_rc__,n_c,Q_rc__,&QQ_cc__);
   array_printf(Q_rc__,"double",n_r,n_c," % Q_rc__: ");
   array_printf(QQ_cc__,"double",n_c,n_c," % QQ_cc__: ");
   printf(" %% QQ_cc_ans__ vs QQ_cc__: relative error %0.16f\n",dfnormn((unsigned long long int)n_c*(unsigned long long int)n_c,QQ_cc_ans__,QQ_cc__));
@@ -163,7 +163,7 @@ void array_orth_d_test_speed()
   memset(QQ_cc_ans__,0,(unsigned long long int)n_c*(unsigned long long int)n_c*sizeof(double));
   for (nc=0;nc<n_c;nc++){ QQ_cc_ans__[nc+nc*n_c]=1;}
   QQ_cc__ = (double *) malloc1((unsigned long long int)n_c*(unsigned long long int)n_c*sizeof(double));
-  dp_pd_mult_immintrin_loadu(n_c,n_r,Q_rc__,n_c,Q_rc__,&QQ_cc__);
+  dp_pd_mult_immintrin_loadu_fma(n_c,n_r,Q_rc__,n_c,Q_rc__,&QQ_cc__);
   printf(" %% QQ_cc_ans__ vs QQ_cc__: relative error %0.16f\n",dfnormn((unsigned long long int)n_c*(unsigned long long int)n_c,QQ_cc_ans__,QQ_cc__));
   free1(&QQ_cc_ans__);
   free1(&QQ_cc__);

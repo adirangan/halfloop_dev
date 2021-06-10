@@ -87,14 +87,14 @@ void halfloop_nonbinary_f(int n_r,int n_c,float *A1_rc__,float *A1_cr__,double g
   for (nc=0;nc<n_c;nc++){ ec_[nc] = (float)1.0;}
   for (nc=0;nc<n_c;nc++){
     A1_rc_ = A1_rc__ + (unsigned long long int)nc*(unsigned long long int)n_r;
-    dp_ps_immintrin_loadu(n_r,er_,A1_rc_,&(etA1n_[nc]));
-    dp_ps_immintrin_loadu(n_r,A1_rc_,A1_rc_,&(etA2n_[nc]));
+    dp_ps_immintrin_loadu_fma(n_r,er_,A1_rc_,&(etA1n_[nc]));
+    dp_ps_immintrin_loadu_fma(n_r,A1_rc_,A1_rc_,&(etA2n_[nc]));
     QC_pre_[nc] = etA1n_[nc]*etA1n_[nc] - etA2n_[nc];
     /* for (nc=0;nc<n_c;nc++){ } */}
   for (nr=0;nr<n_r;nr++){
     A1_cr_ = A1_cr__ + (unsigned long long int)nr*(unsigned long long int)n_c;
-    dp_ps_immintrin_loadu(n_c,etA1n_,A1_cr_,&(tmp_f_0));
-    dp_ps_immintrin_loadu(n_c,A1_cr_,A1_cr_,&(tmp_f_1));
+    dp_ps_immintrin_loadu_fma(n_c,etA1n_,A1_cr_,&(tmp_f_0));
+    dp_ps_immintrin_loadu_fma(n_c,A1_cr_,A1_cr_,&(tmp_f_1));
     QR_pre_[nr] = tmp_f_0 - tmp_f_1;
     /* for (nr=0;nr<n_r;nr++){ } */}
   if (verbose>2){ array_printf(etA1n_,"float",1,n_c," % etA1n_: ");}
@@ -109,9 +109,9 @@ void halfloop_nonbinary_f(int n_r,int n_c,float *A1_rc__,float *A1_cr__,double g
     trace_trn__[0+6*niteration] = 1+niteration;
     trace_trn__[1+6*niteration] = n_index_r_rem;
     trace_trn__[2+6*niteration] = n_index_c_rem;
-    dp_ps_immintrin_loadu(n_r,er_,QR_pre_,&(tmp_f_0));
+    dp_ps_immintrin_loadu_fma(n_r,er_,QR_pre_,&(tmp_f_0));
     trace_trn__[3+6*niteration] = tmp_f_0/n_r;
-    dp_ps_immintrin_loadu(n_c,ec_,QC_pre_,&(tmp_f_1));
+    dp_ps_immintrin_loadu_fma(n_c,ec_,QC_pre_,&(tmp_f_1));
     trace_trn__[4+6*niteration] = tmp_f_1/n_c;
     trace_trn__[5+6*niteration] = 1.0;
     if (verbose>2){ array_printf(&(trace_trn__[6*niteration]),"double",1,6," % trace_trn__: ");}
@@ -203,7 +203,7 @@ void halfloop_nonbinary_f(int n_r,int n_c,float *A1_rc__,float *A1_cr__,double g
 	ynzten_[nr] += tmp_f_0*etz1n_[nc];
 	y2ny2n_[nr] += tmp_f_0*tmp_f_0;
 	/* for (nc=0;nc<n_c_rmv;nc++){ } */}
-      if (n_c_rtn>n_c/4){ dp_ps_immintrin_loadu(n_c,A1_cr_,etx1n_stretch_,&(wnxten_[nr]));}
+      if (n_c_rtn>n_c/4){ dp_ps_immintrin_loadu_fma(n_c,A1_cr_,etx1n_stretch_,&(wnxten_[nr]));}
       else{
 	wnxten_[nr] = 0;
 	for (nc=0;nc<n_c_rtn;nc++){
@@ -375,14 +375,14 @@ void halfloop_nonbinary_d(int n_r,int n_c,double *B1_rc__,double *B1_cr__,double
   for (nc=0;nc<n_c;nc++){ ec_[nc] = (double)1.0;}
   for (nc=0;nc<n_c;nc++){
     B1_rc_ = B1_rc__ + (unsigned long long int)nc*(unsigned long long int)n_r;
-    dp_pd_immintrin_loadu(n_r,er_,B1_rc_,&(etB1n_[nc]));
-    dp_pd_immintrin_loadu(n_r,B1_rc_,B1_rc_,&(etB2n_[nc]));
+    dp_pd_immintrin_loadu_fma(n_r,er_,B1_rc_,&(etB1n_[nc]));
+    dp_pd_immintrin_loadu_fma(n_r,B1_rc_,B1_rc_,&(etB2n_[nc]));
     QC_pre_[nc] = etB1n_[nc]*etB1n_[nc] - etB2n_[nc];
     /* for (nc=0;nc<n_c;nc++){ } */}
   for (nr=0;nr<n_r;nr++){
     B1_cr_ = B1_cr__ + (unsigned long long int)nr*(unsigned long long int)n_c;
-    dp_pd_immintrin_loadu(n_c,etB1n_,B1_cr_,&(tmp_d_0));
-    dp_pd_immintrin_loadu(n_c,B1_cr_,B1_cr_,&(tmp_d_1));
+    dp_pd_immintrin_loadu_fma(n_c,etB1n_,B1_cr_,&(tmp_d_0));
+    dp_pd_immintrin_loadu_fma(n_c,B1_cr_,B1_cr_,&(tmp_d_1));
     QR_pre_[nr] = tmp_d_0 - tmp_d_1;
     /* for (nr=0;nr<n_r;nr++){ } */}
   if (verbose>2){ array_printf(etB1n_,"double",1,n_c," % etB1n_: ");}
@@ -397,9 +397,9 @@ void halfloop_nonbinary_d(int n_r,int n_c,double *B1_rc__,double *B1_cr__,double
     trace_trn__[0+6*niteration] = 1+niteration;
     trace_trn__[1+6*niteration] = n_index_r_rem;
     trace_trn__[2+6*niteration] = n_index_c_rem;
-    dp_pd_immintrin_loadu(n_r,er_,QR_pre_,&(tmp_d_0));
+    dp_pd_immintrin_loadu_fma(n_r,er_,QR_pre_,&(tmp_d_0));
     trace_trn__[3+6*niteration] = tmp_d_0/n_r;
-    dp_pd_immintrin_loadu(n_c,ec_,QC_pre_,&(tmp_d_1));
+    dp_pd_immintrin_loadu_fma(n_c,ec_,QC_pre_,&(tmp_d_1));
     trace_trn__[4+6*niteration] = tmp_d_1/n_c;
     trace_trn__[5+6*niteration] = 1.0;
     if (verbose>2){ array_printf(&(trace_trn__[6*niteration]),"double",1,6," % trace_trn__: ");}
@@ -491,7 +491,7 @@ void halfloop_nonbinary_d(int n_r,int n_c,double *B1_rc__,double *B1_cr__,double
 	ynzten_[nr] += tmp_d_0*etz1n_[nc];
 	y2ny2n_[nr] += tmp_d_0*tmp_d_0;
 	/* for (nc=0;nc<n_c_rmv;nc++){ } */}
-      if (n_c_rtn>n_c/4){ dp_pd_immintrin_loadu(n_c,B1_cr_,etx1n_stretch_,&(wnxten_[nr]));}
+      if (n_c_rtn>n_c/4){ dp_pd_immintrin_loadu_fma(n_c,B1_cr_,etx1n_stretch_,&(wnxten_[nr]));}
       else{
 	wnxten_[nr] = 0;
 	for (nc=0;nc<n_c_rtn;nc++){
@@ -768,14 +768,14 @@ void halfloop_nonbinary_rdrop_f_bkp(int n_r,int n_c,float *A1_rc__,float *A1_cr_
   for (nc=0;nc<n_c;nc++){ ec_[nc] = (float)1.0;}
   for (nc=0;nc<n_c;nc++){
     A1_rc_ = A1_rc__ + (unsigned long long int)nc*(unsigned long long int)n_r;
-    dp_ps_immintrin_loadu(n_r,er_,A1_rc_,&(etA1n_[nc]));
-    dp_ps_immintrin_loadu(n_r,A1_rc_,A1_rc_,&(etA2n_[nc]));
+    dp_ps_immintrin_loadu_fma(n_r,er_,A1_rc_,&(etA1n_[nc]));
+    dp_ps_immintrin_loadu_fma(n_r,A1_rc_,A1_rc_,&(etA2n_[nc]));
     QC_pre_[nc] = etA1n_[nc]*etA1n_[nc] - etA2n_[nc];
     /* for (nc=0;nc<n_c;nc++){ } */}
   for (nr=0;nr<n_r;nr++){
     A1_cr_ = A1_cr__ + (unsigned long long int)nr*(unsigned long long int)n_c;
-    dp_ps_immintrin_loadu(n_c,etA1n_,A1_cr_,&(tmp_f_0));
-    dp_ps_immintrin_loadu(n_c,A1_cr_,A1_cr_,&(tmp_f_1));
+    dp_ps_immintrin_loadu_fma(n_c,etA1n_,A1_cr_,&(tmp_f_0));
+    dp_ps_immintrin_loadu_fma(n_c,A1_cr_,A1_cr_,&(tmp_f_1));
     QR_pre_[nr] = tmp_f_0 - tmp_f_1;
     /* for (nr=0;nr<n_r;nr++){ } */}
   if (verbose>2){ array_printf(etA1n_,"float",1,n_c," % etA1n_: ");}
@@ -790,9 +790,9 @@ void halfloop_nonbinary_rdrop_f_bkp(int n_r,int n_c,float *A1_rc__,float *A1_cr_
     trace_trn__[0+6*niteration] = 1+niteration;
     trace_trn__[1+6*niteration] = n_index_r_rem;
     trace_trn__[2+6*niteration] = n_index_c_rem;
-    dp_ps_immintrin_loadu(n_r,er_,QR_pre_,&(tmp_f_0));
+    dp_ps_immintrin_loadu_fma(n_r,er_,QR_pre_,&(tmp_f_0));
     trace_trn__[3+6*niteration] = tmp_f_0/n_r;
-    dp_ps_immintrin_loadu(n_c,ec_,QC_pre_,&(tmp_f_1));
+    dp_ps_immintrin_loadu_fma(n_c,ec_,QC_pre_,&(tmp_f_1));
     trace_trn__[4+6*niteration] = tmp_f_1/n_c;
     trace_trn__[5+6*niteration] = 1.0;
     if (verbose>2){ array_printf(&(trace_trn__[6*niteration]),"double",1,6," % trace_trn__: ");}
@@ -881,7 +881,7 @@ void halfloop_nonbinary_rdrop_f_bkp(int n_r,int n_c,float *A1_rc__,float *A1_cr_
 	ynzten_[nr] += tmp_f_0*etz1n_[nc];
 	y2ny2n_[nr] += tmp_f_0*tmp_f_0;
 	/* for (nc=0;nc<n_c_rmv;nc++){ } */}
-      if (n_c_rtn>n_c/4){ dp_ps_immintrin_loadu(n_c,A1_cr_,etx1n_stretch_,&(wnxten_[nr]));}
+      if (n_c_rtn>n_c/4){ dp_ps_immintrin_loadu_fma(n_c,A1_cr_,etx1n_stretch_,&(wnxten_[nr]));}
       else{
 	wnxten_[nr] = 0;
 	for (nc=0;nc<n_c_rtn;nc++){
@@ -1021,12 +1021,12 @@ void halfloop_nonbinary_rdrop_f(int n_r,int n_c,float *A1_rc__,float *A1_cr__,do
   for (nr=0;nr<n_r;nr++){ er_[nr] = (float)1.0;}
   for (nc=0;nc<n_c;nc++){
     A1_rc_ = A1_rc__ + (unsigned long long int)nc*(unsigned long long int)n_r;
-    dp_ps_immintrin_loadu(n_r,er_,A1_rc_,&(etA1n_[nc]));
+    dp_ps_immintrin_loadu_fma(n_r,er_,A1_rc_,&(etA1n_[nc]));
     /* for (nc=0;nc<n_c;nc++){ } */}
   for (nr=0;nr<n_r;nr++){
     A1_cr_ = A1_cr__ + (unsigned long long int)nr*(unsigned long long int)n_c;
-    dp_ps_immintrin_loadu(n_c,etA1n_,A1_cr_,&(tmp_f_0));
-    dp_ps_immintrin_loadu(n_c,A1_cr_,A1_cr_,&(tmp_f_1));
+    dp_ps_immintrin_loadu_fma(n_c,etA1n_,A1_cr_,&(tmp_f_0));
+    dp_ps_immintrin_loadu_fma(n_c,A1_cr_,A1_cr_,&(tmp_f_1));
     QR_pre_[nr] = tmp_f_0 - tmp_f_1;
     /* for (nr=0;nr<n_r;nr++){ } */}
   if (verbose>2){ array_printf(etA1n_,"float",1,n_c," % etA1n_: ");}
@@ -1039,7 +1039,7 @@ void halfloop_nonbinary_rdrop_f(int n_r,int n_c,float *A1_rc__,float *A1_cr__,do
     trace_trn__[0+6*niteration] = 1+niteration;
     trace_trn__[1+6*niteration] = n_index_r_rem;
     trace_trn__[2+6*niteration] = n_c;
-    dp_ps_immintrin_loadu(n_r,er_,QR_pre_,&(tmp_f_0));
+    dp_ps_immintrin_loadu_fma(n_r,er_,QR_pre_,&(tmp_f_0));
     trace_trn__[3+6*niteration] = tmp_f_0/n_r;
     trace_trn__[4+6*niteration] = 0.0;
     trace_trn__[5+6*niteration] = 1.0;
@@ -1081,7 +1081,7 @@ void halfloop_nonbinary_rdrop_f(int n_r,int n_c,float *A1_rc__,float *A1_cr__,do
     memset(wnxten_,0,n_r*sizeof(float));
     for (nr=0;nr<n_r_rtn;nr++){
       A1_cr_ = A1_cr__ + (unsigned long long int)(r_rtn_[nr]) * (unsigned long long int)n_c;
-      dp_ps_immintrin_loadu(n_c,A1_cr_,etx1n_,&(wnxten_[nr]));
+      dp_ps_immintrin_loadu_fma(n_c,A1_cr_,etx1n_,&(wnxten_[nr]));
       /* for (nr=0;nr<n_r_rtn;nr++){ } */}
     memset(QR_pos_,0,n_r*sizeof(float));
     for (nr=0;nr<n_r_rtn;nr++){
@@ -1212,14 +1212,14 @@ void halfloop_nonbinary_rdrop_d_bkp(int n_r,int n_c,double *A1_rc__,double *A1_c
   for (nc=0;nc<n_c;nc++){ ec_[nc] = (double)1.0;}
   for (nc=0;nc<n_c;nc++){
     A1_rc_ = A1_rc__ + (unsigned long long int)nc*(unsigned long long int)n_r;
-    dp_pd_immintrin_loadu(n_r,er_,A1_rc_,&(etA1n_[nc]));
-    dp_pd_immintrin_loadu(n_r,A1_rc_,A1_rc_,&(etA2n_[nc]));
+    dp_pd_immintrin_loadu_fma(n_r,er_,A1_rc_,&(etA1n_[nc]));
+    dp_pd_immintrin_loadu_fma(n_r,A1_rc_,A1_rc_,&(etA2n_[nc]));
     QC_pre_[nc] = etA1n_[nc]*etA1n_[nc] - etA2n_[nc];
     /* for (nc=0;nc<n_c;nc++){ } */}
   for (nr=0;nr<n_r;nr++){
     A1_cr_ = A1_cr__ + (unsigned long long int)nr*(unsigned long long int)n_c;
-    dp_pd_immintrin_loadu(n_c,etA1n_,A1_cr_,&(tmp_d_0));
-    dp_pd_immintrin_loadu(n_c,A1_cr_,A1_cr_,&(tmp_d_1));
+    dp_pd_immintrin_loadu_fma(n_c,etA1n_,A1_cr_,&(tmp_d_0));
+    dp_pd_immintrin_loadu_fma(n_c,A1_cr_,A1_cr_,&(tmp_d_1));
     QR_pre_[nr] = tmp_d_0 - tmp_d_1;
     /* for (nr=0;nr<n_r;nr++){ } */}
   if (verbose>2){ array_printf(etA1n_,"double",1,n_c," % etA1n_: ");}
@@ -1234,9 +1234,9 @@ void halfloop_nonbinary_rdrop_d_bkp(int n_r,int n_c,double *A1_rc__,double *A1_c
     trace_trn__[0+6*niteration] = 1+niteration;
     trace_trn__[1+6*niteration] = n_index_r_rem;
     trace_trn__[2+6*niteration] = n_index_c_rem;
-    dp_pd_immintrin_loadu(n_r,er_,QR_pre_,&(tmp_d_0));
+    dp_pd_immintrin_loadu_fma(n_r,er_,QR_pre_,&(tmp_d_0));
     trace_trn__[3+6*niteration] = tmp_d_0/n_r;
-    dp_pd_immintrin_loadu(n_c,ec_,QC_pre_,&(tmp_d_1));
+    dp_pd_immintrin_loadu_fma(n_c,ec_,QC_pre_,&(tmp_d_1));
     trace_trn__[4+6*niteration] = tmp_d_1/n_c;
     trace_trn__[5+6*niteration] = 1.0;
     if (verbose>2){ array_printf(&(trace_trn__[6*niteration]),"double",1,6," % trace_trn__: ");}
@@ -1325,7 +1325,7 @@ void halfloop_nonbinary_rdrop_d_bkp(int n_r,int n_c,double *A1_rc__,double *A1_c
 	ynzten_[nr] += tmp_d_0*etz1n_[nc];
 	y2ny2n_[nr] += tmp_d_0*tmp_d_0;
 	/* for (nc=0;nc<n_c_rmv;nc++){ } */}
-      if (n_c_rtn>n_c/4){ dp_pd_immintrin_loadu(n_c,A1_cr_,etx1n_stretch_,&(wnxten_[nr]));}
+      if (n_c_rtn>n_c/4){ dp_pd_immintrin_loadu_fma(n_c,A1_cr_,etx1n_stretch_,&(wnxten_[nr]));}
       else{
 	wnxten_[nr] = 0;
 	for (nc=0;nc<n_c_rtn;nc++){
@@ -1465,12 +1465,12 @@ void halfloop_nonbinary_rdrop_d(int n_r,int n_c,double *A1_rc__,double *A1_cr__,
   for (nr=0;nr<n_r;nr++){ er_[nr] = (double)1.0;}
   for (nc=0;nc<n_c;nc++){
     A1_rc_ = A1_rc__ + (unsigned long long int)nc*(unsigned long long int)n_r;
-    dp_pd_immintrin_loadu(n_r,er_,A1_rc_,&(etA1n_[nc]));
+    dp_pd_immintrin_loadu_fma(n_r,er_,A1_rc_,&(etA1n_[nc]));
     /* for (nc=0;nc<n_c;nc++){ } */}
   for (nr=0;nr<n_r;nr++){
     A1_cr_ = A1_cr__ + (unsigned long long int)nr*(unsigned long long int)n_c;
-    dp_pd_immintrin_loadu(n_c,etA1n_,A1_cr_,&(tmp_d_0));
-    dp_pd_immintrin_loadu(n_c,A1_cr_,A1_cr_,&(tmp_d_1));
+    dp_pd_immintrin_loadu_fma(n_c,etA1n_,A1_cr_,&(tmp_d_0));
+    dp_pd_immintrin_loadu_fma(n_c,A1_cr_,A1_cr_,&(tmp_d_1));
     QR_pre_[nr] = tmp_d_0 - tmp_d_1;
     /* for (nr=0;nr<n_r;nr++){ } */}
   if (verbose>2){ array_printf(etA1n_,"double",1,n_c," % etA1n_: ");}
@@ -1483,7 +1483,7 @@ void halfloop_nonbinary_rdrop_d(int n_r,int n_c,double *A1_rc__,double *A1_cr__,
     trace_trn__[0+6*niteration] = 1+niteration;
     trace_trn__[1+6*niteration] = n_index_r_rem;
     trace_trn__[2+6*niteration] = n_c;
-    dp_pd_immintrin_loadu(n_r,er_,QR_pre_,&(tmp_d_0));
+    dp_pd_immintrin_loadu_fma(n_r,er_,QR_pre_,&(tmp_d_0));
     trace_trn__[3+6*niteration] = tmp_d_0/n_r;
     trace_trn__[4+6*niteration] = 0.0;
     trace_trn__[5+6*niteration] = 1.0;
@@ -1525,7 +1525,7 @@ void halfloop_nonbinary_rdrop_d(int n_r,int n_c,double *A1_rc__,double *A1_cr__,
     memset(wnxten_,0,n_r*sizeof(double));
     for (nr=0;nr<n_r_rtn;nr++){
       A1_cr_ = A1_cr__ + (unsigned long long int)(r_rtn_[nr]) * (unsigned long long int)n_c;
-      dp_pd_immintrin_loadu(n_c,A1_cr_,etx1n_,&(wnxten_[nr]));
+      dp_pd_immintrin_loadu_fma(n_c,A1_cr_,etx1n_,&(wnxten_[nr]));
       /* for (nr=0;nr<n_r_rtn;nr++){ } */}
     memset(QR_pos_,0,n_r*sizeof(double));
     for (nr=0;nr<n_r_rtn;nr++){
