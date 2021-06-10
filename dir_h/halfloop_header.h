@@ -174,6 +174,8 @@ void dp_ps_mult_cblas_sgemm(int n_row_A,int n_col_X,float *f_A_trn__,int n_row_B
 void dp_ps_mult_cblas_sdot(int n_row_A,int n_col_X,float *f_A_trn__,int n_row_B,float *f_B_trn__,float **f_C_p_);
 void dp_ps_bruteforce(int n_col_X,float *f_A_,float *f_B_,float *f_C_);
 void dp_ps_mult_bruteforce(int n_row_A,int n_col_X,float *f_A_trn__,int n_row_B,float *f_B_trn__,float **f_C_p_);
+void dp_ps_immintrin_loadu_wrap(int n_col_X,float *f_A_,float *f_B_,float *f_C_);
+void dp_ps_mult_immintrin_loadu_wrap(int n_row_A,int n_col_X,float *f_A_trn__,int n_row_B,float *f_B_trn__,float **f_C_p_);
 void dp_ps_immintrin_loadu_avx(int n_col_X,float *f_A_,float *f_B_,float *f_C_);
 void dp_ps_mult_immintrin_loadu_avx(int n_row_A,int n_col_X,float *f_A_trn__,int n_row_B,float *f_B_trn__,float **f_C_p_);
 void dp_ps_immintrin_loadu_fma(int n_col_X,float *f_A_,float *f_B_,float *f_C_);

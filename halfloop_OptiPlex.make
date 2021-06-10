@@ -1,7 +1,7 @@
 
 # Compiler
 CC=gcc
-CCFLAGS_ori= -fPIC -w -O2 -mfma -fopenmp -lm -I./dir_h
+CCFLAGS_ori= -fPIC -w -O2 -D_FMA -mfma -fopenmp -lm -I./dir_h
 CCFLAGS_opt= -D_COMPLEX -D_AVX -mavx -D_CBLAS -Wl,-R -Wl,/usr/lib/x86_64-linux-gnu -lgslcblas
 CCFLAGS_dev = $(CCFLAGS_ori) # $(CCFLAGS_opt)
 CCFLAGS=$(CCFLAGS_dev) -D_MONOLITH

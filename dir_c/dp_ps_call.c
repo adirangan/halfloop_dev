@@ -53,7 +53,9 @@ void dp_pd_immintrin_loadu_fma(int n_col_X,double *d_A_,double *d_B_,double *d_C
   for (ncol_X_256d=0;ncol_X_256d<n_col_X_256d-1;ncol_X_256d++){
     pd_A0 = _mm256_loadu_pd(d_A_point0_);
     pd_B0 = _mm256_loadu_pd(d_B_point0_);
+#ifdef _FMA
     pd_ac0 = _mm256_fmadd_pd(pd_A0,pd_B0,pd_ac0);
+#endif /* _FMA */
     d_A_point0_+=4;d_B_point0_+=4;
     /* for (ncol_X_256d=0;ncol_X_256d<n_col_X_256d-1;ncol_X_256d++){ } */}
   d_ac0 = d_ac0_[0] + d_ac0_[1] + d_ac0_[2] + d_ac0_[3];
@@ -265,6 +267,28 @@ void dp_ps_mult_bruteforce(int n_row_A,int n_col_X,float *f_A_trn__,int n_row_B,
     /* if (f_C__!=NULL){ } */}
 }
 
+void dp_ps_immintrin_loadu_wrap(int n_col_X,float *f_A_,float *f_B_,float *f_C_)
+{
+  /* does not assume alignment */
+#ifdef _FMA
+  dp_ps_immintrin_loadu_fma(n_col_X,f_A_,f_B_,f_C_);
+#endif /* _FMA */
+#ifndef _FMA
+  dp_ps_immintrin_loadu_avx(n_col_X,f_A_,f_B_,f_C_);
+#endif /* _FMA */
+}
+
+void dp_ps_mult_immintrin_loadu_wrap(int n_row_A,int n_col_X,float *f_A_trn__,int n_row_B,float *f_B_trn__,float **f_C_p_)
+{
+  /* does not assume alignment */
+#ifdef _FMA
+  dp_ps_mult_immintrin_loadu_fma(n_row_A,n_col_X,f_A_trn__,n_row_B,f_B_trn__,f_C_p_);
+#endif /* _FMA */
+#ifndef _FMA
+  dp_ps_mult_immintrin_loadu_avx(n_row_A,n_col_X,f_A_trn__,n_row_B,f_B_trn__,f_C_p_);
+#endif /* _FMA */
+}
+
 void dp_ps_immintrin_loadu_avx(int n_col_X,float *f_A_,float *f_B_,float *f_C_)
 {
   /* does not assume alignment */
@@ -334,7 +358,9 @@ void dp_ps_immintrin_loadu_fma(int n_col_X,float *f_A_,float *f_B_,float *f_C_)
   for (ncol_X_256=0;ncol_X_256<n_col_X_256-1;ncol_X_256++){
     ps_A0 = _mm256_loadu_ps(f_A_point0_);
     ps_B0 = _mm256_loadu_ps(f_B_point0_);
+#ifdef _FMA
     ps_ac0 = _mm256_fmadd_ps(ps_A0,ps_B0,ps_ac0);
+#endif /* _FMA */
     f_A_point0_+=8;f_B_point0_+=8;
     /* for (ncol_X_256=0;ncol_X_256<n_col_X_256-1;ncol_X_256++){ } */}
   f_ac0 = f_ac0_[0] + f_ac0_[1] + f_ac0_[2] + f_ac0_[3] + f_ac0_[4] + f_ac0_[5] + f_ac0_[6] + f_ac0_[7];
@@ -395,8 +421,12 @@ void dp_ps_mult_immintrin_load1_fma(int n_row_A,int n_col_X,float *f_A_trn__,int
 	for (ncol_X=0;ncol_X<n_col_X_256;ncol_X++){
 	  ps_A0 = _mm256_load_ps(tmp_f_A_point0_);
 	  ps_B0 = _mm256_load_ps(tmp_f_B_point0_);
+#ifdef _FMA
 	  ps_ac0 = _mm256_fmadd_ps(ps_A0,ps_B0,ps_ac0);
+#endif /* _FMA */
+#ifdef _FMA
 	  tmp_f_A_point0_+=8;tmp_f_B_point0_+=8;
+#endif /* _FMA */
 	  /* for (ncol_X=0;ncol_X<n_col_X_256;ncol_X++){ } */}
 	tmp_f_ac0 = tmp_f_ac0_[0] + tmp_f_ac0_[1] + tmp_f_ac0_[2] + tmp_f_ac0_[3] + tmp_f_ac0_[4] + tmp_f_ac0_[5] + tmp_f_ac0_[6] + tmp_f_ac0_[7];
 	f_C__[nrow_A + nrow_B*n_row_A] = tmp_f_ac0;
@@ -436,13 +466,19 @@ void dp_ps_mult_immintrin_fma2(int n_row_A,int n_col_X,__m256 *ps_A_trn__,int n_
 	ps_ac0 = _mm256_set1_ps((float)0.0);
 	ps_ac1 = _mm256_set1_ps((float)0.0);
 	for (ncol_X=0;ncol_X<n_col_X_256-1;ncol_X+=2){
+#ifdef _FMA
 	  ps_ac0 = _mm256_fmadd_ps(*(tmp_ps_A_trn_),*(tmp_ps_B_trn_),ps_ac0);
+#endif /* _FMA */
+#ifdef _FMA
 	  ps_ac1 = _mm256_fmadd_ps(*(tmp_ps_A_trn_+1),*(tmp_ps_B_trn_+1),ps_ac1);
+#endif /* _FMA */
 	  tmp_ps_A_trn_+=2;
 	  tmp_ps_B_trn_+=2;
 	  /* for (ncol_X=0;ncol_X<n_col_X_256-1;ncol_X+=2){ } */}
 	if ( (nrow_A==0) && (nrow_B==0) ){ printf(" ncol_X %d\n",ncol_X);}
+#ifdef _FMA
 	if (n_col_X_256%2==1){ ps_ac0 = _mm256_fmadd_ps(*(tmp_ps_A_trn_++),*(tmp_ps_B_trn_++),ps_ac0);}
+#endif /* _FMA */
 	tmp_f_ac0 = tmp_f_ac0_[0] + tmp_f_ac0_[1] + tmp_f_ac0_[2] + tmp_f_ac0_[3] + tmp_f_ac0_[4] + tmp_f_ac0_[5] + tmp_f_ac0_[6] + tmp_f_ac0_[7];
 	tmp_f_ac1 = tmp_f_ac1_[0] + tmp_f_ac1_[1] + tmp_f_ac1_[2] + tmp_f_ac1_[3] + tmp_f_ac1_[4] + tmp_f_ac1_[5] + tmp_f_ac1_[6] + tmp_f_ac1_[7];
 	f_C__[nrow_A + nrow_B*n_row_A] = tmp_f_ac0 + tmp_f_ac1;
@@ -481,7 +517,9 @@ void dp_ps_mult_immintrin_fma(int n_row_A,int n_col_X,__m256 *ps_A_trn__,int n_r
 	tmp_ps_A_trn_ = tmp_ps_A_trn__;
 	tmp_ps_B_trn_ = tmp_ps_B_trn__;
 	for (ncol_X=0;ncol_X<n_col_X_256;ncol_X++){
+#ifdef _FMA
 	  ps_acc = _mm256_fmadd_ps(*(tmp_ps_A_trn_++),*(tmp_ps_B_trn_++),ps_acc);
+#endif /* _FMA */
 	  /* for (ncol_X=0;ncol_X<n_col_X_256;ncol_X++){ } */}
 	tmp_f = tmp_f_[0] + tmp_f_[1] + tmp_f_[2] + tmp_f_[3] + tmp_f_[4] + tmp_f_[5] + tmp_f_[6] + tmp_f_[7];
 	f_C__[nrow_A + nrow_B*n_row_A] = tmp_f;
@@ -684,11 +722,21 @@ void dp_ps_mult_immintrin_test()
   ferror = ffnorm(ulli_C_total,f_C_bf__,f_C_ps__);
   printf(" %% ferror %0.16f\n",ferror);
   /* %%%%%%%% */
-  _mm_free(ps_A_trn__); ps_A_trn__ = NULL;
   GLOBAL_tic(0);
   memset(f_C_ps__,0,ulli_C_total*sizeof(float));
   dp_ps_mult_immintrin_loadu_avx(n_row_A,n_col_X,f_A_u_trn__,n_row_B,f_B_u_trn__,&f_C_ps__);
   GLOBAL_toc(0,1," dp_ps_mult_immintrin_loadu_avx: ");
+  printf("Gops %0.6f\n",(double)n_row_A*(double)n_row_B*(double)n_col_X/GLOBAL_elrt[0]/1e9);
+  for (nrow_A=0;nrow_A<n_row_A_sub;nrow_A++){ for (nrow_B=0;nrow_B<n_row_B_sub;nrow_B++){ f_C_sub__[nrow_A+nrow_B*n_row_A_sub] = f_C_ps__[nrow_A+nrow_B*n_row_A];}}
+  printf(" %% upper corner of f_C_ps__: \n");
+  array_printf(f_C_sub__,"float",n_row_A_sub,n_row_B_sub," % f_C_ps__: ");
+  ferror = ffnorm(ulli_C_total,f_C_bf__,f_C_ps__);
+  printf(" %% ferror %0.16f\n",ferror);
+  /* %%%%%%%% */
+  GLOBAL_tic(0);
+  memset(f_C_ps__,0,ulli_C_total*sizeof(float));
+  dp_ps_mult_immintrin_loadu_wrap(n_row_A,n_col_X,f_A_u_trn__,n_row_B,f_B_u_trn__,&f_C_ps__);
+  GLOBAL_toc(0,1," dp_ps_mult_immintrin_loadu_wrap: ");
   printf("Gops %0.6f\n",(double)n_row_A*(double)n_row_B*(double)n_col_X/GLOBAL_elrt[0]/1e9);
   for (nrow_A=0;nrow_A<n_row_A_sub;nrow_A++){ for (nrow_B=0;nrow_B<n_row_B_sub;nrow_B++){ f_C_sub__[nrow_A+nrow_B*n_row_A_sub] = f_C_ps__[nrow_A+nrow_B*n_row_A];}}
   printf(" %% upper corner of f_C_ps__: \n");
