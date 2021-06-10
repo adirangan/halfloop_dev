@@ -167,6 +167,8 @@ double RISIGET(unsigned long int *rseed_p,double rate);
 void R01GET_test();
 void dp_pd_bruteforce(int n_col_X,double *d_A_,double *d_B_,double *d_C_);
 void dp_pd_mult_bruteforce(int n_row_A,int n_col_X,double *d_A_trn__,int n_row_B,double *d_B_trn__,double **d_C_p_);
+void dp_pd_immintrin_loadu_wrap(int n_col_X,double *d_A_,double *d_B_,double *d_C_);
+void dp_pd_mult_immintrin_loadu_wrap(int n_row_A,int n_col_X,double *d_A_trn__,int n_row_B,double *d_B_trn__,double **d_C_p_);
 void dp_pd_immintrin_loadu_fma(int n_col_X,double *d_A_,double *d_B_,double *d_C_);
 void dp_pd_mult_immintrin_loadu_fma(int n_row_A,int n_col_X,double *d_A_trn__,int n_row_B,double *d_B_trn__,double **d_C_p_);
 void dp_pd_mult_immintrin_test();

@@ -1,0 +1,2 @@
+GLOBAL_mode= halfloop_nonbinary_f_recursive_omp_test;
+END= 0;

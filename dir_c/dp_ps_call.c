@@ -36,6 +36,28 @@ void dp_pd_mult_bruteforce(int n_row_A,int n_col_X,double *d_A_trn__,int n_row_B
     /* if (d_C__!=NULL){ } */}
 }
 
+void dp_pd_immintrin_loadu_wrap(int n_col_X,double *d_A_,double *d_B_,double *d_C_)
+{
+  /* does not assume alignment */
+#ifdef _FMA
+  dp_pd_immintrin_loadu_fma(n_col_X,d_A_,d_B_,d_C_);
+#endif /* _FMA */
+#ifndef _FMA
+  printf(" %% Warning, dp_pd_immintrin_loadu_avx does not exist\n"); exit(EXIT_FAILURE);
+#endif /* _FMA */
+}
+
+void dp_pd_mult_immintrin_loadu_wrap(int n_row_A,int n_col_X,double *d_A_trn__,int n_row_B,double *d_B_trn__,double **d_C_p_)
+{
+  /* does not assume alignment */
+#ifdef _FMA
+  dp_pd_mult_immintrin_loadu_fma(n_row_A,n_col_X,d_A_trn__,n_row_B,d_B_trn__,d_C_p_);
+#endif /* _FMA */
+#ifndef _FMA
+  printf(" %% Warning, dp_pd_mult_immintrin_loadu_avx does not exist\n"); exit(EXIT_FAILURE);
+#endif /* _FMA */
+}
+
 void dp_pd_immintrin_loadu_fma(int n_col_X,double *d_A_,double *d_B_,double *d_C_)
 {
   /* does not assume alignment */
