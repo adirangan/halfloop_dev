@@ -26,7 +26,7 @@ void halfloop_nonbinary_f_recursive_helper_QR_helper_orth
     Q_rc__ = (float *) malloc1((unsigned long long int)n_r_index*(unsigned long long int)n_r_index*sizeof(float));
     array_orth_f(n_r_index,n_r_index,&Q_rc__,rseed_p);
     if (verbose>9){ array_printf_margin(Q_rc__,"float",n_r_index,n_r_index," % Q_rc__: "); printf(" %% %% %% %%\n");}
-    dp_ps_mult_immintrin_loadu_fma(n_r_index,n_r_index,Q_rc__,n_c_index,E_rc__,&QE_rc__);
+    dp_ps_mult_immintrin_loadu_wrap(n_r_index,n_r_index,Q_rc__,n_c_index,E_rc__,&QE_rc__);
     free1(&Q_rc__);
     /* if (n_r_index<=n_m_index){ } */}
   if ( (GLOBAL_flag_orth_brute==0) && (n_r_index> n_m_index) ){
@@ -48,7 +48,7 @@ void halfloop_nonbinary_f_recursive_helper_QR_helper_orth
       if (verbose>9){ array_printf_margin(QE_0_rc__,"float",n_m_index,n_c_index," %% QE_0_rc__: ");}
       array_orth_f(n_m_index,n_m_index,&Q_rc__,rseed_p);
       if (verbose>9){ array_printf_margin(Q_rc__,"float",n_m_index,n_m_index," %% Q_rc__: ");}
-      dp_ps_mult_immintrin_loadu_fma(n_m_index,n_m_index,Q_rc__,n_c_index,QE_0_rc__,&QE_1_rc__);
+      dp_ps_mult_immintrin_loadu_wrap(n_m_index,n_m_index,Q_rc__,n_c_index,QE_0_rc__,&QE_1_rc__);
       array_implant_f_from_f(n_r_index,n_c_index,QE_rc__,n_m_index,r_perm_index_sub_,0,NULL,QE_1_rc__,NULL);
       /* for (niteration=0;niteration<n_iteration;niteration++){ } */}
     free1(&r_perm_index_thrice_);
