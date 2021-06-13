@@ -50,6 +50,7 @@ extern int GLOBAL_verbose;
 extern char GLOBAL_mode[FNAMESIZE];
 extern double GLOBAL_tolerance;
 extern unsigned int GLOBAL_recursion_limit;
+extern unsigned int GLOBAL_halfloop_recursion_limit;
 extern int addressable_1;
 extern int addressable_0;
 extern int addressable_int_length;
@@ -278,6 +279,7 @@ void halfloop_nonbinary_recursive_helper_ZR__
 void halfloop_nonbinary_f_recursive
 (
  int verbose
+ ,int ndepth
  ,int n_r
  ,int n_c
  ,float *E_base_rc__
@@ -338,6 +340,7 @@ void halfloop_nonbinary_f_recursive_omp_helper_QR__
 void halfloop_nonbinary_f_recursive_omp
 (
  int verbose
+ ,int ndepth
  ,int n_r
  ,int n_c
  ,float *E_base_rc__

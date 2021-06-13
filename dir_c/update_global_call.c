@@ -10,6 +10,7 @@ void update_global(char *vname)
   if (0){ /* do nothing */ }
   else if (strcmp(vname,"GLOBAL_verbose")==0){ scanf("%d",&GLOBAL_verbose); if (verbose>0){ printf("%s read to be %d\n",vname,GLOBAL_verbose);}}
   else if (strcmp(vname,"GLOBAL_mode")==0){ scanf("%[^,;]",GLOBAL_mode); if (verbose>0){ printf("%s read to be %s\n",vname,GLOBAL_mode);} /* else if (strcmp(vname,"GLOBAL_mode")==0){ } */}
+  else if (strcmp(vname,"GLOBAL_halfloop_recursion_limit")==0){ scanf("%u",&GLOBAL_halfloop_recursion_limit); if (verbose>0){ printf("%s read to be %u\n",vname,GLOBAL_halfloop_recursion_limit);}}
   else if (strcmp(vname,"GLOBAL_E_base_mda_r4")==0){ scanf("%[^,;]",GLOBAL_E_base_mda_r4); if (verbose>0){ printf("%s read to be %s\n",vname,GLOBAL_E_base_mda_r4);} /* else if (strcmp(vname,"GLOBAL_E_base_mda_r4")==0){ } */}
   else if (strcmp(vname,"GLOBAL_flag_r0drop_vs_rcdrop")==0){ scanf("%d",&GLOBAL_flag_r0drop_vs_rcdrop); if (verbose>0){ printf("%s read to be %d\n",vname,GLOBAL_flag_r0drop_vs_rcdrop);}}
   else if (strcmp(vname,"GLOBAL_gamma")==0){ scanf("%lf",&GLOBAL_gamma); if (verbose>0){ printf("%s read to be %f\n",vname,GLOBAL_gamma);}}

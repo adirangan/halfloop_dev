@@ -413,6 +413,7 @@ void halfloop_nonbinary_recursive_helper_ZR__
 void halfloop_nonbinary_f_recursive
 (
  int verbose
+ ,int ndepth
  ,int n_r
  ,int n_c
  ,float *E_base_rc__
@@ -759,7 +760,7 @@ void halfloop_nonbinary_f_recursive
   /* %%%% */
   p_branch = exp(-nlp_gumb_emp); if (p_branch<(double)1.0/(double)n_shuffle){ p_branch = exp(-nlp_gumb_opt);}
   p_next = 1.0 - (1.0-p_prev)*(1-p_branch); //%<-- q_next = q_prev*q_branch;
-  flag_split = (n_r_rtn_index_F>=n_member_lob) && (n_r_rmv_index_F>=n_member_lob) && (p_next<=p_use);
+  flag_split = (ndepth< GLOBAL_halfloop_recursion_limit) && (n_r_rtn_index_F>=n_member_lob) && (n_r_rmv_index_F>=n_member_lob) && (p_next<=p_use);
   if (verbose>0){ printf(" %% p_branch %f p_next %f n_r_rtn_index_F %d n_r_rmv_index_F %d flag_split %d\n",p_branch,p_next,n_r_rtn_index_F,n_r_rmv_index_F,flag_split);} 
   nlp_p_split_[0] = nlp_gumb_emp;
   nlp_p_split_[1] = nlp_gumb_opt;
@@ -780,6 +781,7 @@ void halfloop_nonbinary_f_recursive
     halfloop_nonbinary_f_recursive
       (
        verbose
+       ,1+ndepth
        ,n_r
        ,n_c
        ,E_base_rc__
@@ -808,6 +810,7 @@ void halfloop_nonbinary_f_recursive
     halfloop_nonbinary_f_recursive
       (
        verbose
+       ,1+ndepth
        ,n_r
        ,n_c
        ,E_base_rc__
@@ -861,9 +864,9 @@ void halfloop_nonbinary_f_recursive
     /* %%%% */
     /* if (flag_split){ } */}
   /* %%%% */
-  /* if p_prev_0in < 0 then print labels to file */
+  /* if ndepth==0 then print labels to file */
   /* %%%% */
-  if (p_prev_0in< 0){
+  if (ndepth==0){
     sprintf(fname_output_label,"%s/output_label__.txt",dir_out);
     if ((fp=fopen(fname_output_label,"w"))==NULL){ printf(" %% Warning! could not open %s.\n",fname_output_label); exit(EXIT_FAILURE);}
     for (nr_index=0;nr_index<n_r_index;nr_index++){
@@ -882,7 +885,7 @@ void halfloop_nonbinary_f_recursive
       fprintf(fp,"%s\n",nlpnex_label__[nr_index]);
       /* for (nr_index=0;nr_index<n_r_index;nr_index++){ } */}
     fclose(fp);fp=NULL;
-    /* if (p_prev_0in< 0){ } */}
+    /* if (ndepth==0){ } */}
   /* %%%% */
   free1(&r_index_rmv_sub_);
   free1(&r_index_rtn_sub_);
@@ -953,6 +956,7 @@ void halfloop_nonbinary_f_recursive_test()
   GLOBAL_tic(0);
   halfloop_nonbinary_f_recursive(
   verbose
+ ,0
  ,n_r
  ,n_c
  ,E_base_rc__
@@ -998,6 +1002,7 @@ void halfloop_nonbinary_f_recursive_test()
   GLOBAL_tic(0);
   halfloop_nonbinary_f_recursive(
   verbose
+ ,0
  ,n_r
  ,n_c
  ,E_base_rc__
@@ -1090,6 +1095,7 @@ void halfloop_nonbinary_f_recursive_test_speed()
   GLOBAL_tic(0);
   halfloop_nonbinary_f_recursive(
   verbose
+ ,0
  ,n_r
  ,n_c
  ,E_base_rc__
@@ -1284,6 +1290,7 @@ void halfloop_nonbinary_f_recursive_omp_helper_QR__
 void halfloop_nonbinary_f_recursive_omp
 (
  int verbose
+ ,int ndepth
  ,int n_r
  ,int n_c
  ,float *E_base_rc__
@@ -1630,7 +1637,7 @@ void halfloop_nonbinary_f_recursive_omp
   /* %%%% */
   p_branch = exp(-nlp_gumb_emp); if (p_branch<(double)1.0/(double)n_shuffle){ p_branch = exp(-nlp_gumb_opt);}
   p_next = 1.0 - (1.0-p_prev)*(1-p_branch); //%<-- q_next = q_prev*q_branch;
-  flag_split = (n_r_rtn_index_F>=n_member_lob) && (n_r_rmv_index_F>=n_member_lob) && (p_next<=p_use);
+  flag_split = (ndepth< GLOBAL_halfloop_recursion_limit) && (n_r_rtn_index_F>=n_member_lob) && (n_r_rmv_index_F>=n_member_lob) && (p_next<=p_use);
   if (verbose>0){ printf(" %% p_branch %f p_next %f n_r_rtn_index_F %d n_r_rmv_index_F %d flag_split %d\n",p_branch,p_next,n_r_rtn_index_F,n_r_rmv_index_F,flag_split);} 
   nlp_p_split_[0] = nlp_gumb_emp;
   nlp_p_split_[1] = nlp_gumb_opt;
@@ -1651,6 +1658,7 @@ void halfloop_nonbinary_f_recursive_omp
     halfloop_nonbinary_f_recursive_omp
       (
        verbose
+       ,1+ndepth
        ,n_r
        ,n_c
        ,E_base_rc__
@@ -1679,6 +1687,7 @@ void halfloop_nonbinary_f_recursive_omp
     halfloop_nonbinary_f_recursive_omp
       (
        verbose
+       ,1+ndepth
        ,n_r
        ,n_c
        ,E_base_rc__
@@ -1732,9 +1741,9 @@ void halfloop_nonbinary_f_recursive_omp
     /* %%%% */
     /* if (flag_split){ } */}
   /* %%%% */
-  /* if p_prev_0in < 0 then print labels to file */
+  /* if ndepth==0 then print labels to file */
   /* %%%% */
-  if (p_prev_0in< 0){
+  if (ndepth==0){
     sprintf(fname_output_label,"%s/output_label__.txt",dir_out);
     if ((fp=fopen(fname_output_label,"w"))==NULL){ printf(" %% Warning! could not open %s.\n",fname_output_label); exit(EXIT_FAILURE);}
     for (nr_index=0;nr_index<n_r_index;nr_index++){
@@ -1753,7 +1762,7 @@ void halfloop_nonbinary_f_recursive_omp
       fprintf(fp,"%s\n",nlpnex_label__[nr_index]);
       /* for (nr_index=0;nr_index<n_r_index;nr_index++){ } */}
     fclose(fp);fp=NULL;
-    /* if (p_prev_0in< 0){ } */}
+    /* if (ndepth==0){ } */}
   /* %%%% */
   free1(&r_index_rmv_sub_);
   free1(&r_index_rtn_sub_);
@@ -1823,6 +1832,7 @@ void halfloop_nonbinary_f_recursive_omp_test()
   GLOBAL_tic(0);
   halfloop_nonbinary_f_recursive_omp(
   verbose
+ ,0
  ,n_r
  ,n_c
  ,E_base_rc__
@@ -1862,6 +1872,7 @@ void halfloop_nonbinary_f_recursive_omp_test()
   GLOBAL_tic(0);
   halfloop_nonbinary_f_recursive_omp(
   verbose
+ ,0
  ,n_r
  ,n_c
  ,E_base_rc__
@@ -1948,6 +1959,7 @@ void halfloop_nonbinary_f_recursive_omp_test_speed()
   GLOBAL_tic(0);
   halfloop_nonbinary_f_recursive_omp(
   verbose
+ ,0
  ,n_r
  ,n_c
  ,E_base_rc__
@@ -2009,6 +2021,7 @@ void halfloop_nonbinary_f_gateway_matlab
   if (flag_omp_use==0){
   halfloop_nonbinary_f_recursive(
   verbose
+ ,0
  ,n_r
  ,n_c
  ,E_base_rc__
@@ -2035,6 +2048,7 @@ void halfloop_nonbinary_f_gateway_matlab
   if (flag_omp_use==1){
   halfloop_nonbinary_f_recursive_omp(
   verbose
+ ,0
  ,n_r
  ,n_c
  ,E_base_rc__
@@ -2107,6 +2121,7 @@ void halfloop_nonbinary_f_gateway_shell()
   if (GLOBAL_flag_omp_use==0){
   halfloop_nonbinary_f_recursive(
   GLOBAL_verbose
+ ,0
  ,n_r
  ,n_c
  ,E_base_rc__
@@ -2133,6 +2148,7 @@ void halfloop_nonbinary_f_gateway_shell()
   if (GLOBAL_flag_omp_use==1){
   halfloop_nonbinary_f_recursive_omp(
   GLOBAL_verbose
+ ,0
  ,n_r
  ,n_c
  ,E_base_rc__
