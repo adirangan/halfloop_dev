@@ -1,0 +1,3 @@
+GLOBAL_mode= halfloop_nonbinary_f_recursive_test;
+GLOBAL_halfloop_recursion_limit= 3;
+END= 0;
