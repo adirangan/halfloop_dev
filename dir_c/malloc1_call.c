@@ -5,8 +5,9 @@
 void * malloc1(size_t size)
 { 
   void *vp=NULL;
-  vp = malloc(size);
-  memset(vp,0,size);
+  vp = malloc(1+size);
+  if (vp==NULL){ printf(" %% Warning, out of memory: malloc failed with size %lld\n",(unsigned long long int)size); exit(EXIT_FAILURE);}
+  memset(vp,0,1+size);
   if (GLOBAL_malloc1_notupdate==0){ GLOBAL_n_malloc1++;}
   return vp;
 }

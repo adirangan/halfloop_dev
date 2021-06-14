@@ -22,7 +22,7 @@ double GLOBAL_elct[GLOBAL_NTICKS],GLOBAL_elrt[GLOBAL_NTICKS];
 int GLOBAL_verbose=0;
 char GLOBAL_mode[FNAMESIZE] = "\0";
 double GLOBAL_tolerance=0.000000000001; //%<-- 1e-12;
-unsigned int GLOBAL_recursion_limit=1024*32; //%<-- 2^15;
+unsigned int GLOBAL_quicksort_recursion_limit=1024*32; //%<-- 2^15;
 unsigned int GLOBAL_halfloop_recursion_limit=63; //<-- 8*sizeof(unsigned long long int)-1;
 int addressable_1=1;
 int addressable_0=0;
