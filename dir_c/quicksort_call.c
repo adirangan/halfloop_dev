@@ -26,7 +26,8 @@ int iquicksort_partition_index(int *i_full_,int stride,int *index_full_,int l,in
 {
   int verbose=0;
   int *i_ = i_full_ + stride*l;
-  int *index_ = index_full_ + l;
+  int flag_index=0;
+  int *index_=NULL;
   int *g_wkspace_=NULL;
   int *index_wkspace_ = NULL;
   int n_i = 1+r-l;
@@ -41,39 +42,41 @@ int iquicksort_partition_index(int *i_full_,int stride,int *index_full_,int l,in
   int m_upd=0;
   if (verbose){ printf(" %% [entering iquicksort_partition_index]\n");}
   if (verbose){ array_printf(i_,"int",1,stride*n_i," %% pre i_: ");}
-  if (verbose){ array_printf(index_,"int",1,n_i," %% pre index_: ");}
+  flag_index = index_full_!=NULL;
+  if (flag_index){ index_ = index_full_ + l;}
+  if (verbose){ if (flag_index){ array_printf(index_,"int",1,n_i," %% pre index_: ");}}
   g_wkspace_ = (int *) malloc1((unsigned long long int)(2*n_i)*sizeof(int));
-  index_wkspace_ = (int *) malloc1((unsigned long long int)(2*n_i)*sizeof(int));
+  if (flag_index){ index_wkspace_ = (int *) malloc1((unsigned long long int)(2*n_i)*sizeof(int));}
   i_pivot = i_[stride*m];
-  index_pivot = index_[m];
+  if (flag_index){ index_pivot = index_[m];}
   if (verbose){ printf(" %% m %d, i_pivot %d, index_pivot %d\n",m,i_pivot,index_pivot);}
   g_wkspace_[n_i] = i_pivot;
-  index_wkspace_[n_i] = index_pivot;
+  if (flag_index){ index_wkspace_[n_i] = index_pivot;}
   g_index_lower = n_i-1;
   g_index_upper = n_i+1;
   flag_alt = 0;
   for (ni=0;ni<n_i;ni++){
     if (ni!=m){
       i = i_[stride*ni];
-      index = index_[ni];
-      if (i< i_pivot){ g_wkspace_[g_index_lower] = i; index_wkspace_[g_index_lower] = index; g_index_lower--;}
-      if (i> i_pivot){ g_wkspace_[g_index_upper] = i; index_wkspace_[g_index_upper] = index; g_index_upper++;}
+      if (flag_index){ index = index_[ni];}
+      if (i< i_pivot){ g_wkspace_[g_index_lower] = i; if (flag_index){ index_wkspace_[g_index_lower] = index;} g_index_lower--;}
+      if (i> i_pivot){ g_wkspace_[g_index_upper] = i; if (flag_index){ index_wkspace_[g_index_upper] = index;} g_index_upper++;}
       if (i==i_pivot){
-	if (flag_alt==0){ g_wkspace_[g_index_lower] = i; index_wkspace_[g_index_lower] = index; g_index_lower--;}
-	if (flag_alt==1){ g_wkspace_[g_index_upper] = i; index_wkspace_[g_index_upper] = index; g_index_upper++;}
+	if (flag_alt==0){ g_wkspace_[g_index_lower] = i; if (flag_index){ index_wkspace_[g_index_lower] = index;} g_index_lower--;}
+	if (flag_alt==1){ g_wkspace_[g_index_upper] = i; if (flag_index){ index_wkspace_[g_index_upper] = index;} g_index_upper++;}
 	flag_alt = 1-flag_alt;
 	/* if (i==i_pivot){ } */}
       /* if (ni!=m){ } */}
     /* for (ni=0;ni<n_i;ni++){ } */}
-  for (ni=0;ni<n_i;ni++){ i_[stride*ni] = g_wkspace_[1+g_index_lower+ni]; index_[ni] = index_wkspace_[1+g_index_lower+ni];}
+  for (ni=0;ni<n_i;ni++){ i_[stride*ni] = g_wkspace_[1+g_index_lower+ni]; if (flag_index){ index_[ni] = index_wkspace_[1+g_index_lower+ni];}}
   if (verbose){ array_printf(g_wkspace_,"int",1,2*n_i," %% g_wkspace_: ");}
-  if (verbose){ array_printf(index_wkspace_,"int",1,2*n_i," %% index_wkspace_: ");}
+  if (verbose){ if (flag_index){ array_printf(index_wkspace_,"int",1,2*n_i," %% index_wkspace_: ");}}
   if (verbose){ array_printf(i_,"int",1,stride*n_i," %% pos i_: ");}
-  if (verbose){ array_printf(index_,"int",1,n_i," %% pos index_: ");}
+  if (verbose){ if (flag_index){ array_printf(index_,"int",1,n_i," %% pos index_: ");}}
   m_upd = n_i - 1 - g_index_lower;
   if (verbose){ printf(" %% local pivot position %d, full pivot position %d\n",m_upd,l+m_upd);}
   free1(&g_wkspace_);
-  free1(&index_wkspace_);
+  if (flag_index){ free1(&index_wkspace_);}
   if (verbose){ printf(" %% [finished iquicksort_partition_index]\n");}
   return l+m_upd;
 }
@@ -250,7 +253,8 @@ int fquicksort_partition_index(float *f_full_,int stride,int *index_full_,int l,
 {
   int verbose=0;
   float *f_ = f_full_ + stride*l;
-  int *index_ = index_full_ + l;
+  int flag_index=0;
+  int *index_=NULL;
   float *g_wkspace_=NULL;
   int *index_wkspace_ = NULL;
   int n_f = 1+r-l;
@@ -265,39 +269,41 @@ int fquicksort_partition_index(float *f_full_,int stride,int *index_full_,int l,
   int m_upd=0;
   if (verbose){ printf(" %% [entering fquicksort_partition_index]\n");}
   if (verbose){ array_printf(f_,"float",1,stride*n_f," %% pre f_: ");}
-  if (verbose){ array_printf(index_,"int",1,n_f," %% pre index_: ");}
+  flag_index = index_full_!=NULL;
+  if (flag_index){ index_ = index_full_ + l;}
+  if (verbose){ if (flag_index){ array_printf(index_,"int",1,n_f," %% pre index_: ");}}
   g_wkspace_ = (float *) malloc1((unsigned long long int)(2*n_f)*sizeof(float));
-  index_wkspace_ = (int *) malloc1((unsigned long long int)(2*n_f)*sizeof(int));
+  if (flag_index){ index_wkspace_ = (int *) malloc1((unsigned long long int)(2*n_f)*sizeof(int));}
   f_pivot = f_[stride*m];
-  index_pivot = index_[m];
+  if (flag_index){ index_pivot = index_[m];}
   if (verbose){ printf(" %% m %d, f_pivot %f, index_pivot %d\n",m,f_pivot,index_pivot);}
   g_wkspace_[n_f] = f_pivot;
-  index_wkspace_[n_f] = index_pivot;
+  if (flag_index){ index_wkspace_[n_f] = index_pivot;}
   g_index_lower = n_f-1;
   g_index_upper = n_f+1;
   flag_alt = 0;
   for (nf=0;nf<n_f;nf++){
     if (nf!=m){
       f = f_[stride*nf];
-      index = index_[nf];
-      if (f< f_pivot){ g_wkspace_[g_index_lower] = f; index_wkspace_[g_index_lower] = index; g_index_lower--;}
-      if (f> f_pivot){ g_wkspace_[g_index_upper] = f; index_wkspace_[g_index_upper] = index; g_index_upper++;}
+      if (flag_index){ index = index_[nf];}
+      if (f< f_pivot){ g_wkspace_[g_index_lower] = f; if (flag_index){ index_wkspace_[g_index_lower] = index;} g_index_lower--;}
+      if (f> f_pivot){ g_wkspace_[g_index_upper] = f; if (flag_index){ index_wkspace_[g_index_upper] = index;} g_index_upper++;}
       if (f==f_pivot){
-	if (flag_alt==0){ g_wkspace_[g_index_lower] = f; index_wkspace_[g_index_lower] = index; g_index_lower--;}
-	if (flag_alt==1){ g_wkspace_[g_index_upper] = f; index_wkspace_[g_index_upper] = index; g_index_upper++;}
+	if (flag_alt==0){ g_wkspace_[g_index_lower] = f; if (flag_index){ index_wkspace_[g_index_lower] = index;} g_index_lower--;}
+	if (flag_alt==1){ g_wkspace_[g_index_upper] = f; if (flag_index){ index_wkspace_[g_index_upper] = index;} g_index_upper++;}
 	flag_alt = 1-flag_alt;
 	/* if (f==f_pivot){ } */}
       /* if (nf!=m){ } */}
     /* for (nf=0;nf<n_f;nf++){ } */}
-  for (nf=0;nf<n_f;nf++){ f_[stride*nf] = g_wkspace_[1+g_index_lower+nf]; index_[nf] = index_wkspace_[1+g_index_lower+nf];}
+  for (nf=0;nf<n_f;nf++){ f_[stride*nf] = g_wkspace_[1+g_index_lower+nf]; if (flag_index){ index_[nf] = index_wkspace_[1+g_index_lower+nf];}}
   if (verbose){ array_printf(g_wkspace_,"float",1,2*n_f," %% g_wkspace_: ");}
-  if (verbose){ array_printf(index_wkspace_,"int",1,2*n_f," %% index_wkspace_: ");}
+  if (verbose){ if (flag_index){ array_printf(index_wkspace_,"int",1,2*n_f," %% index_wkspace_: ");}}
   if (verbose){ array_printf(f_,"float",1,stride*n_f," %% pos f_: ");}
-  if (verbose){ array_printf(index_,"int",1,n_f," %% pos index_: ");}
+  if (verbose){ if (flag_index){ array_printf(index_,"int",1,n_f," %% pos index_: ");}}
   m_upd = n_f - 1 - g_index_lower;
   if (verbose){ printf(" %% local pivot position %d, full pivot position %d\n",m_upd,l+m_upd);}
   free1(&g_wkspace_);
-  free1(&index_wkspace_);
+  if (flag_index){ free1(&index_wkspace_);}
   if (verbose){ printf(" %% [finished fquicksort_partition_index]\n");}
   return l+m_upd;
 }
@@ -440,7 +446,8 @@ int dquicksort_partition_index(double *d_full_,int stride,int *index_full_,int l
 {
   int verbose=0;
   double *d_ = d_full_ + stride*l;
-  int *index_ = index_full_ + l;
+  int flag_index=0;
+  int *index_=NULL;
   double *g_wkspace_=NULL;
   int *index_wkspace_ = NULL;
   int n_d = 1+r-l;
@@ -455,39 +462,41 @@ int dquicksort_partition_index(double *d_full_,int stride,int *index_full_,int l
   int m_upd=0;
   if (verbose){ printf(" %% [entering dquicksort_partition_index]\n");}
   if (verbose){ array_printf(d_,"double",1,stride*n_d," %% pre d_: ");}
-  if (verbose){ array_printf(index_,"int",1,n_d," %% pre index_: ");}
+  flag_index = index_full_!=NULL;
+  if (flag_index){ index_ = index_full_ + l;}
+  if (verbose){ if (flag_index){ array_printf(index_,"int",1,n_d," %% pre index_: ");}}
   g_wkspace_ = (double *) malloc1((unsigned long long int)(2*n_d)*sizeof(double));
-  index_wkspace_ = (int *) malloc1((unsigned long long int)(2*n_d)*sizeof(int));
+  if (flag_index){ index_wkspace_ = (int *) malloc1((unsigned long long int)(2*n_d)*sizeof(int));}
   d_pivot = d_[stride*m];
-  index_pivot = index_[m];
+  if (flag_index){ index_pivot = index_[m];}
   if (verbose){ printf(" %% m %d, d_pivot %f, index_pivot %d\n",m,d_pivot,index_pivot);}
   g_wkspace_[n_d] = d_pivot;
-  index_wkspace_[n_d] = index_pivot;
+  if (flag_index){ index_wkspace_[n_d] = index_pivot;}
   g_index_lower = n_d-1;
   g_index_upper = n_d+1;
   flag_alt = 0;
   for (nd=0;nd<n_d;nd++){
     if (nd!=m){
       d = d_[stride*nd];
-      index = index_[nd];
-      if (d< d_pivot){ g_wkspace_[g_index_lower] = d; index_wkspace_[g_index_lower] = index; g_index_lower--;}
-      if (d> d_pivot){ g_wkspace_[g_index_upper] = d; index_wkspace_[g_index_upper] = index; g_index_upper++;}
+      if (flag_index){ index = index_[nd];}
+      if (d< d_pivot){ g_wkspace_[g_index_lower] = d; if (flag_index){ index_wkspace_[g_index_lower] = index;} g_index_lower--;}
+      if (d> d_pivot){ g_wkspace_[g_index_upper] = d; if (flag_index){ index_wkspace_[g_index_upper] = index;} g_index_upper++;}
       if (d==d_pivot){
-	if (flag_alt==0){ g_wkspace_[g_index_lower] = d; index_wkspace_[g_index_lower] = index; g_index_lower--;}
-	if (flag_alt==1){ g_wkspace_[g_index_upper] = d; index_wkspace_[g_index_upper] = index; g_index_upper++;}
+	if (flag_alt==0){ g_wkspace_[g_index_lower] = d; if (flag_index){ index_wkspace_[g_index_lower] = index;} g_index_lower--;}
+	if (flag_alt==1){ g_wkspace_[g_index_upper] = d; if (flag_index){ index_wkspace_[g_index_upper] = index;} g_index_upper++;}
 	flag_alt = 1-flag_alt;
 	/* if (d==d_pivot){ } */}
       /* if (nd!=m){ } */}
     /* for (nd=0;nd<n_d;nd++){ } */}
-  for (nd=0;nd<n_d;nd++){ d_[stride*nd] = g_wkspace_[1+g_index_lower+nd]; index_[nd] = index_wkspace_[1+g_index_lower+nd];}
+  for (nd=0;nd<n_d;nd++){ d_[stride*nd] = g_wkspace_[1+g_index_lower+nd]; if (flag_index){ index_[nd] = index_wkspace_[1+g_index_lower+nd];}}
   if (verbose){ array_printf(g_wkspace_,"double",1,2*n_d," %% g_wkspace_: ");}
-  if (verbose){ array_printf(index_wkspace_,"int",1,2*n_d," %% index_wkspace_: ");}
+  if (verbose){ if (flag_index){ array_printf(index_wkspace_,"int",1,2*n_d," %% index_wkspace_: ");}}
   if (verbose){ array_printf(d_,"double",1,stride*n_d," %% pos d_: ");}
-  if (verbose){ array_printf(index_,"int",1,n_d," %% pos index_: ");}
+  if (verbose){ if (flag_index){ array_printf(index_,"int",1,n_d," %% pos index_: ");}}
   m_upd = n_d - 1 - g_index_lower;
   if (verbose){ printf(" %% local pivot position %d, full pivot position %d\n",m_upd,l+m_upd);}
   free1(&g_wkspace_);
-  free1(&index_wkspace_);
+  if (flag_index){ free1(&index_wkspace_);}
   if (verbose){ printf(" %% [finished dquicksort_partition_index]\n");}
   return l+m_upd;
 }
