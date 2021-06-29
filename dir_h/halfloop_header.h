@@ -384,7 +384,8 @@ void halfloop_nonbinary_f_gateway_matlab
 void halfloop_nonbinary_f_gateway_shell();
 void * malloc1(size_t size);
 void free1(void **vp);
-void malloc1_char__(int n_l,char ***str_p_);
+void malloc1_char_FNAMESIZE__(int n_l,char ***str_p_);
+void malloc1_char__(int n_l,int n_s,char ***str_p_);
 void free1_char__(int n_l,char ***str_p_);
 void MDA_write_i4(int n_dim,int *dim_,int *i4_,const char *fname);
 void MDA_read_i4(int *n_dim_p,int **dim_p_,int **i4_p_,const char *fname);
