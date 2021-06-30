@@ -118,6 +118,6 @@ int main(int argc, char** argv) {
   if (strstr(GLOBAL_mode,"halfloop_nonbinary_f_recursive_helper_QR_helper_orth_test_speed")!=NULL){ halfloop_nonbinary_f_recursive_helper_QR_helper_orth_test_speed();}
   if (strstr(GLOBAL_mode,"halfloop_nonbinary_f_recursive_test_speed")!=NULL){ halfloop_nonbinary_f_recursive_test_speed();}
   if (strstr(GLOBAL_mode,"halfloop_nonbinary_f_gateway_shell")!=NULL){ halfloop_nonbinary_f_gateway_shell();}
-  if (GLOBAL_verbose>-1){ printf("exiting successfully\n");}
+  if (GLOBAL_verbose>0){ printf("exiting successfully\n");}
   return 0;
 }

@@ -1421,6 +1421,8 @@ void halfloop_nonbinary_f_gateway_shell()
   if (verbose){
     printf(" %% calling halfloop_nonbinary_f_recursive with parameters: \n");
     printf(" %% verbose %d\n",GLOBAL_verbose);
+    printf(" %% flag_omp_use %d\n",GLOBAL_flag_omp_use);
+    printf(" %% recursion_limit %d\n",GLOBAL_halfloop_recursion_limit);
     printf(" %% E_base_mda_r4 %s\n",GLOBAL_E_base_mda_r4);
     printf(" %% flag_r0drop_vs_rcdrop %d\n",GLOBAL_flag_r0drop_vs_rcdrop);
     printf(" %% gamma %0.3f\n",GLOBAL_gamma);
@@ -1430,7 +1432,6 @@ void halfloop_nonbinary_f_gateway_shell()
     printf(" %% dir_trunk %s\n",GLOBAL_dir_trunk);
     printf(" %% prefix_base %s\n",GLOBAL_prefix_base);
     printf(" %% flag_force_create %d\n",GLOBAL_flag_force_create);
-    printf(" %% flag_omp_use %d\n",GLOBAL_flag_omp_use);
     /* if (verbose){ } */}
   halfloop_nonbinary_f_recursive(
   GLOBAL_verbose
