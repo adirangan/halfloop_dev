@@ -276,33 +276,6 @@ void halfloop_nonbinary_recursive_helper_ZR__
  ,double *nlp_gumb_opt_p
  ,double *nlp_gumb_emp_p
 );
-void halfloop_nonbinary_f_recursive
-(
- int verbose
- ,int ndepth
- ,int n_r
- ,int n_c
- ,float *E_base_rc__
- ,int n_r_index_0in
- ,int *r_index_0in_
- ,int n_c_index_0in
- ,int *c_index_0in_
- ,int flag_r0drop_vs_rcdrop
- ,double gamma_0in
- ,int n_shuffle_0in
- ,double p_set_0in
- ,int n_member_lob_0in
- ,double p_prev_0in
- ,char *dir_trunk_0in
- ,char *dir_out_0in
- ,char *prefix_base_0in
- ,int flag_force_create_0in
- ,unsigned long long int **binary_label_p_
- ,char ***output_label_p_
- ,char ***nlpbra_label_p_
- ,char ***nlpnex_label_p_
-);
-void halfloop_nonbinary_f_recursive_test();
 void halfloop_nonbinary_f_recursive_omp_helper_QR_
 (
  int verbose
@@ -337,10 +310,12 @@ void halfloop_nonbinary_f_recursive_omp_helper_QR__
  ,char *fname_xdrop__
  ,char *fname_QR__
 );
-void halfloop_nonbinary_f_recursive_omp
+void halfloop_nonbinary_f_recursive
 (
  int verbose
+ ,int flag_omp
  ,int ndepth
+ ,int recursion_limit
  ,int n_r
  ,int n_c
  ,float *E_base_rc__
@@ -363,24 +338,8 @@ void halfloop_nonbinary_f_recursive_omp
  ,char ***nlpbra_label_p_
  ,char ***nlpnex_label_p_
 );
-void halfloop_nonbinary_f_recursive_omp_test();
-void halfloop_nonbinary_f_gateway_matlab
-(
- int verbose
- ,int n_r
- ,int n_c
- ,float *E_base_rc__
- ,int flag_r0drop_vs_rcdrop
- ,double gamma
- ,int n_shuffle
- ,double p_set
- ,int n_member_lob
- ,char *dir_trunk
- ,char *prefix_base
- ,int flag_force_create
- ,int flag_omp_use
- ,unsigned long long int *binary_label_out_
-);
+void halfloop_nonbinary_f_recursive_test();
+void halfloop_nonbinary_f_recursive_test_speed();
 void halfloop_nonbinary_f_gateway_shell();
 void * malloc1(size_t size);
 void free1(void **vp);

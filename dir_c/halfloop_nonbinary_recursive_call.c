@@ -615,6 +615,7 @@ void halfloop_nonbinary_f_recursive
   char prefix_gamma[FNAMESIZE];
   struct stat stat_dir = {0};
   struct stat stat_file = {0};
+  int na=0;
   int nr=0,flag_free_r_index=0,nr_index=0,n_r_index=0,*r_index_=NULL;
   int nc=0,flag_free_c_index=0,nc_index=0,n_c_index=0,*c_index_=NULL;
   double gamma=0;
@@ -1088,7 +1089,7 @@ void halfloop_nonbinary_f_recursive
       if (binary_label_!=NULL){ if (binary_label_B_[nr_rmv_index_F]>(unsigned long long int)(4.295e9)){ printf(" %% Warning, too many clusters for binary_label_, binary_label overflow\n");} binary_label_[nr_index] += (unsigned long long int)1+(unsigned long long int)2*binary_label_B_[nr_rmv_index_F];}
       if (output_label__!=NULL){ if (strlen(output_label_B__[nr_rmv_index_F])>FNAMESIZE-16){ printf(" %% Warning, too many clusters for output_label__, increase label length\n");} sprintf(output_label__[nr_index],"%s%s","B",output_label_B__[nr_rmv_index_F]);}
       sprintf(nlpbra_label__[nr_index],"%0.2f",minimum(9999,-log(p_branch))); //%<-- restrict to 4+2 digits. ;
-      if (nlpbra_label__!=NULL){ if (strlen(nlpbra_label_B__[nr_rmv_index_F])>FNAMESIZE-16){ printf(" %% Warning, too many clusters for nlpbra_label__, increase label length\n");} sprintf(nlpbra_label__[nr_index],"%0.2f %s",mimimum(9999,-log(p_branch)),nlpbra_label_B__[nr_rmv_index_F]);}
+      if (nlpbra_label__!=NULL){ if (strlen(nlpbra_label_B__[nr_rmv_index_F])>FNAMESIZE-16){ printf(" %% Warning, too many clusters for nlpbra_label__, increase label length\n");} sprintf(nlpbra_label__[nr_index],"%0.2f %s",minimum(9999,-log(p_branch)),nlpbra_label_B__[nr_rmv_index_F]);}
       sprintf(nlpnex_label__[nr_index],"%0.2f",minimum(9999,-log(p_next))); //%<-- restrict to 4+2 digits. ;
       if (nlpnex_label__!=NULL){ if (strlen(nlpnex_label_B__[nr_rmv_index_F])>FNAMESIZE-16){ printf(" %% Warning, too many clusters for nlpnex_label__, increase label length\n");} sprintf(nlpnex_label__[nr_index],"%0.2f %s",minimum(9999,-log(p_next)),nlpnex_label_B__[nr_rmv_index_F]);}
       /* for (nr_rmv_index_F=0;nr_rmv_index_F<n_r_rmv_index_F;nr_rmv_index_F++){ } */}
@@ -1148,6 +1149,8 @@ void halfloop_nonbinary_f_recursive
 void halfloop_nonbinary_f_recursive_test()
 {
   int verbose=0;
+  int flag_omp=GLOBAL_flag_omp_use;
+  int recursion_limit=GLOBAL_halfloop_recursion_limit;
   int flag_r0drop_vs_rcdrop=0;
   int flag_rcdrop = 0;
   int flag_r0drop = 1;
@@ -1198,7 +1201,9 @@ void halfloop_nonbinary_f_recursive_test()
   GLOBAL_tic(0);
   halfloop_nonbinary_f_recursive(
   verbose
+ ,flag_omp
  ,0
+ ,recursion_limit
  ,n_r
  ,n_c
  ,E_base_rc__
@@ -1244,7 +1249,9 @@ void halfloop_nonbinary_f_recursive_test()
   GLOBAL_tic(0);
   halfloop_nonbinary_f_recursive(
   verbose
+ ,flag_omp
  ,0
+ ,recursion_limit
  ,n_r
  ,n_c
  ,E_base_rc__
@@ -1295,6 +1302,8 @@ void halfloop_nonbinary_f_recursive_test()
 void halfloop_nonbinary_f_recursive_test_speed()
 {
   int verbose=1;
+  int flag_omp=GLOBAL_flag_omp_use;
+  int recursion_limit=GLOBAL_halfloop_recursion_limit;
   int flag_r0drop_vs_rcdrop=0;
   int flag_rcdrop = 0;
   int flag_r0drop = 1;
@@ -1337,7 +1346,9 @@ void halfloop_nonbinary_f_recursive_test_speed()
   GLOBAL_tic(0);
   halfloop_nonbinary_f_recursive(
   verbose
+ ,flag_omp
  ,0
+ ,recursion_limit
  ,n_r
  ,n_c
  ,E_base_rc__
@@ -1416,6 +1427,7 @@ void halfloop_nonbinary_f_gateway_shell()
   GLOBAL_verbose
  ,GLOBAL_flag_omp_use
  ,0
+ ,GLOBAL_halfloop_recursion_limit
  ,n_r
  ,n_c
  ,E_base_rc__

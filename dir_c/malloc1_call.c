@@ -35,22 +35,6 @@ void malloc1_char_FNAMESIZE__(int n_l,char ***str_p_)
     /* if (str__!=NULL){ } */}
 }
 
-void malloc1_char_FNAMESIZE__(int n_l,char ***str_p_)
-{
-  int nl=0;
-  char **str__=NULL;
-  str__=NULL;
-  if (str_p_!=NULL){
-    if ( (*str_p_)==NULL ){ (*str_p_) = (char **) malloc1((unsigned long long int)n_l*sizeof(char *));}
-    str__ = *str_p_;
-    /* if (str_p_!=NULL){ } */}
-  if (str__!=NULL){
-    for (nl=0;nl<n_l;nl++){
-      if (str__[nl]==NULL){ str__[nl] = (char *) malloc1((unsigned long long int)FNAMESIZE*sizeof(char));}
-      /* for (nl=0;nl<n_l;nl++){ } */}
-    /* if (str__!=NULL){ } */}
-}
-
 void malloc1_char__(int n_l,int n_s,char ***str_p_)
 {
   int nl=0;

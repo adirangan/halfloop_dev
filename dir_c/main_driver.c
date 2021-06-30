@@ -117,8 +117,6 @@ int main(int argc, char** argv) {
   if (strcmp(GLOBAL_mode,"halfloop_nonbinary_f_recursive_test")==0){ halfloop_nonbinary_f_recursive_test();}
   if (strcmp(GLOBAL_mode,"halfloop_nonbinary_f_recursive_helper_QR_helper_orth_test_speed")==0){ halfloop_nonbinary_f_recursive_helper_QR_helper_orth_test_speed();}
   if (strcmp(GLOBAL_mode,"halfloop_nonbinary_f_recursive_test_speed")==0){ halfloop_nonbinary_f_recursive_test_speed();}
-  if (strcmp(GLOBAL_mode,"halfloop_nonbinary_f_recursive_omp_test")==0){ halfloop_nonbinary_f_recursive_omp_test();}
-  if (strcmp(GLOBAL_mode,"halfloop_nonbinary_f_recursive_omp_test_speed")==0){ halfloop_nonbinary_f_recursive_omp_test_speed();}
   if (strcmp(GLOBAL_mode,"halfloop_nonbinary_f_gateway_shell")==0){ halfloop_nonbinary_f_gateway_shell();}
   if (GLOBAL_verbose>-1){ printf("exiting successfully\n");}
   return 0;
