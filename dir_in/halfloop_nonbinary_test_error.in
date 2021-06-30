@@ -1,0 +1,2 @@
+GLOBAL_mode= halfloop_nonbinary_test_error halfloop_nonbinary_rdrop_test_error;
+END= 0;

@@ -59,7 +59,7 @@ double RNGET(unsigned long int *rseed_p)
 {
   /* box muller polar form */
   double u=0,v=0,s=0;
-  while (s==0 || s>1){ u=2*R01GET(rseed_p)-1;v=2*R01GET(rseed_p)-1;s=u*u+v*v;}
+  while (s<=0 || s> 1){ u=2*R01GET(rseed_p)-1;v=2*R01GET(rseed_p)-1;s=u*u+v*v;}
   return u*sqrt(-2*log(s)/s);
 }
 

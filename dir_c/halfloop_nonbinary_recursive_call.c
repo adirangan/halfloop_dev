@@ -572,6 +572,15 @@ void halfloop_nonbinary_recursive_helper_ZR__
 
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 
+void halfloop_nonbinary_f_recursive_prefix_base1(char *prefix_base0,double gamma,int n_member_lob,char *prefix_base1)
+{
+  char prefix_n_member_lob[FNAMESIZE];
+  char prefix_gamma[FNAMESIZE];
+  if (gamma> 0){ sprintf(prefix_gamma,"_g%.3d",(int)floor(1000*gamma));} else{ sprintf(prefix_gamma,"");}
+  if (n_member_lob> 2){ sprintf(prefix_n_member_lob,"_n%.2d",n_member_lob);} else{ sprintf(prefix_n_member_lob,"");}
+  sprintf(prefix_base1,"%s%s%s",prefix_base0,prefix_gamma,prefix_n_member_lob);
+}
+
 void halfloop_nonbinary_f_recursive
 (
  int verbose
@@ -611,8 +620,6 @@ void halfloop_nonbinary_f_recursive
   char prefix_base0[FNAMESIZE];
   char prefix_base1[FNAMESIZE];
   char dir_0in[PNAMESIZE];
-  char prefix_n_member_lob[FNAMESIZE];
-  char prefix_gamma[FNAMESIZE];
   struct stat stat_dir = {0};
   struct stat stat_file = {0};
   int na=0;
@@ -666,10 +673,10 @@ void halfloop_nonbinary_f_recursive
   MDA_dim_ = (int *) malloc1(2*sizeof(int)); //%<-- should only ever need 2. ;
   nlp_p_split_ = (double *) malloc1((1+14)*sizeof(double)); //%<-- gumb_emp, gumb_opt, F, E, p_branch, p_next, p_set, p_use, n_r_rtn_index_F, n_r_rmv_index_F, n_member_lob, ndepth, recursion_limit, flag_split. ;
   cwd = (char *) malloc1((size_t)n_str_path); getcwd(cwd,n_str_path);
-  if (n_str_path> FNAMESIZE){ printf(" %% Warning, n_str_path %d in halfloop_nonbinary_f_recursive_omp\n",n_str_path);}
-  if ( (dir_trunk_0in!=NULL) && (strlen(dir_trunk_0in)> FNAMESIZE) ){ printf(" %% Warning, dir_trunk_0in %s too long in halfloop_nonbinary_f_recursive_omp\n",dir_trunk_0in);}
-  if ( (dir_out_0in!=NULL) && (strlen(dir_out_0in)> FNAMESIZE) ){ printf(" %% Warning, dir_out_0in %s too long in halfloop_nonbinary_f_recursive_omp\n",dir_out_0in);}
-  if ( (prefix_base_0in!=NULL) && (strlen(prefix_base_0in)> FNAMESIZE) ){ printf(" %% Warning, prefix_base_0in %s too long in halfloop_nonbinary_f_recursive_omp\n",prefix_base_0in);}
+  if (n_str_path> FNAMESIZE){ printf(" %% Warning, n_str_path %d in halfloop_nonbinary_f_recursive\n",n_str_path);}
+  if ( (dir_trunk_0in!=NULL) && (strlen(dir_trunk_0in)> FNAMESIZE) ){ printf(" %% Warning, dir_trunk_0in %s too long in halfloop_nonbinary_f_recursive\n",dir_trunk_0in);}
+  if ( (dir_out_0in!=NULL) && (strlen(dir_out_0in)> FNAMESIZE) ){ printf(" %% Warning, dir_out_0in %s too long in halfloop_nonbinary_f_recursive\n",dir_out_0in);}
+  if ( (prefix_base_0in!=NULL) && (strlen(prefix_base_0in)> FNAMESIZE) ){ printf(" %% Warning, prefix_base_0in %s too long in halfloop_nonbinary_f_recursive\n",prefix_base_0in);}
   if ( dir_trunk_0in==NULL ){ if (verbose>0){ printf(" %% cwd: [%s]\n",cwd);} sprintf(dir_trunk,"%s",cwd);} else{ sprintf(dir_trunk,"%s",dir_trunk_0in);}
   if ( prefix_base_0in==NULL ){ sprintf(prefix_base0,"%s","test");} else{ sprintf(prefix_base0,"%s",prefix_base_0in);}
   if (verbose>1){
@@ -706,9 +713,7 @@ void halfloop_nonbinary_f_recursive
   if (dir_out_0in==NULL){
     sprintf(dir_0in,"%s/dir_%s",dir_trunk,prefix_base0);
     if (stat(dir_0in,&stat_dir)==-1){ printf(" %% %s not found, creating\n",dir_0in); mkdir(dir_0in,0755);} else{ if (verbose){ printf(" %% %s found, not creating\n",dir_0in);}}
-    if (gamma> 0){ sprintf(prefix_gamma,"_g%.3d",(int)floor(1000*gamma));} else{ sprintf(prefix_gamma,"");}
-    if (n_member_lob> 2){ sprintf(prefix_n_member_lob,"_n%.2d",n_member_lob);} else{ sprintf(prefix_n_member_lob,"");}
-    sprintf(prefix_base1,"%s%s%s",prefix_base0,prefix_gamma,prefix_n_member_lob);
+    halfloop_nonbinary_f_recursive_prefix_base1(prefix_base0,gamma,n_member_lob,prefix_base1);
     sprintf(dir_out,"%s/dir_%s",dir_0in,prefix_base1);
     if (verbose>1){
       printf(" %% dir_0in: %s\n",dir_0in);
@@ -738,13 +743,13 @@ void halfloop_nonbinary_f_recursive
   binary_label_ = NULL;
   *binary_label_p_ = (unsigned  long long int *) malloc1((unsigned long long int)n_r_index*sizeof(unsigned long long int));
   binary_label_ = *binary_label_p_; for (nr_index=0;nr_index<n_r_index;nr_index++){ binary_label_[nr_index]=(unsigned long long int)0;}
-  length_output_label = 8 + 1 + 1*(recursion_limit-ndepth) ;
+  length_output_label = 8 + 1 + 1*(recursion_limit-ndepth) ; //%<-- allows for 1 character per level, as well as root label. ;
   output_label__ = NULL; malloc1_char__(n_r_index,length_output_label,output_label_p_); output_label__ = *output_label_p_;
   if (output_label__!=NULL){ for (nr_index=0;nr_index<n_r_index;nr_index++){ sprintf(output_label__[nr_index],"0");}}
-  length_nlpbra_label = 8 + 1 + 8*(recursion_limit-ndepth) ; //%<-- allows for 4+2 digits and space. ;
+  length_nlpbra_label = 8 + 1 + 8*(recursion_limit-ndepth+1) ; //%<-- allows for 4+2 digits and space, as well as leaf label. ;
   nlpbra_label__ = NULL; malloc1_char__(n_r_index,length_nlpbra_label,nlpbra_label_p_); nlpbra_label__ = *nlpbra_label_p_;
   if (nlpbra_label__!=NULL){ for (nr_index=0;nr_index<n_r_index;nr_index++){ sprintf(nlpbra_label__[nr_index],"");}}
-  length_nlpnex_label = 8 + 1 + 8*(recursion_limit-ndepth) ; //%<-- allows for 4+2 digits and space. ;
+  length_nlpnex_label = 8 + 1 + 8*(recursion_limit-ndepth+1) ; //%<-- allows for 4+2 digits and space, as well as leaf label. ;
   nlpnex_label__ = NULL; malloc1_char__(n_r_index,length_nlpnex_label,nlpnex_label_p_); nlpnex_label__ = *nlpnex_label_p_;
   if (nlpnex_label__!=NULL){ for (nr_index=0;nr_index<n_r_index;nr_index++){ sprintf(nlpnex_label__[nr_index],"");}}
   /* %%%%%%%%%%%%%%%% */
@@ -1009,7 +1014,7 @@ void halfloop_nonbinary_f_recursive
   sprintf(MDA_fname,"%s/nlp_p_split_.mda",dir_out); MDA_n_dim = 2; MDA_dim_[0] = 9; MDA_dim_[1] = 1;
   MDA_write_r8(MDA_n_dim,MDA_dim_,nlp_p_split_,MDA_fname);
   if (verbose>2){ MDA_printf_r8_margin(MDA_fname);}
-  if (flag_split){
+  if (flag_split==1){
     /* %%%% */
     sprintf(dir_A_out,"%s/A",dir_out);
     if (stat(dir_A_out,&stat_dir)==-1){ printf(" %% %s not found, creating\n",dir_A_out); mkdir(dir_A_out,0755);} else{ if (verbose){ printf(" %% %s found, not creating\n",dir_A_out);}}
@@ -1079,19 +1084,15 @@ void halfloop_nonbinary_f_recursive
       nr_index = r_rtn_index_F_[nr_rtn_index_F];
       if (binary_label_!=NULL){ if (binary_label_A_[nr_rtn_index_F]>(unsigned long long int)(4.295e9)){ printf(" %% Warning, too many clusters for binary_label_, binary_label overflow\n");} binary_label_[nr_index] += (unsigned long long int)0+(unsigned long long int)2*binary_label_A_[nr_rtn_index_F];}
       if (output_label__!=NULL){ if (strlen(output_label_A__[nr_rtn_index_F])>FNAMESIZE-16){ printf(" %% Warning, too many clusters for output_label__, increase label length\n");} sprintf(output_label__[nr_index],"%s%s","A",output_label_A__[nr_rtn_index_F]);}
-      sprintf(nlpbra_label__[nr_index],"%0.2f",minimum(9999,-log(p_branch))); //%<-- restrict to 4+2 digits. ;
-      if (nlpbra_label__!=NULL){ if (strlen(nlpbra_label_A__[nr_rtn_index_F])>FNAMESIZE-16){ printf(" %% Warning, too many clusters for nlpbra_label__, increase label length\n");} sprintf(nlpbra_label__[nr_index],"%0.2f %s",minimum(9999,-log(p_branch)),nlpbra_label_A__[nr_rtn_index_F]);}
-      sprintf(nlpnex_label__[nr_index],"%0.2f",minimum(9999,-log(p_next))); //%<-- restrict to 4+2 digits. ;
-      if (nlpnex_label__!=NULL){ if (strlen(nlpnex_label_A__[nr_rtn_index_F])>FNAMESIZE-16){ printf(" %% Warning, too many clusters for nlpnex_label__, increase label length\n");} sprintf(nlpnex_label__[nr_index],"%0.2f %s",minimum(9999,-log(p_next)),nlpnex_label_A__[nr_rtn_index_F]);}
+      if (nlpbra_label__!=NULL){ if (strlen(nlpbra_label_A__[nr_rtn_index_F])>FNAMESIZE-16){ printf(" %% Warning, too many clusters for nlpbra_label__, increase label length\n");} sprintf(nlpbra_label__[nr_index],"%0.2f %s",minimum(9999,-log(p_branch)),nlpbra_label_A__[nr_rtn_index_F]);} //%<-- restrict to 4+2 digits. ;
+      if (nlpnex_label__!=NULL){ if (strlen(nlpnex_label_A__[nr_rtn_index_F])>FNAMESIZE-16){ printf(" %% Warning, too many clusters for nlpnex_label__, increase label length\n");} sprintf(nlpnex_label__[nr_index],"%0.2f %s",minimum(9999,-log(p_next)),nlpnex_label_A__[nr_rtn_index_F]);} //%<-- restrict to 4+2 digits. ;
       /* for (nr_rtn_index_F=0;nr_rtn_index_F<n_r_rtn_index_F;nr_rtn_index_F++){ } */}
     for (nr_rmv_index_F=0;nr_rmv_index_F<n_r_rmv_index_F;nr_rmv_index_F++){
       nr_index = r_rmv_index_F_[nr_rmv_index_F];
       if (binary_label_!=NULL){ if (binary_label_B_[nr_rmv_index_F]>(unsigned long long int)(4.295e9)){ printf(" %% Warning, too many clusters for binary_label_, binary_label overflow\n");} binary_label_[nr_index] += (unsigned long long int)1+(unsigned long long int)2*binary_label_B_[nr_rmv_index_F];}
       if (output_label__!=NULL){ if (strlen(output_label_B__[nr_rmv_index_F])>FNAMESIZE-16){ printf(" %% Warning, too many clusters for output_label__, increase label length\n");} sprintf(output_label__[nr_index],"%s%s","B",output_label_B__[nr_rmv_index_F]);}
-      sprintf(nlpbra_label__[nr_index],"%0.2f",minimum(9999,-log(p_branch))); //%<-- restrict to 4+2 digits. ;
-      if (nlpbra_label__!=NULL){ if (strlen(nlpbra_label_B__[nr_rmv_index_F])>FNAMESIZE-16){ printf(" %% Warning, too many clusters for nlpbra_label__, increase label length\n");} sprintf(nlpbra_label__[nr_index],"%0.2f %s",minimum(9999,-log(p_branch)),nlpbra_label_B__[nr_rmv_index_F]);}
-      sprintf(nlpnex_label__[nr_index],"%0.2f",minimum(9999,-log(p_next))); //%<-- restrict to 4+2 digits. ;
-      if (nlpnex_label__!=NULL){ if (strlen(nlpnex_label_B__[nr_rmv_index_F])>FNAMESIZE-16){ printf(" %% Warning, too many clusters for nlpnex_label__, increase label length\n");} sprintf(nlpnex_label__[nr_index],"%0.2f %s",minimum(9999,-log(p_next)),nlpnex_label_B__[nr_rmv_index_F]);}
+      if (nlpbra_label__!=NULL){ if (strlen(nlpbra_label_B__[nr_rmv_index_F])>FNAMESIZE-16){ printf(" %% Warning, too many clusters for nlpbra_label__, increase label length\n");} sprintf(nlpbra_label__[nr_index],"%0.2f %s",minimum(9999,-log(p_branch)),nlpbra_label_B__[nr_rmv_index_F]);} //%<-- restrict to 4+2 digits. ;
+      if (nlpnex_label__!=NULL){ if (strlen(nlpnex_label_B__[nr_rmv_index_F])>FNAMESIZE-16){ printf(" %% Warning, too many clusters for nlpnex_label__, increase label length\n");} sprintf(nlpnex_label__[nr_index],"%0.2f %s",minimum(9999,-log(p_next)),nlpnex_label_B__[nr_rmv_index_F]);} //%<-- restrict to 4+2 digits. ;
       /* for (nr_rmv_index_F=0;nr_rmv_index_F<n_r_rmv_index_F;nr_rmv_index_F++){ } */}
     /* %%%% */
     /* free labels */
@@ -1105,7 +1106,16 @@ void halfloop_nonbinary_f_recursive
     free1_char__(n_r_rmv_index_F,&nlpbra_label_B__);
     free1_char__(n_r_rmv_index_F,&nlpnex_label_B__);
     /* %%%% */
-    /* if (flag_split){ } */}
+    /* if (flag_split==1){ } */}
+  if (flag_split==0){
+    /* %%%% */
+    /* update labels with nlp */
+    /* %%%% */
+    for (nr_index=0;nr_index<n_r_index;nr_index++){
+      sprintf(nlpbra_label__[nr_index],"%0.2f",minimum(9999,-log(p_branch))); //%<-- restrict to 4+2 digits. ;
+      sprintf(nlpnex_label__[nr_index],"%0.2f",minimum(9999,-log(p_next))); //%<-- restrict to 4+2 digits. ;
+      /* for (nr_index=0;nr_index<n_r_index;nr_index++){ } */}
+    /* if (flag_split==0){ } */}
   /* %%%% */
   /* if ndepth==0 then print labels to file */
   /* %%%% */
@@ -1235,8 +1245,8 @@ void halfloop_nonbinary_f_recursive_test()
   flag_error = 0;
   for (nr_index=0;nr_index<n_r_index;nr_index++){
     flag_error += strcmp(output_label__[nr_index],output_label_rc_ans__[nr_index]);
-    flag_error += strcmp(nlpbra_label__[nr_index],nlpbra_label_rc_ans__[nr_index]);
-    flag_error += strcmp(nlpnex_label__[nr_index],nlpnex_label_rc_ans__[nr_index]);
+    flag_error += (strstr(nlpbra_label__[nr_index],nlpbra_label_rc_ans__[nr_index]) == nlpbra_label__);
+    flag_error += (strstr(nlpnex_label__[nr_index],nlpnex_label_rc_ans__[nr_index]) == nlpnex_label__);
     if (verbose){ printf(" %% nr_index %d/%d: %d %s %s %s\n",nr_index,n_r_index,binary_label_[nr_index],output_label__[nr_index],nlpbra_label__[nr_index],nlpnex_label__[nr_index]);}
     /* for (nr_index=0;nr_index<n_r_index;nr_index++){ } */}
   printf(" %% output_label_rc_ans__, nlpbra_label_rc_ans__ and nlpnex_label_rc_ans__ vs output_label__, nlpbra_label__ and nlpex_label__:  flag_error %d\n",flag_error);
@@ -1283,8 +1293,8 @@ void halfloop_nonbinary_f_recursive_test()
   flag_error = 0;
   for (nr_index=0;nr_index<n_r_index;nr_index++){
     flag_error += strcmp(output_label__[nr_index],output_label_r0_ans__[nr_index]);
-    flag_error += strcmp(nlpbra_label__[nr_index],nlpbra_label_r0_ans__[nr_index]);
-    flag_error += strcmp(nlpnex_label__[nr_index],nlpnex_label_r0_ans__[nr_index]);
+    flag_error += (strstr(nlpbra_label__[nr_index],nlpbra_label_r0_ans__[nr_index]) == nlpbra_label__);
+    flag_error += (strstr(nlpnex_label__[nr_index],nlpnex_label_r0_ans__[nr_index]) == nlpnex_label__);
     if (verbose){ printf(" %% nr_index %d/%d: %d %s %s %s\n",nr_index,n_r_index,binary_label_[nr_index],output_label__[nr_index],nlpbra_label__[nr_index],nlpnex_label__[nr_index]);}
     /* for (nr_index=0;nr_index<n_r_index;nr_index++){ } */}
   printf(" %% output_label_r0_ans__, nlpbra_label_r0_ans__ and nlpnex_label_r0_ans__ vs output_label__, nlpbra_label__ and nlpex_label__:  flag_error %d\n",flag_error);
@@ -1313,7 +1323,6 @@ void halfloop_nonbinary_f_recursive_test_speed()
   int n_member_lob = 3;
   int nr=0,n_r = 178*2;
   int nc=0,n_c = 2e4;
-  n_r = 5000; n_c = 50;
   int nr_index=0,n_r_index=0,*r_index_=NULL;
   int nc_index=0,n_c_index=0,*c_index_=NULL;
   float x=0,y=0,z=0;
@@ -1364,7 +1373,7 @@ void halfloop_nonbinary_f_recursive_test_speed()
  ,-1
  ,NULL
  ,NULL
- ,"test_rc"
+ ,"test_speed_rc"
  ,flag_force_create
  ,&binary_label_
  ,&output_label__
