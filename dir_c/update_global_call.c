@@ -15,6 +15,7 @@ void update_global(char *vname)
   else if (strcmp(vname,"GLOBAL_flag_r0drop_vs_rcdrop")==0){ scanf("%d",&GLOBAL_flag_r0drop_vs_rcdrop); if (verbose>0){ printf("%s read to be %d\n",vname,GLOBAL_flag_r0drop_vs_rcdrop);}}
   else if (strcmp(vname,"GLOBAL_gamma")==0){ scanf("%lf",&GLOBAL_gamma); if (verbose>0){ printf("%s read to be %f\n",vname,GLOBAL_gamma);}}
   else if (strcmp(vname,"GLOBAL_n_shuffle")==0){ scanf("%d",&GLOBAL_n_shuffle); if (verbose>0){ printf("%s read to be %d\n",vname,GLOBAL_n_shuffle);}}
+  else if (strcmp(vname,"GLOBAL_flag_orth_brute")==0){ scanf("%d",&GLOBAL_flag_orth_brute); if (verbose>0){ printf("%s read to be %d\n",vname,GLOBAL_flag_orth_brute);}}
   else if (strcmp(vname,"GLOBAL_p_set")==0){ scanf("%lf",&GLOBAL_p_set); if (verbose>0){ printf("%s read to be %f\n",vname,GLOBAL_p_set);}}
   else if (strcmp(vname,"GLOBAL_n_member_lob")==0){ scanf("%d",&GLOBAL_n_member_lob); if (verbose>0){ printf("%s read to be %d\n",vname,GLOBAL_n_member_lob);}}
   else if (strcmp(vname,"GLOBAL_dir_trunk")==0){ scanf("%[^,;]",GLOBAL_dir_trunk); if (verbose>0){ printf("%s read to be %s\n",vname,GLOBAL_dir_trunk);} /* else if (strcmp(vname,"GLOBAL_dir_trunk")==0){ } */}
