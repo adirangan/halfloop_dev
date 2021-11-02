@@ -3,7 +3,7 @@
 CC=gcc
 CCFLAGS_ori= -fPIC -w -O2 -D_AVX -mavx -fopenmp -lm -I./dir_h
 CCFLAGS_opt= -D_COMPLEX -D_FMA -mfma -D_CBLAS -Wl,-R -Wl,/usr/lib/x86_64-linux-gnu -lgslcblas
-CCFLAGS_dev = $(CCFLAGS_ori) # $(CCFLAGS_opt)
+CCFLAGS_dev = $(CCFLAGS_ori) $(CCFLAGS_opt)
 CCFLAGS=$(CCFLAGS_dev) -D_MONOLITH 
 
 vpath %.c ./dir_c
@@ -26,6 +26,7 @@ sources_dev = array_extract_call.c \
 	array_transpose_call.c \
 	rand_call.c \
 	dp_ps_call.c \
+	hp_ps_call.c \
 	erfcln_call.c \
 	find_internal_maximum_call.c \
 	get_xdrop_logscale_call.c \

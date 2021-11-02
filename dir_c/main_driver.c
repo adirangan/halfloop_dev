@@ -84,6 +84,7 @@ int main(int argc, char** argv) {
   if (strstr(GLOBAL_mode,"dp_ps_single_test")!=NULL){ dp_ps_single_test();}
   if (strstr(GLOBAL_mode,"dp_ps_mult_immintrin_test")!=NULL){ dp_ps_mult_immintrin_test();}
   if (strstr(GLOBAL_mode,"dp_pd_mult_immintrin_test")!=NULL){ dp_pd_mult_immintrin_test();}
+  if (strstr(GLOBAL_mode,"hp_ps_mult_immintrin_test")!=NULL){ hp_ps_mult_immintrin_test();}
   if (strstr(GLOBAL_mode,"get_xdrop_logscale_array_test")!=NULL){ get_xdrop_logscale_array_test();}
   if (strstr(GLOBAL_mode,"iquicksort_index_driver_test")!=NULL){ iquicksort_index_driver_test();}
   if (strstr(GLOBAL_mode,"fquicksort_index_driver_test")!=NULL){ fquicksort_index_driver_test();}
