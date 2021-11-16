@@ -1,7 +1,7 @@
 #ifndef _MONOLITH
 #include "halfloop_header.h"
 #endif /* _MONOLITH */
-
+/* Trying to build a faster complex multiply -- not there yet! */
 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 
 void hp_interleave_mult_bruteforce(int n_row_A,int n_col_X,float complex *c_A_trn__,int n_row_B,float complex *c_B_trn__,float complex **c_C_p_)
@@ -73,13 +73,48 @@ void hp_segregated_mult_bruteforce(int n_row_A,int n_col_X,float *f_AR_trn__,flo
     /* if (c_C__!=NULL){ } */}
 }
 
+void hp_segregated_mult_immintrin_loadu_fma(int n_row_A,int n_col_X,float *f_AR_trn__,float *f_AI_trn__,int n_row_B,float *f_BR_trn__,float *f_BI_trn__,float complex **c_C_p_)
+{
+  /* does not assume alignment */
+  int nrow_A=0,nrow_B=0;
+  float *tmp_f_AR_point0_=NULL;
+  float *tmp_f_AI_point0_=NULL;
+  float *tmp_f_BR_point0_=NULL;
+  float *tmp_f_BI_point0_=NULL;
+  float complex *c_C__=NULL;
+  float f_ARBR=0.0,f_ARBI=0.0,f_AIBR=0.0,f_AIBI=0.0;
+  int na=0;
+  c_C__=NULL;
+  if (c_C_p_!=NULL){
+    if ( (*c_C_p_)==NULL ){ (*c_C_p_) = (float complex *) malloc1((unsigned long long int)n_row_A*(unsigned long long int)n_row_B*sizeof(float complex));}
+    c_C__ = *c_C_p_;
+    /* if (c_C_p_!=NULL){ } */}
+  if (c_C__!=NULL){
+    na=0;
+    for (nrow_B=0;nrow_B<n_row_B;nrow_B++){
+      for (nrow_A=0;nrow_A<n_row_A;nrow_A++){
+	tmp_f_AR_point0_ = &(f_AR_trn__[nrow_A*n_col_X]);
+	tmp_f_AI_point0_ = &(f_AI_trn__[nrow_A*n_col_X]);
+	tmp_f_BR_point0_ = &(f_BR_trn__[nrow_B*n_col_X]);
+	tmp_f_BI_point0_ = &(f_BI_trn__[nrow_B*n_col_X]);
+	dp_ps_immintrin_loadu_fma(n_col_X,tmp_f_AR_point0_,tmp_f_BR_point0_,&f_ARBR);
+	dp_ps_immintrin_loadu_fma(n_col_X,tmp_f_AR_point0_,tmp_f_BI_point0_,&f_ARBI);
+	dp_ps_immintrin_loadu_fma(n_col_X,tmp_f_AI_point0_,tmp_f_BI_point0_,&f_AIBI);
+	dp_ps_immintrin_loadu_fma(n_col_X,tmp_f_AI_point0_,tmp_f_BR_point0_,&f_AIBR);
+	c_C__[na] = (float complex)(f_ARBR + f_AIBI) + _Complex_I * (float complex)(f_ARBI - f_AIBR);
+	na += 1;
+	/* for (nrow_A=0;nrow_A<n_row_A;nrow_A++){ } */}
+      /* for (nrow_B=0;nrow_B<n_row_B;nrow_B++){ } */}
+    /* if (c_C__!=NULL){ } */}
+}
+
 void hp_ps_mult_immintrin_test()
 {
-  int n_row_A = 53;
-  int n_col_X = 152;
+  int n_row_A = 153;
+  int n_col_X = 1152;
   int n_col_X_rup = rup(n_col_X,8);
   int n_col_X_256 = n_col_X_rup/8; //%<-- 8 floats per __m256. ;
-  int n_row_B = 47;
+  int n_row_B = 147;
   int n_row_A_sub = 5;
   int n_col_X_sub = 15;
   int n_row_B_sub = 4;
@@ -207,6 +242,19 @@ void hp_ps_mult_immintrin_test()
   memset(c_C_al__,0,ulli_C_total*sizeof(float complex));
   hp_segregated_mult_bruteforce(n_row_A,n_col_X,f_AR_u_trn__,f_AI_u_trn__,n_row_B,f_BR_u_trn__,f_BI_u_trn__,&c_C_al__);
   GLOBAL_toc(0,1," hp_segregated_mult_bruteforce: ");
+  printf("Gops %0.6f\n",(double)n_row_A*(double)n_row_B*(double)n_col_X_rup/GLOBAL_elrt[0]/1e9);
+  for (nrow_A=0;nrow_A<n_row_A_sub;nrow_A++){ for (nrow_B=0;nrow_B<n_row_B_sub;nrow_B++){
+      c_C_sub__[nrow_A+nrow_B*n_row_A_sub] = c_C_al__[nrow_A+nrow_B*n_row_A];
+      /* for (nrow_A=0;nrow_A<n_row_A_sub;nrow_A++){ for (nrow_B=0;nrow_B<n_row_B_sub;nrow_B++){ }} */}}
+  printf(" %% upper corner of c_C_al__: \n");
+  array_printf(c_C_sub__,"float complex",n_row_A_sub,n_row_B_sub," % c_C_al__: ");
+  ferror = cfnorm(ulli_C_total,c_C_bf__,c_C_al__);
+  printf(" %% ferror %0.16f\n",ferror);
+  /* %%%%%%%% */
+  GLOBAL_tic(0);
+  memset(c_C_al__,0,ulli_C_total*sizeof(float complex));
+  hp_segregated_mult_immintrin_loadu_fma(n_row_A,n_col_X,f_AR_u_trn__,f_AI_u_trn__,n_row_B,f_BR_u_trn__,f_BI_u_trn__,&c_C_al__);
+  GLOBAL_toc(0,1," hp_segregated_mult_immintrin_loadu_fma: ");
   printf("Gops %0.6f\n",(double)n_row_A*(double)n_row_B*(double)n_col_X_rup/GLOBAL_elrt[0]/1e9);
   for (nrow_A=0;nrow_A<n_row_A_sub;nrow_A++){ for (nrow_B=0;nrow_B<n_row_B_sub;nrow_B++){
       c_C_sub__[nrow_A+nrow_B*n_row_A_sub] = c_C_al__[nrow_A+nrow_B*n_row_A];
