@@ -73,7 +73,7 @@ void hp_segregated_mult_bruteforce(int n_row_A,int n_col_X,float *f_AR_trn__,flo
     /* if (c_C__!=NULL){ } */}
 }
 
-void hp_segregated_mult_immintrin_loadu_fma(int n_row_A,int n_col_X,float *f_AR_trn__,float *f_AI_trn__,int n_row_B,float *f_BR_trn__,float *f_BI_trn__,float complex **c_C_p_)
+void hp_segregated_to_interleaved_mult_immintrin_loadu_fma(int n_row_A,int n_col_X,float *f_AR_trn__,float *f_AI_trn__,int n_row_B,float *f_BR_trn__,float *f_BI_trn__,float complex **c_C_p_)
 {
   /* does not assume alignment */
   int nrow_A=0,nrow_B=0;
@@ -108,8 +108,128 @@ void hp_segregated_mult_immintrin_loadu_fma(int n_row_A,int n_col_X,float *f_AR_
     /* if (c_C__!=NULL){ } */}
 }
 
+void hp_segregated_to_segregated_mult_immintrin_loadu_fma(int n_row_A,int n_col_X,float *f_AR_trn__,float *f_AI_trn__,int n_row_B,float *f_BR_trn__,float *f_BI_trn__,float **f_CR_p_,float **f_CI_p_)
+{
+  /* does not assume alignment */
+  int nrow_A=0,nrow_B=0;
+  float *tmp_f_AR_point0_=NULL;
+  float *tmp_f_AI_point0_=NULL;
+  float *tmp_f_BR_point0_=NULL;
+  float *tmp_f_BI_point0_=NULL;
+  float *f_CR__=NULL;
+  float *f_CI__=NULL;
+  float f_ARBR=0.0,f_ARBI=0.0,f_AIBR=0.0,f_AIBI=0.0;
+  int na=0;
+  f_CR__=NULL;
+  if (f_CR_p_!=NULL){
+    if ( (*f_CR_p_)==NULL ){ (*f_CR_p_) = (float *) malloc1((unsigned long long int)n_row_A*(unsigned long long int)n_row_B*sizeof(float));}
+    f_CR__ = *f_CR_p_;
+    /* if (f_CR_p_!=NULL){ } */}
+  f_CI__=NULL;
+  if (f_CI_p_!=NULL){
+    if ( (*f_CI_p_)==NULL ){ (*f_CI_p_) = (float *) malloc1((unsigned long long int)n_row_A*(unsigned long long int)n_row_B*sizeof(float));}
+    f_CI__ = *f_CI_p_;
+    /* if (f_CI_p_!=NULL){ } */}
+  if ((f_CR__!=NULL) && (f_CI__!=NULL)){
+    na=0;
+    for (nrow_B=0;nrow_B<n_row_B;nrow_B++){
+      for (nrow_A=0;nrow_A<n_row_A;nrow_A++){
+	tmp_f_AR_point0_ = &(f_AR_trn__[nrow_A*n_col_X]);
+	tmp_f_AI_point0_ = &(f_AI_trn__[nrow_A*n_col_X]);
+	tmp_f_BR_point0_ = &(f_BR_trn__[nrow_B*n_col_X]);
+	tmp_f_BI_point0_ = &(f_BI_trn__[nrow_B*n_col_X]);
+	dp_ps_immintrin_loadu_fma(n_col_X,tmp_f_AR_point0_,tmp_f_BR_point0_,&f_ARBR);
+	dp_ps_immintrin_loadu_fma(n_col_X,tmp_f_AR_point0_,tmp_f_BI_point0_,&f_ARBI);
+	dp_ps_immintrin_loadu_fma(n_col_X,tmp_f_AI_point0_,tmp_f_BI_point0_,&f_AIBI);
+	dp_ps_immintrin_loadu_fma(n_col_X,tmp_f_AI_point0_,tmp_f_BR_point0_,&f_AIBR);
+	f_CR__[na] = (f_ARBR + f_AIBI);
+	f_CI__[na] = (f_ARBI - f_AIBR);
+	na += 1;
+	/* for (nrow_A=0;nrow_A<n_row_A;nrow_A++){ } */}
+      /* for (nrow_B=0;nrow_B<n_row_B;nrow_B++){ } */}
+    /* if ((f_CR__!=NULL) && (f_CI__!=NULL)){ } */}
+}
+
+void hp_segregated_to_segregated_mult_immintrin_load1_fma(int n_row_A,int n_col_X,float *f_AR_trn__,float *f_AI_trn__,int n_row_B,float *f_BR_trn__,float *f_BI_trn__,float **f_CR_p_,float **f_CI_p_)
+{
+  /* assumes alignment */
+  int n_col_X_rup = rup(n_col_X,8);
+  int n_col_X_256 = n_col_X_rup/8; //%<-- 8 floats per __m256. ;
+  int nrow_A=0,nrow_B=0,ncol_X=0;
+  float *tmp_f_AR_point0_=NULL;
+  float *tmp_f_AI_point0_=NULL;
+  float *tmp_f_BR_point0_=NULL;
+  float *tmp_f_BI_point0_=NULL;
+  __m256 ps_AR0,ps_BR0;
+  __m256 ps_AI0,ps_BI0;
+  __m256 ps_acARBR0;
+  __m256 ps_acARBI0;
+  __m256 ps_acAIBR0;
+  __m256 ps_acAIBI0;
+  float *tmp_f_acARBR0_ = (float *) &ps_acARBR0;
+  float *tmp_f_acARBI0_ = (float *) &ps_acARBI0;
+  float *tmp_f_acAIBR0_ = (float *) &ps_acAIBR0;
+  float *tmp_f_acAIBI0_ = (float *) &ps_acAIBI0;
+  float tmp_f_acARBR0=0;
+  float tmp_f_acARBI0=0;
+  float tmp_f_acAIBR0=0;
+  float tmp_f_acAIBI0=0;
+  float *f_CR__=NULL;
+  float *f_CI__=NULL;
+  int na=0;
+  f_CR__=NULL;
+  if (f_CR_p_!=NULL){
+    if ( (*f_CR_p_)==NULL ){ (*f_CR_p_) = (float *) malloc1((unsigned long long int)n_row_A*(unsigned long long int)n_row_B*sizeof(float));}
+    f_CR__ = *f_CR_p_;
+    /* if (f_CR_p_!=NULL){ } */}
+  f_CI__=NULL;
+  if (f_CI_p_!=NULL){
+    if ( (*f_CI_p_)==NULL ){ (*f_CI_p_) = (float *) malloc1((unsigned long long int)n_row_A*(unsigned long long int)n_row_B*sizeof(float));}
+    f_CI__ = *f_CI_p_;
+    /* if (f_CI_p_!=NULL){ } */}
+  if ((f_CR__!=NULL) && (f_CI__!=NULL)){
+    na=0;
+    for (nrow_B=0;nrow_B<n_row_B;nrow_B++){
+      for (nrow_A=0;nrow_A<n_row_A;nrow_A++){
+	tmp_f_AR_point0_ = &(f_AR_trn__[nrow_A*n_col_X_rup]);
+	tmp_f_AI_point0_ = &(f_AI_trn__[nrow_A*n_col_X_rup]);
+	tmp_f_BR_point0_ = &(f_BR_trn__[nrow_B*n_col_X_rup]);
+	tmp_f_BI_point0_ = &(f_BI_trn__[nrow_B*n_col_X_rup]);
+	ps_acARBR0 = _mm256_set1_ps((float)0.0);
+	ps_acARBI0 = _mm256_set1_ps((float)0.0);
+	ps_acAIBR0 = _mm256_set1_ps((float)0.0);
+	ps_acAIBI0 = _mm256_set1_ps((float)0.0);
+	for (ncol_X=0;ncol_X<n_col_X_256;ncol_X++){
+	  ps_AR0 = _mm256_load_ps(tmp_f_AR_point0_);
+	  ps_BR0 = _mm256_load_ps(tmp_f_BR_point0_);
+	  ps_AI0 = _mm256_load_ps(tmp_f_AI_point0_);
+	  ps_BI0 = _mm256_load_ps(tmp_f_BI_point0_);
+#ifdef _FMA
+	  ps_acARBR0 = _mm256_fmadd_ps(ps_AR0,ps_BR0,ps_acARBR0);
+	  ps_acARBI0 = _mm256_fmadd_ps(ps_AR0,ps_BI0,ps_acARBI0);
+	  ps_acAIBR0 = _mm256_fmadd_ps(ps_AI0,ps_BR0,ps_acAIBR0);
+	  ps_acAIBI0 = _mm256_fmadd_ps(ps_AI0,ps_BI0,ps_acAIBI0);
+#endif /* _FMA */
+#ifdef _FMA
+	  tmp_f_AR_point0_+=8;tmp_f_BR_point0_+=8;
+	  tmp_f_AI_point0_+=8;tmp_f_BI_point0_+=8;
+#endif /* _FMA */
+	  /* for (ncol_X=0;ncol_X<n_col_X_256;ncol_X++){ } */}
+	tmp_f_acARBR0 = tmp_f_acARBR0_[0] + tmp_f_acARBR0_[1] + tmp_f_acARBR0_[2] + tmp_f_acARBR0_[3] + tmp_f_acARBR0_[4] + tmp_f_acARBR0_[5] + tmp_f_acARBR0_[6] + tmp_f_acARBR0_[7];
+	tmp_f_acARBI0 = tmp_f_acARBI0_[0] + tmp_f_acARBI0_[1] + tmp_f_acARBI0_[2] + tmp_f_acARBI0_[3] + tmp_f_acARBI0_[4] + tmp_f_acARBI0_[5] + tmp_f_acARBI0_[6] + tmp_f_acARBI0_[7];
+	tmp_f_acAIBR0 = tmp_f_acAIBR0_[0] + tmp_f_acAIBR0_[1] + tmp_f_acAIBR0_[2] + tmp_f_acAIBR0_[3] + tmp_f_acAIBR0_[4] + tmp_f_acAIBR0_[5] + tmp_f_acAIBR0_[6] + tmp_f_acAIBR0_[7];
+	tmp_f_acAIBI0 = tmp_f_acAIBI0_[0] + tmp_f_acAIBI0_[1] + tmp_f_acAIBI0_[2] + tmp_f_acAIBI0_[3] + tmp_f_acAIBI0_[4] + tmp_f_acAIBI0_[5] + tmp_f_acAIBI0_[6] + tmp_f_acAIBI0_[7];
+	f_CR__[na] = tmp_f_acARBR0 + tmp_f_acAIBI0;
+	f_CI__[na] = tmp_f_acARBI0 - tmp_f_acAIBR0;
+	na += 1;
+	/* for (nrow_A=0;nrow_A<n_row_A;nrow_A++){ } */}
+      /* for (nrow_B=0;nrow_B<n_row_B;nrow_B++){ } */}
+    /* if ((f_CR__!=NULL) && (f_CI__!=NULL)){ } */}
+}
+
 void hp_ps_mult_immintrin_test()
 {
+  int verbose = 0;
   int n_row_A = 153;
   int n_col_X = 1152;
   int n_col_X_rup = rup(n_col_X,8);
@@ -137,8 +257,8 @@ void hp_ps_mult_immintrin_test()
   float *f_BI_u_trn__ = NULL;
   float *f_CR_bf__ = NULL;
   float *f_CI_bf__ = NULL;
-  float *f_CR_ps__ = NULL;
-  float *f_CI_ps__ = NULL;
+  float *f_CR_al__ = NULL;
+  float *f_CI_al__ = NULL;
   float *f_AR_sub__ = NULL;
   float *f_AI_sub__ = NULL;
   float *f_BR_sub__ = NULL;
@@ -167,8 +287,8 @@ void hp_ps_mult_immintrin_test()
   f_BI_u_trn__ = (float *) malloc1(n_col_X*n_row_A*sizeof(float));
   f_CR_bf__ = (float *) malloc1(n_row_A*n_row_B*sizeof(float));
   f_CI_bf__ = (float *) malloc1(n_row_A*n_row_B*sizeof(float));
-  f_CR_ps__ = (float *) malloc1(n_row_A*n_row_B*sizeof(float));
-  f_CI_ps__ = (float *) malloc1(n_row_A*n_row_B*sizeof(float));
+  f_CR_al__ = (float *) malloc1(n_row_A*n_row_B*sizeof(float));
+  f_CI_al__ = (float *) malloc1(n_row_A*n_row_B*sizeof(float));
   f_AR_sub__ = (float *) malloc1(n_row_A_sub*n_col_X_sub*sizeof(float));
   f_AI_sub__ = (float *) malloc1(n_row_A_sub*n_col_X_sub*sizeof(float));
   f_BR_sub__ = (float *) malloc1(n_row_B_sub*n_col_X_sub*sizeof(float));
@@ -197,12 +317,14 @@ void hp_ps_mult_immintrin_test()
       f_AI_sub__[nrow_A+ncol_X*n_row_A_sub] = f_AI_trn__[ncol_X + nrow_A*n_col_X_rup];
       c_A_sub__[nrow_A+ncol_X*n_row_A_sub] = (float complex) f_AR_sub__[nrow_A+ncol_X*n_row_A_sub] + _Complex_I * (float complex) f_AI_sub__[nrow_A+ncol_X*n_row_A_sub];
       /* for (nrow_A=0;nrow_A<n_row_A_sub;nrow_A++){ for (ncol_X=0;ncol_X<n_col_X_sub;ncol_X++){ }} */}}
-  printf(" %% upper corner of f_AR_trn__: \n");
-  array_printf(f_AR_sub__,"float",n_row_A_sub,n_col_X_sub," % f_AR_sub__: ");
-  printf(" %% upper corner of f_AI_trn__: \n");
-  array_printf(f_AI_sub__,"float",n_row_A_sub,n_col_X_sub," % f_AI_sub__: ");
-  printf(" %% upper corner of c_A_trn__: \n");
-  array_printf(c_A_sub__,"float complex",n_row_A_sub,n_col_X_sub," % c_A_sub__: ");
+  if (verbose>1){
+    printf(" %% upper corner of f_AR_trn__: \n");
+    array_printf(f_AR_sub__,"float",n_row_A_sub,n_col_X_sub," % f_AR_sub__: ");
+    printf(" %% upper corner of f_AI_trn__: \n");
+    array_printf(f_AI_sub__,"float",n_row_A_sub,n_col_X_sub," % f_AI_sub__: ");
+    printf(" %% upper corner of c_A_trn__: \n");
+    array_printf(c_A_sub__,"float complex",n_row_A_sub,n_col_X_sub," % c_A_sub__: ");
+    /* if (verbose>1){ } */}
   ulli=0;
   for (nrow_B=0;nrow_B<n_row_B;nrow_B++){ for (ncol_X=0;ncol_X<n_col_X;ncol_X++){
       f_BR_trn__[ncol_X + nrow_B*n_col_X_rup] = (float)(((int)ulli%11)-2);
@@ -212,29 +334,33 @@ void hp_ps_mult_immintrin_test()
       c_B_u_trn__[ncol_X + nrow_B*n_col_X] = (float complex) f_BR_u_trn__[ncol_X + nrow_B*n_col_X] + _Complex_I * (float complex) f_BI_u_trn__[ncol_X + nrow_B*n_col_X];
       ulli++;
       /* for (nrow_B=0;nrow_B<n_row_B;nrow_B++){ for (ncol_X=0;ncol_X<n_col_X;ncol_X++){ }} */}}
-  for (nrow_B=0;nrow_B<n_row_B_sub;nrow_B++){ for (ncol_X=0;ncol_X<n_col_X_sub;ncol_X++){
-      f_BR_sub__[nrow_B+ncol_X*n_row_B_sub] = f_BR_trn__[ncol_X + nrow_B*n_col_X_rup];
-      f_BI_sub__[nrow_B+ncol_X*n_row_B_sub] = f_BI_trn__[ncol_X + nrow_B*n_col_X_rup];
-      c_B_sub__[nrow_B+ncol_X*n_row_B_sub] = (float complex) f_BR_sub__[nrow_B+ncol_X*n_row_B_sub] + _Complex_I * (float complex) f_BI_sub__[nrow_B+ncol_X*n_row_B_sub];
-      /* for (nrow_B=0;nrow_B<n_row_B_sub;nrow_B++){ for (ncol_X=0;ncol_X<n_col_X_sub;ncol_X++){ }} */}}
-  printf(" %% upper corner of f_BR_trn__: \n");
-  array_printf(f_BR_sub__,"float",n_row_B_sub,n_col_X_sub," % f_BR_sub__: ");
-  printf(" %% upper corner of f_BI_trn__: \n");
-  array_printf(f_BI_sub__,"float",n_row_B_sub,n_col_X_sub," % f_BI_sub__: ");
-  printf(" %% upper corner of c_B_trn__: \n");
-  array_printf(c_B_sub__,"float complex",n_row_B_sub,n_col_X_sub," % c_B_sub__: ");
+  if (verbose>1){
+    for (nrow_B=0;nrow_B<n_row_B_sub;nrow_B++){ for (ncol_X=0;ncol_X<n_col_X_sub;ncol_X++){
+	f_BR_sub__[nrow_B+ncol_X*n_row_B_sub] = f_BR_trn__[ncol_X + nrow_B*n_col_X_rup];
+	f_BI_sub__[nrow_B+ncol_X*n_row_B_sub] = f_BI_trn__[ncol_X + nrow_B*n_col_X_rup];
+	c_B_sub__[nrow_B+ncol_X*n_row_B_sub] = (float complex) f_BR_sub__[nrow_B+ncol_X*n_row_B_sub] + _Complex_I * (float complex) f_BI_sub__[nrow_B+ncol_X*n_row_B_sub];
+	/* for (nrow_B=0;nrow_B<n_row_B_sub;nrow_B++){ for (ncol_X=0;ncol_X<n_col_X_sub;ncol_X++){ }} */}}
+    printf(" %% upper corner of f_BR_trn__: \n");
+    array_printf(f_BR_sub__,"float",n_row_B_sub,n_col_X_sub," % f_BR_sub__: ");
+    printf(" %% upper corner of f_BI_trn__: \n");
+    array_printf(f_BI_sub__,"float",n_row_B_sub,n_col_X_sub," % f_BI_sub__: ");
+    printf(" %% upper corner of c_B_trn__: \n");
+    array_printf(c_B_sub__,"float complex",n_row_B_sub,n_col_X_sub," % c_B_sub__: ");
+    /* if (verbose>1){ } */}
   GLOBAL_toc(0,1," initialize: ");
   /* %%%%%%%% */
   GLOBAL_tic(0);
   memset(c_C_bf__,0,ulli_C_total*sizeof(float complex));
   hp_interleave_mult_bruteforce(n_row_A,n_col_X,c_A_u_trn__,n_row_B,c_B_u_trn__,&c_C_bf__);
   GLOBAL_toc(0,1," hp_ps_mult_bruteforce: ");
-  printf("Gops %0.6f\n",(double)n_row_A*(double)n_row_B*(double)n_col_X_rup/GLOBAL_elrt[0]/1e9);
-  for (nrow_A=0;nrow_A<n_row_A_sub;nrow_A++){ for (nrow_B=0;nrow_B<n_row_B_sub;nrow_B++){
-      c_C_sub__[nrow_A+nrow_B*n_row_A_sub] = c_C_bf__[nrow_A+nrow_B*n_row_A];
-      /* for (nrow_A=0;nrow_A<n_row_A_sub;nrow_A++){ for (nrow_B=0;nrow_B<n_row_B_sub;nrow_B++){ }} */}}
-  printf(" %% upper corner of c_C_bf__: \n");
-  array_printf(c_C_sub__,"float complex",n_row_A_sub,n_row_B_sub," % c_C_bf__: ");
+  printf(" %% Gops %0.6f\n",(double)n_row_A*(double)n_row_B*(double)n_col_X_rup/GLOBAL_elrt[0]/1e9);
+  if (verbose>1){
+    for (nrow_A=0;nrow_A<n_row_A_sub;nrow_A++){ for (nrow_B=0;nrow_B<n_row_B_sub;nrow_B++){
+	c_C_sub__[nrow_A+nrow_B*n_row_A_sub] = c_C_bf__[nrow_A+nrow_B*n_row_A];
+	/* for (nrow_A=0;nrow_A<n_row_A_sub;nrow_A++){ for (nrow_B=0;nrow_B<n_row_B_sub;nrow_B++){ }} */}}
+    printf(" %% upper corner of c_C_bf__: \n");
+    array_printf(c_C_sub__,"float complex",n_row_A_sub,n_row_B_sub," % c_C_bf__: ");
+    /* if (verbose>1){ } */}
   ferror = cfnorm(ulli_C_total,c_C_bf__,c_C_bf__);
   printf(" %% ferror %0.16f\n",ferror);
   /* %%%%%%%% */
@@ -242,25 +368,67 @@ void hp_ps_mult_immintrin_test()
   memset(c_C_al__,0,ulli_C_total*sizeof(float complex));
   hp_segregated_mult_bruteforce(n_row_A,n_col_X,f_AR_u_trn__,f_AI_u_trn__,n_row_B,f_BR_u_trn__,f_BI_u_trn__,&c_C_al__);
   GLOBAL_toc(0,1," hp_segregated_mult_bruteforce: ");
-  printf("Gops %0.6f\n",(double)n_row_A*(double)n_row_B*(double)n_col_X_rup/GLOBAL_elrt[0]/1e9);
-  for (nrow_A=0;nrow_A<n_row_A_sub;nrow_A++){ for (nrow_B=0;nrow_B<n_row_B_sub;nrow_B++){
-      c_C_sub__[nrow_A+nrow_B*n_row_A_sub] = c_C_al__[nrow_A+nrow_B*n_row_A];
-      /* for (nrow_A=0;nrow_A<n_row_A_sub;nrow_A++){ for (nrow_B=0;nrow_B<n_row_B_sub;nrow_B++){ }} */}}
-  printf(" %% upper corner of c_C_al__: \n");
-  array_printf(c_C_sub__,"float complex",n_row_A_sub,n_row_B_sub," % c_C_al__: ");
+  printf(" %% Gops %0.6f\n",(double)n_row_A*(double)n_row_B*(double)n_col_X_rup/GLOBAL_elrt[0]/1e9);
+  if (verbose>1){
+    for (nrow_A=0;nrow_A<n_row_A_sub;nrow_A++){ for (nrow_B=0;nrow_B<n_row_B_sub;nrow_B++){
+	c_C_sub__[nrow_A+nrow_B*n_row_A_sub] = c_C_al__[nrow_A+nrow_B*n_row_A];
+	/* for (nrow_A=0;nrow_A<n_row_A_sub;nrow_A++){ for (nrow_B=0;nrow_B<n_row_B_sub;nrow_B++){ }} */}}
+    printf(" %% upper corner of c_C_al__: \n");
+    array_printf(c_C_sub__,"float complex",n_row_A_sub,n_row_B_sub," % c_C_al__: ");
+    /* if (verbose>1){ } */}
   ferror = cfnorm(ulli_C_total,c_C_bf__,c_C_al__);
   printf(" %% ferror %0.16f\n",ferror);
   /* %%%%%%%% */
   GLOBAL_tic(0);
   memset(c_C_al__,0,ulli_C_total*sizeof(float complex));
-  hp_segregated_mult_immintrin_loadu_fma(n_row_A,n_col_X,f_AR_u_trn__,f_AI_u_trn__,n_row_B,f_BR_u_trn__,f_BI_u_trn__,&c_C_al__);
-  GLOBAL_toc(0,1," hp_segregated_mult_immintrin_loadu_fma: ");
-  printf("Gops %0.6f\n",(double)n_row_A*(double)n_row_B*(double)n_col_X_rup/GLOBAL_elrt[0]/1e9);
-  for (nrow_A=0;nrow_A<n_row_A_sub;nrow_A++){ for (nrow_B=0;nrow_B<n_row_B_sub;nrow_B++){
-      c_C_sub__[nrow_A+nrow_B*n_row_A_sub] = c_C_al__[nrow_A+nrow_B*n_row_A];
-      /* for (nrow_A=0;nrow_A<n_row_A_sub;nrow_A++){ for (nrow_B=0;nrow_B<n_row_B_sub;nrow_B++){ }} */}}
-  printf(" %% upper corner of c_C_al__: \n");
-  array_printf(c_C_sub__,"float complex",n_row_A_sub,n_row_B_sub," % c_C_al__: ");
+  hp_segregated_to_interleaved_mult_immintrin_loadu_fma(n_row_A,n_col_X,f_AR_u_trn__,f_AI_u_trn__,n_row_B,f_BR_u_trn__,f_BI_u_trn__,&c_C_al__);
+  GLOBAL_toc(0,1," hp_segregated_to_interleaved_mult_immintrin_loadu_fma: ");
+  printf(" %% Gops %0.6f\n",(double)n_row_A*(double)n_row_B*(double)n_col_X_rup/GLOBAL_elrt[0]/1e9);
+  if (verbose>1){
+    for (nrow_A=0;nrow_A<n_row_A_sub;nrow_A++){ for (nrow_B=0;nrow_B<n_row_B_sub;nrow_B++){
+	c_C_sub__[nrow_A+nrow_B*n_row_A_sub] = c_C_al__[nrow_A+nrow_B*n_row_A];
+	/* for (nrow_A=0;nrow_A<n_row_A_sub;nrow_A++){ for (nrow_B=0;nrow_B<n_row_B_sub;nrow_B++){ }} */}}
+    printf(" %% upper corner of c_C_al__: \n");
+    array_printf(c_C_sub__,"float complex",n_row_A_sub,n_row_B_sub," % c_C_al__: ");
+    /* if (verbose>1){ } */}
+  ferror = cfnorm(ulli_C_total,c_C_bf__,c_C_al__);
+  printf(" %% ferror %0.16f\n",ferror);
+  /* %%%%%%%% */
+  GLOBAL_tic(0);
+  memset(f_CR_al__,0,ulli_C_total*sizeof(float));
+  memset(f_CI_al__,0,ulli_C_total*sizeof(float));
+  hp_segregated_to_segregated_mult_immintrin_loadu_fma(n_row_A,n_col_X,f_AR_u_trn__,f_AI_u_trn__,n_row_B,f_BR_u_trn__,f_BI_u_trn__,&f_CR_al__,&f_CI_al__);
+  GLOBAL_toc(0,1," hp_segregated_to_segregated_mult_immintrin_loadu_fma: ");
+  printf(" %% Gops %0.6f\n",(double)n_row_A*(double)n_row_B*(double)n_col_X_rup/GLOBAL_elrt[0]/1e9);
+  for (nrow_A=0;nrow_A<n_row_A;nrow_A++){ for (nrow_B=0;nrow_B<n_row_B;nrow_B++){
+      c_C_al__[nrow_A+nrow_B*n_row_A] = f_CR_al__[nrow_A+nrow_B*n_row_A] + _Complex_I * (float complex) f_CI_al__[nrow_A+nrow_B*n_row_A];
+      /* for (nrow_A=0;nrow_A<n_row_A;nrow_A++){ for (nrow_B=0;nrow_B<n_row_B;nrow_B++){ }} */}}
+  if (verbose>1){
+    for (nrow_A=0;nrow_A<n_row_A_sub;nrow_A++){ for (nrow_B=0;nrow_B<n_row_B_sub;nrow_B++){
+	c_C_sub__[nrow_A+nrow_B*n_row_A_sub] = c_C_al__[nrow_A+nrow_B*n_row_A];
+	/* for (nrow_A=0;nrow_A<n_row_A_sub;nrow_A++){ for (nrow_B=0;nrow_B<n_row_B_sub;nrow_B++){ }} */}}
+    printf(" %% upper corner of c_C_al__: \n");
+    array_printf(c_C_sub__,"float complex",n_row_A_sub,n_row_B_sub," % c_C_al__: ");
+    /* if (verbose>1){ } */}
+  ferror = cfnorm(ulli_C_total,c_C_bf__,c_C_al__);
+  printf(" %% ferror %0.16f\n",ferror);
+  /* %%%%%%%% */
+  GLOBAL_tic(0);
+  memset(f_CR_al__,0,ulli_C_total*sizeof(float));
+  memset(f_CI_al__,0,ulli_C_total*sizeof(float));
+  hp_segregated_to_segregated_mult_immintrin_load1_fma(n_row_A,n_col_X,f_AR_trn__,f_AI_trn__,n_row_B,f_BR_trn__,f_BI_trn__,&f_CR_al__,&f_CI_al__);
+  GLOBAL_toc(0,1," hp_segregated_to_segregated_mult_immintrin_load1_fma: ");
+  printf(" %% Gops %0.6f\n",(double)n_row_A*(double)n_row_B*(double)n_col_X_rup/GLOBAL_elrt[0]/1e9);
+  for (nrow_A=0;nrow_A<n_row_A;nrow_A++){ for (nrow_B=0;nrow_B<n_row_B;nrow_B++){
+      c_C_al__[nrow_A+nrow_B*n_row_A] = f_CR_al__[nrow_A+nrow_B*n_row_A] + _Complex_I * (float complex) f_CI_al__[nrow_A+nrow_B*n_row_A];
+      /* for (nrow_A=0;nrow_A<n_row_A;nrow_A++){ for (nrow_B=0;nrow_B<n_row_B;nrow_B++){ }} */}}
+  if (verbose>1){
+    for (nrow_A=0;nrow_A<n_row_A_sub;nrow_A++){ for (nrow_B=0;nrow_B<n_row_B_sub;nrow_B++){
+	c_C_sub__[nrow_A+nrow_B*n_row_A_sub] = c_C_al__[nrow_A+nrow_B*n_row_A];
+	/* for (nrow_A=0;nrow_A<n_row_A_sub;nrow_A++){ for (nrow_B=0;nrow_B<n_row_B_sub;nrow_B++){ }} */}}
+    printf(" %% upper corner of c_C_al__: \n");
+    array_printf(c_C_sub__,"float complex",n_row_A_sub,n_row_B_sub," % c_C_al__: ");
+    /* if (verbose>1){ } */}
   ferror = cfnorm(ulli_C_total,c_C_bf__,c_C_al__);
   printf(" %% ferror %0.16f\n",ferror);
   /* %%%%%%%% */
@@ -269,12 +437,14 @@ void hp_ps_mult_immintrin_test()
   memset(c_C_al__,0,ulli_C_total*sizeof(float complex));
   hp_interleave_mult_cblas_cgemm(n_row_A,n_col_X,c_A_u_trn__,n_row_B,c_B_u_trn__,&c_C_al__);
   GLOBAL_toc(0,1," hp_interleave_mult_cblas_cgemm: ");
-  printf("Gops %0.6f\n",(double)n_row_A*(double)n_row_B*(double)n_col_X_rup/GLOBAL_elrt[0]/1e9);
-  for (nrow_A=0;nrow_A<n_row_A_sub;nrow_A++){ for (nrow_B=0;nrow_B<n_row_B_sub;nrow_B++){
-      c_C_sub__[nrow_A+nrow_B*n_row_A_sub] = c_C_al__[nrow_A+nrow_B*n_row_A];
-      /* for (nrow_A=0;nrow_A<n_row_A_sub;nrow_A++){ for (nrow_B=0;nrow_B<n_row_B_sub;nrow_B++){ }} */}}
-  printf(" %% upper corner of c_C_al__: \n");
-  array_printf(c_C_sub__,"float complex",n_row_A_sub,n_row_B_sub," % c_C_al__: ");
+  printf(" %% Gops %0.6f\n",(double)n_row_A*(double)n_row_B*(double)n_col_X_rup/GLOBAL_elrt[0]/1e9);
+  if (verbose>1){
+    for (nrow_A=0;nrow_A<n_row_A_sub;nrow_A++){ for (nrow_B=0;nrow_B<n_row_B_sub;nrow_B++){
+	c_C_sub__[nrow_A+nrow_B*n_row_A_sub] = c_C_al__[nrow_A+nrow_B*n_row_A];
+	/* for (nrow_A=0;nrow_A<n_row_A_sub;nrow_A++){ for (nrow_B=0;nrow_B<n_row_B_sub;nrow_B++){ }} */}}
+    printf(" %% upper corner of c_C_al__: \n");
+    array_printf(c_C_sub__,"float complex",n_row_A_sub,n_row_B_sub," % c_C_al__: ");
+    /* if (verbose>1){ } */}
   ferror = cfnorm(ulli_C_total,c_C_bf__,c_C_al__);
   printf(" %% ferror %0.16f\n",ferror);
 #endif /* _CBLAS */
@@ -289,8 +459,8 @@ void hp_ps_mult_immintrin_test()
   free1(&f_BI_u_trn__);
   free1(&f_CR_bf__);
   free1(&f_CI_bf__);
-  free1(&f_CR_ps__);
-  free1(&f_CI_ps__);
+  free1(&f_CR_al__);
+  free1(&f_CI_al__);
   free1(&f_AR_sub__);
   free1(&f_AI_sub__);
   free1(&f_BR_sub__);
