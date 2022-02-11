@@ -21,6 +21,7 @@ header_dev = ./dir_h/halfloop_header.h
 sources_dev = array_extract_call.c \
 	array_mean_center_call.c \
 	array_orth_call.c \
+	array_split_call.c \
 	array_printf_call.c \
 	array_stats_call.c \
 	array_transpose_call.c \
@@ -34,6 +35,7 @@ sources_dev = array_extract_call.c \
 	gumbel_call.c \
 	halfloop_nonbinary_call.c \
 	halfloop_nonbinary_recursive_call.c \
+	halfloop_split_nonbinary_recursive_call.c \
 	malloc1_call.c \
 	MDA_io_call.c \
 	nelder_mead_call.c \

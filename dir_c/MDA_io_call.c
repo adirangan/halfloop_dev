@@ -280,15 +280,15 @@ void MDA_io_test()
   char fname[32];
   double *r8_0_;
   int n_dim_2=NULL;
-  int *r8_2_=NULL;
+  double *r8_2_=NULL;
   int *dim_2_=NULL;
   float *r4_0_;
   int n_dim_3=NULL;
-  int *r4_3_=NULL;
+  float *r4_3_=NULL;
   int *dim_3_=NULL;
   unsigned long long int *ulli_0_;
   int n_dim_4=NULL;
-  int *ulli_4_=NULL;
+  unsigned long long int *ulli_4_=NULL;
   int *dim_4_=NULL;
   GLOBAL_tic(0);
   dim_0_ = (int *) malloc1(n_dim_0*sizeof(int));

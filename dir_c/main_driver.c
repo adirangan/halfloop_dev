@@ -39,6 +39,7 @@ char GLOBAL_dir_trunk[PNAMESIZE] = "\0";
 char GLOBAL_prefix_base[FNAMESIZE] = "\0";
 int GLOBAL_flag_force_create=0;
 int GLOBAL_flag_omp_use=1;
+int GLOBAL_flag_split=0;
 
 /* ---------------------------------------------------------------- */
 int GLOBAL_malloc1_notupdate=0;
@@ -110,6 +111,8 @@ int main(int argc, char** argv) {
   if (strstr(GLOBAL_mode,"array_orth_f_test_speed")!=NULL){ array_orth_f_test_speed();}
   if (strstr(GLOBAL_mode,"array_orth_d_test_error")!=NULL){ array_orth_d_test_error();}
   if (strstr(GLOBAL_mode,"array_orth_d_test_speed")!=NULL){ array_orth_d_test_speed();}
+  if (strstr(GLOBAL_mode,"array_split_f_from_f_test")!=NULL){ array_split_f_from_f_test();}
+  if (strstr(GLOBAL_mode,"xdrop_from_xdrop_split_test")!=NULL){ xdrop_from_xdrop_split_test();}
   if (strstr(GLOBAL_mode,"erfcln_f_test")!=NULL){ erfcln_f_test();}
   if (strstr(GLOBAL_mode,"erfcln_d_test")!=NULL){ erfcln_d_test();}
   if (strstr(GLOBAL_mode,"z_to_lp_d_test")!=NULL){ z_to_lp_d_test();}
@@ -118,6 +121,7 @@ int main(int argc, char** argv) {
   if (strstr(GLOBAL_mode,"halfloop_nonbinary_f_recursive_test")!=NULL){ halfloop_nonbinary_f_recursive_test();}
   if (strstr(GLOBAL_mode,"halfloop_nonbinary_f_recursive_helper_QR_helper_orth_test_speed")!=NULL){ halfloop_nonbinary_f_recursive_helper_QR_helper_orth_test_speed();}
   if (strstr(GLOBAL_mode,"halfloop_nonbinary_f_recursive_test_speed")!=NULL){ halfloop_nonbinary_f_recursive_test_speed();}
+  if (strstr(GLOBAL_mode,"halfloop_split_nonbinary_f_recursive_test_speed")!=NULL){ halfloop_split_nonbinary_f_recursive_test_speed();}
   if (strstr(GLOBAL_mode,"halfloop_nonbinary_f_gateway_shell")!=NULL){ halfloop_nonbinary_f_gateway_shell();}
   if (GLOBAL_verbose>0){ printf("exiting successfully\n");}
   return 0;

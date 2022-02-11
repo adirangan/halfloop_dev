@@ -22,6 +22,7 @@ void update_global(char *vname)
   else if (strcmp(vname,"GLOBAL_prefix_base")==0){ scanf("%[^,;]",GLOBAL_prefix_base); if (verbose>0){ printf("%s read to be %s\n",vname,GLOBAL_prefix_base);} /* else if (strcmp(vname,"GLOBAL_prefix_base")==0){ } */}
   else if (strcmp(vname,"GLOBAL_flag_force_create")==0){ scanf("%d",&GLOBAL_flag_force_create); if (verbose>0){ printf("%s read to be %d\n",vname,GLOBAL_flag_force_create);}}
   else if (strcmp(vname,"GLOBAL_flag_omp_use")==0){ scanf("%d",&GLOBAL_flag_omp_use); if (verbose>0){ printf("%s read to be %d\n",vname,GLOBAL_flag_omp_use);}}
+  else if (strcmp(vname,"GLOBAL_flag_split")==0){ scanf("%d",&GLOBAL_flag_split); if (verbose>0){ printf("%s read to be %d\n",vname,GLOBAL_flag_split);}}
   else if (strcmp(vname,"END")==0){ /* do nothing */ if (verbose>0){ printf("end of input reached\n");}}
 /*   else if (strcmp(vname,"yy")==0){ scanf("%zz",&yy); if (verbose>0){ printf("%s read to be %zz\n",vname,yy);}} */
   else /* if anything else */{ printf(" %% Error! vname %s in update_global\n",vname); exit(EXIT_FAILURE); }

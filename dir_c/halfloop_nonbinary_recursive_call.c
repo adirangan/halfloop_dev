@@ -1422,6 +1422,7 @@ void halfloop_nonbinary_f_gateway_shell()
     printf(" %% calling halfloop_nonbinary_f_recursive with parameters: \n");
     printf(" %% verbose %d\n",GLOBAL_verbose);
     printf(" %% flag_omp_use %d\n",GLOBAL_flag_omp_use);
+    printf(" %% flag_split %d\n",GLOBAL_flag_split);
     printf(" %% recursion_limit %d\n",GLOBAL_halfloop_recursion_limit);
     printf(" %% E_base_mda_r4 %s\n",GLOBAL_E_base_mda_r4);
     printf(" %% flag_r0drop_vs_rcdrop %d\n",GLOBAL_flag_r0drop_vs_rcdrop);
@@ -1433,6 +1434,8 @@ void halfloop_nonbinary_f_gateway_shell()
     printf(" %% prefix_base %s\n",GLOBAL_prefix_base);
     printf(" %% flag_force_create %d\n",GLOBAL_flag_force_create);
     /* if (verbose){ } */}
+  /* %%%%%%%% */
+  if (GLOBAL_flag_split==0){
   halfloop_nonbinary_f_recursive(
   GLOBAL_verbose
  ,GLOBAL_flag_omp_use
@@ -1460,6 +1463,37 @@ void halfloop_nonbinary_f_gateway_shell()
  ,&nlpbra_label__
  ,&nlpnex_label__
  );
+  /* if (GLOBAL_flag_split==0){ } */}
+  /* %%%%%%%% */
+  if (GLOBAL_flag_split==1){
+  halfloop_split_nonbinary_f_recursive(
+  GLOBAL_verbose
+ ,GLOBAL_flag_omp_use
+ ,0
+ ,GLOBAL_halfloop_recursion_limit
+ ,n_r
+ ,n_c
+ ,E_base_rc__
+ ,0
+ ,NULL
+ ,0
+ ,NULL
+ ,GLOBAL_flag_r0drop_vs_rcdrop
+ ,GLOBAL_gamma
+ ,GLOBAL_n_shuffle
+ ,GLOBAL_p_set
+ ,GLOBAL_n_member_lob
+ ,-1
+ ,GLOBAL_dir_trunk
+ ,NULL
+ ,GLOBAL_prefix_base
+ ,GLOBAL_flag_force_create
+ ,&binary_label_
+ ,&output_label__
+ ,&nlpbra_label__
+ ,&nlpnex_label__
+ );
+  /* if (GLOBAL_flag_split==1){ } */}
   /* %%%%%%%% */
   free1(&d_);
   free1(&E_base_rc__);

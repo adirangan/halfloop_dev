@@ -66,6 +66,7 @@ extern char GLOBAL_dir_trunk[PNAMESIZE];
 extern char GLOBAL_prefix_base[FNAMESIZE];
 extern int GLOBAL_flag_force_create;
 extern int GLOBAL_flag_omp_use;
+extern int GLOBAL_flag_split;
 
 #define rup(A,B) ((A) + !!((A)%(B))*((B) - ((A)%(B))))
 #define maximum(A,B) ((A) > (B) ? (A) : (B))
@@ -120,6 +121,23 @@ void array_gram_schmidt_inplace_d(int n_r,int n_c,double *Q_rc__);
 void array_orth_d(int n_r,int n_c,double **Q_rc_p_,unsigned long int *rseed_p);
 void array_orth_d_test_error();
 void array_orth_d_test_speed();
+void array_f_from_split_f(int n_r,int n_c_split,float *A_rc__,float **B_rc_p_,float **B_cr_p_);
+void array_split_f_from_f(int n_r,int n_c,float *A_rc__,float **B_rc_p_,float **B_cr_p_);
+void array_split_f_from_f_test();
+void xdrop_from_xdrop_split
+(
+  int n_r
+ ,int n_c_split
+ ,double gamma
+ ,int *xdrop_split_trn__
+ ,int **xdrop_trn_p_
+ ,int *n_iteration_p_
+ ,int **rdrop_p_
+ ,int **cdrop_p_
+ ,int **rkeep_p_
+ ,int **ckeep_p_
+ );
+void xdrop_from_xdrop_split_test();
 void iarray_printf_margin(int *i_,int n_r,int n_c,const char *prefix);
 void farray_printf_margin(float *f_,int n_r,int n_c,const char *prefix);
 void darray_printf_margin(double *d_,int n_r,int n_c,const char *prefix);
@@ -345,6 +363,87 @@ void halfloop_nonbinary_f_recursive
 void halfloop_nonbinary_f_recursive_test();
 void halfloop_nonbinary_f_recursive_test_speed();
 void halfloop_nonbinary_f_gateway_shell();
+void trace_trn_from_data(int n_iteration,int n_r,int n_c,int *rdrop_,int *cdrop_,double *QR_,double *QC_,double **trace_p_);
+void halfloop_split_nonbinary_f_recursive_helper_QR__
+(
+  int verbose
+ ,int n_r
+ ,int n_c
+ ,float * E_base_rc__
+ ,int n_r_index
+ ,int *r_index_
+ ,int n_c_index
+ ,int *c_index_
+ ,int flag_r0drop_vs_rcdrop
+ ,double gamma
+ ,int n_shuffle
+ ,int flag_force_create
+ ,char *fname_trace__
+ ,char *fname_xdrop__
+ ,char *fname_QR__
+);
+void halfloop_split_nonbinary_f_recursive_omp_helper_QR_
+(
+ int verbose
+ ,int n_r_index
+ ,int n_c_index
+ ,double *E_rc__
+ ,double *E_cr__
+ ,int flag_r0drop_vs_rcdrop
+ ,double gamma
+ ,int nshuffle
+ ,int n_iteration
+ ,double *trace__
+ ,double *QR_
+ ,double *xdrop__
+);
+void halfloop_split_nonbinary_f_recursive_omp_helper_QR__
+(
+  int verbose
+ ,int n_r
+ ,int n_c
+ ,float * E_base_rc__
+ ,int n_r_index
+ ,int *r_index_
+ ,int n_c_index
+ ,int *c_index_
+ ,int flag_r0drop_vs_rcdrop
+ ,double gamma
+ ,int n_shuffle
+ ,int flag_force_create
+ ,char *fname_trace__
+ ,char *fname_xdrop__
+ ,char *fname_QR__
+);
+void halfloop_split_nonbinary_f_recursive
+(
+ int verbose
+ ,int flag_omp
+ ,int ndepth
+ ,int recursion_limit
+ ,int n_r
+ ,int n_c
+ ,float *E_base_rc__
+ ,int n_r_index_0in
+ ,int *r_index_0in_
+ ,int n_c_index_0in
+ ,int *c_index_0in_
+ ,int flag_r0drop_vs_rcdrop
+ ,double gamma_0in
+ ,int n_shuffle_0in
+ ,double p_set_0in
+ ,int n_member_lob_0in
+ ,double p_prev_0in
+ ,char *dir_trunk_0in
+ ,char *dir_out_0in
+ ,char *prefix_base_0in
+ ,int flag_force_create_0in
+ ,unsigned long long int **binary_label_p_
+ ,char ***output_label_p_
+ ,char ***nlpbra_label_p_
+ ,char ***nlpnex_label_p_
+);
+void halfloop_split_nonbinary_f_recursive_test_speed();
 void * malloc1(size_t size);
 void free1(void **vp);
 void malloc1_char_FNAMESIZE__(int n_l,char ***str_p_);
@@ -396,7 +495,6 @@ void pong();
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-
 
 
 
